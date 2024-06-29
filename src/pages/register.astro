@@ -8,11 +8,11 @@ if (Astro.request.method === "POST") {
     const uid = ulid();
     const salt = await bcrypt.genSalt(10);
     await db.insert(User).values({
-        // @ts-ignore
         id: uid,
-        name: response.get("name") || "",
-        email: response.get("email") || "",
+        name: response.get("name")?.toString() || "",
+        email: response.get("email")?.toString() || "",
     });
+
     await db
         .insert(UserAuth)
         .values({
