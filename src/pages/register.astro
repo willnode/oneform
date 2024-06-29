@@ -1,0 +1,95 @@
+---
+import { db, User, UserAuth } from "astro:db";
+import bcrypt from "bcrypt";
+import { ulid } from "ulid";
+
+if (Astro.request.method === "POST") {
+    const response = await Astro.request.formData();
+    const uid = ulid();
+    const salt = await bcrypt.genSalt(10);
+    await db.insert(User).values({
+        // @ts-ignore
+        id: uid,
+        name: response.get("name") || "",
+        email: response.get("email") || "",
+    });
+    await db
+        .insert(UserAuth)
+        .values({
+            id: ulid(),
+            identifier: await bcrypt.hash(response.get("password") || "", salt),
+            type: "email",
+            userId: uid,
+        })
+        .returning();
+
+    return new Response("", {
+        status: 302,
+        headers: {
+            location: "/login?status=ok",
+        },
+    });
+}
+---
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center">Login</h2>
+            <form method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Name</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="name"
+                        id="name"
+                        required
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input
+                        type="email"
+                        class="form-control"
+                        name="email"
+                        id="email"
+                        required
+                    />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        required
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary w-100"
+                    >Register</button
+                >
+            </form>
+        </div>
+    </div>
+</body>

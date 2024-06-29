@@ -1,0 +1,31 @@
+{
+  "name": "rockit",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.7.0",
+    "@astrojs/db": "^0.11.7",
+    "@astrojs/node": "^8.3.2",
+    "@auth/core": "^0.32.0",
+    "@libsql/client": "^0.7.0",
+    "astro": "^4.11.3",
+    "auth-astro": "^4.1.2",
+    "bcrypt": "^5.1.1",
+    "typescript": "^5.5.2",
+    "ulid": "^2.3.0"
+  },
+  "packageManager": "yarn@4.3.1",
+  "devDependencies": {
+    "@types/bcrypt": "^5"
+  }
+}
