@@ -1,0 +1,32 @@
+---
+const { control, value } = Astro.props;
+import Control from "./Control.astro";
+---
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{control.label}</h5>
+        {
+            value?.[control.id]?.map((v: any, i: number) => (
+                // @ts-ignore
+                <>
+                    <div class="d-flex align-items-end">
+                        <div class="flex-grow-1">
+                            <Control
+                                control={control.child}
+                                value={v}
+                                key={i}
+                            />
+                        </div>
+                        <button class="btn btn-sm btn-danger">Remove</button>
+                    </div>
+                    <hr />
+                </>
+            ))
+        }
+    </div>
+
+    <div class="d-flex">
+        <button class="btn btn-success">Add</button>
+    </div>
+</div>

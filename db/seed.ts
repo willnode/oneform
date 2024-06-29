@@ -4,7 +4,7 @@ import { encryptPW } from '../src/helper';
 
 // https://astro.build/db/seed
 export default async function seed() {
-	let uid = ulid();
+	let uid = "01J1JEY8ZJHYHBYYBHAVBEDMRS"; // avoid relogin on reseed
 	let tid = ulid();
 	let fid = ulid();
 	await db.insert(User).values([
@@ -46,10 +46,8 @@ export default async function seed() {
 				id: ulid(),
 				type: 'option',
 				variant: 'single-select',
-				options: {
-					type: 'constant',
-					values: ['meat', 'vegan'],
-				},
+				valueType: 'constant',
+				values: [{ value: 'meat' }, { value: 'vegan' }],
 				code: 'food-type',
 				label: 'Food Type',
 			}

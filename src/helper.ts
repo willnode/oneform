@@ -17,3 +17,9 @@ export function backToLogin() {
         }
     })
 }
+
+export function notFound() {
+    return new Response('not found', {
+        status: 404,
+    })
+}

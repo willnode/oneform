@@ -4,12 +4,19 @@ const { control, value } = Astro.props;
 const id = ulid();
 ---
 
-<label for={id} class="form-label">{control.label}</label>
+{
+    control.label && (
+        <label for={id} class="form-label">
+            {control.label}
+        </label>
+    )
+}
 <select class="form-select" id={id}>
+    <option></option>
     {
-        Array.isArray(control.options?.values)
-            ? control.options?.values.map((x: any) => (
-                  <option selected={x === value[control.id]}>{x}</option>
+        Array.isArray(control?.values)
+            ? control.values.map((x: any) => (
+                  <option selected={x.value === value?.[control.id]}>{x.value}</option>
               ))
             : null
     }

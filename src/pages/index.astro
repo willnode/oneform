@@ -11,5 +11,8 @@ const formList = await db.select().from(Form).where(eq(Form.teamId, team));
 ---
 
 <Layout title="Welcome to Astro.">
-    {formList.map((form) => <a href={`/form/${form.id}/edit`}>{form.title}</a>)}
+    <div class="container">
+        <a href="/login">Logout</a>
+        <a href="/form">Form List</a>
+    </div>
 </Layout>

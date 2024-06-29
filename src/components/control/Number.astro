@@ -4,5 +4,11 @@ const { control, value } = Astro.props;
 const id = ulid();
 ---
 
-<label for={id} class="form-label">{control.label}</label>
-<input type="number" class="form-control" id={id} value={value[control.id]} />
+{
+    control.label && (
+        <label for={id} class="form-label">
+            {control.label}
+        </label>
+    )
+}
+<input type="number" class="form-control" id={id} value={value?.[control.id]} />

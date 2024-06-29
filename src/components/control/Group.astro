@@ -1,0 +1,25 @@
+---
+import Control from "./Control.astro";
+
+const { control, value } = Astro.props;
+let cond = true;
+if (control.if) {
+    var x = new Function("value", control.if);
+    cond = !!x(value);
+}
+---
+
+{
+    cond ? (
+        <div
+            class={
+                "d-flex gap-2 " + (control.horizontal ? "flex-row" : "flex-column")
+            }
+        >
+            {control.children.map((child: any) => (
+                // @ts-ignore
+                <Control control={child} value={value} key={child.id} />
+            ))}
+        </div>
+    ) : null
+}
