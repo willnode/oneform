@@ -4,26 +4,26 @@ import Control from "./Control.astro";
 const { parentID, control, value } = Astro.props;
 let cond = true;
 if (control.if) {
-    var x = new Function("value", control.if);
-    cond = !!x(value);
+	var x = new Function("value", control.if);
+	cond = !!x(value);
 }
 ---
 
 {
-    (
-        <fieldset
-            class={
-                (cond ? "d-flex" : "d-none") +
-                " gap-2 oneform-group " +
-                (control.horizontal ? "flex-row" : "flex-column")
-            }
-            disabled={!cond}
-            data-parent={parentID}
-            data-if={control.if}
-        >
-            {control.children.map((child: any) => (
-                <Control control={child} value={value} key={child.id} parentID={parentID} />
-            ))}
-        </fieldset>
-    )
+	(
+		<fieldset
+			class={
+				(cond ? "d-flex" : "d-none") +
+				" gap-2 oneform-group " +
+				(control.horizontal ? "flex-row" : "flex-column")
+			}
+			disabled={!cond}
+			data-parent={parentID}
+			data-if={control.if}
+		>
+			{control.children.map((child: any) => (
+				<Control control={child} value={value} key={child.id} parentID={parentID} />
+			))}
+		</fieldset>
+	)
 }

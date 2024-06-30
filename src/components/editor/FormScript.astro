@@ -1,49 +1,51 @@
 <script>
-    document.addEventListener("DOMContentLoaded", async function (event) {
-        document.querySelectorAll(".oneform-group").forEach(function (item) {
-            let parentKey = item.getAttribute("data-parent");
-            if (!parentKey) {
-                return;
-            }
-            let childs = [
-                ...item
-                    .querySelectorAll(`:scope [data-parent="${parentKey}"]`)
-                    .values(),
-            ];
-            let inputs = childs.filter(
-                (x) => x.tagName !== "FIELDSET",
-            ) as HTMLInputElement[];
-            let frames = childs.filter(
-                (x) => x.tagName === "FIELDSET",
-            ) as HTMLFieldSetElement[];
-            if (inputs.length > 0 && frames.length > 0) {
-                inputs.forEach((iel) => {
-                    iel.addEventListener("change", function (ev) {
-                        let inputData: any = {};
-                        inputs.forEach((iiel) => {
-                            let name = iiel.getAttribute("name") || "";
-                            name = name?.substring(parentKey.length + 1);
-                            inputData[name] = iiel.value;
-                        });
-                        frames.forEach((fel) => {
-                            let fnBody = fel.getAttribute("data-if");
-                            if (fnBody) {
-                                let fn = new Function("value", fnBody);
-                                let cond = !!fn(inputData);
-                                if (cond) {
-                                    fel.classList.add("d-flex");
-                                    fel.classList.remove("d-none");
-                                    fel.disabled = false;
-                                } else {
-                                    fel.classList.add("d-none");
-                                    fel.classList.remove("d-flex");
-                                    fel.disabled = true;
-                                }
-                            }
-                        });
-                    });
-                });
-            }
-        });
-    });
+	function handleGroup(item: Element) {
+		let parentKey = item.getAttribute("data-parent");
+		if (!parentKey) {
+			return;
+		}
+		let childs = [
+			...item
+				.querySelectorAll(`:scope [data-parent="${parentKey}"]`)
+				.values(),
+		];
+		let inputs = childs.filter(
+			(x) => x.tagName !== "FIELDSET",
+		) as HTMLInputElement[];
+		let frames = childs.filter(
+			(x) => x.tagName === "FIELDSET",
+		) as HTMLFieldSetElement[];
+		if (inputs.length == 0 || frames.length === 0) {
+		}
+		inputs.forEach((iel) => {
+			iel.addEventListener("change", function (ev) {
+				let inputData: any = {};
+				inputs.forEach((iiel) => {
+					let name = iiel.getAttribute("name") || "";
+					name = name?.substring(parentKey.length + 1);
+					inputData[name] = iiel.value;
+				});
+				frames.forEach((fel) => {
+					let fnBody = fel.getAttribute("data-if");
+					if (!fnBody) {
+						return;
+					}
+					let fn = new Function("value", fnBody);
+					let cond = !!fn(inputData);
+					if (cond) {
+						fel.classList.add("d-flex");
+						fel.classList.remove("d-none");
+						fel.disabled = false;
+					} else {
+						fel.classList.add("d-none");
+						fel.classList.remove("d-flex");
+						fel.disabled = true;
+					}
+				});
+			});
+		});
+	}
+	document.addEventListener("DOMContentLoaded", async function (event) {
+		document.querySelectorAll(".oneform-group").forEach(handleGroup);
+	});
 </script>

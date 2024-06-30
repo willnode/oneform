@@ -3,22 +3,22 @@ const { parentID, control, value } = Astro.props;
 ---
 
 <label>
-    {control.label && <div class="form-label">{control.label}</div>}
+	{control.label && <div class="form-label">{control.label}</div>}
 
-    <select
-        class="form-select"
-        name={`${parentID}.${control.id}`}
-        data-parent={parentID}
-    >
-        <option></option>
-        {
-            Array.isArray(control?.values)
-                ? control.values.map((x: any) => (
-                      <option selected={x.value === value?.[control.id]}>
-                          {x.value}
-                      </option>
-                  ))
-                : null
-        }
-    </select>
+	<select
+		class="form-select"
+		name={`${parentID}.${control.id}`}
+		data-parent={parentID}
+	>
+		<option></option>
+		{
+			Array.isArray(control?.values)
+				? control.values.map((x: any) => (
+					  <option selected={x.value === value?.[control.id]}>
+						  {x.value}
+					  </option>
+				  ))
+				: null
+		}
+	</select>
 </label>

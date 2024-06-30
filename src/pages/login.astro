@@ -4,63 +4,63 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Login">
 <script>
-        document.addEventListener("DOMContentLoaded", async function (event) {
-            const { signIn, signOut } = await import("auth-astro/client");
-            const form = document.getElementById("form") as HTMLFormElement;
-            form.addEventListener("submit", async function submit(ev) {
-                ev.preventDefault();
-                var data = new FormData(form);
-                let email = data.get("email");
-                let password = data.get("password");
-                console.log(data, { email, password });
-                let r = await signIn("credentials", {
-                    email,
-                    password,
-                    callbackUrl: "/",
-                    redirect: false,
-                });
-                console.log(await r?.json());
-            });
-        });
-    </script>
+		document.addEventListener("DOMContentLoaded", async function (event) {
+			const { signIn, signOut } = await import("auth-astro/client");
+			const form = document.getElementById("form") as HTMLFormElement;
+			form.addEventListener("submit", async function submit(ev) {
+				ev.preventDefault();
+				var data = new FormData(form);
+				let email = data.get("email");
+				let password = data.get("password");
+				console.log(data, { email, password });
+				let r = await signIn("credentials", {
+					email,
+					password,
+					callbackUrl: "/",
+					redirect: false,
+				});
+				console.log(await r?.json());
+			});
+		});
+	</script>
 
-    <div class="container">
-        <div class="login-container">
-            <h2 class="text-center">Login</h2>
-            <form id="form" name="form">
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
-                    <input
-                        type="email"
-                        class="form-control"
-                        name="email"
-                        aria-describedby="emailHelp"
-                        required
-                    />
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input
-                        type="password"
-                        class="form-control"
-                        name="password"
-                        required
-                    />
-                </div>
-                <div class="mb-3 form-check">
-                    <input
-                        type="checkbox"
-                        class="form-check-input"
-                        id="rememberMe"
-                    />
-                    <label class="form-check-label" for="rememberMe"
-                        >Remember me</label
-                    >
-                </div>
-                <button type="submit" class="btn btn-primary w-100"
-                    >Login</button
-                >
-            </form>
-        </div>
-    </div>
+	<div class="container">
+		<div class="login-container">
+			<h2 class="text-center">Login</h2>
+			<form id="form" name="form">
+				<div class="mb-3">
+					<label for="email" class="form-label">Email address</label>
+					<input
+						type="email"
+						class="form-control"
+						name="email"
+						aria-describedby="emailHelp"
+						required
+					/>
+				</div>
+				<div class="mb-3">
+					<label for="password" class="form-label">Password</label>
+					<input
+						type="password"
+						class="form-control"
+						name="password"
+						required
+					/>
+				</div>
+				<div class="mb-3 form-check">
+					<input
+						type="checkbox"
+						class="form-check-input"
+						id="rememberMe"
+					/>
+					<label class="form-check-label" for="rememberMe"
+						>Remember me</label
+					>
+				</div>
+				<button type="submit" class="btn btn-primary w-100"
+					>Login</button
+				>
+			</form>
+		</div>
+	</div>
 </Layout>

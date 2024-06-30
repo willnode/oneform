@@ -3,24 +3,24 @@ const { parentID, control, value } = Astro.props;
 ---
 
 <label>
-    {control.label && <div class="form-label">{control.label}</div>}
-    {
-        control.variant === "multi-line" ? (
-            <textarea
-                class="form-control"
-                data-parent={parentID}
-                name={`${parentID}.${control.id}`}
-            >
-                {value?.[control.id]}
-            </textarea>
-        ) : (
-            <input
-                type={control.variant === "email" ? control.variant : "text"}
-                class="form-control"
-                data-parent={parentID}
-                name={`${parentID}.${control.id}`}
-                value={value?.[control.id]}
-            />
-        )
-    }
+	{control.label && <div class="form-label">{control.label}</div>}
+	{
+		control.variant === "multi-line" ? (
+			<textarea
+				class="form-control"
+				data-parent={parentID}
+				name={`${parentID}.${control.id}`}
+			>
+				{value?.[control.id]}
+			</textarea>
+		) : (
+			<input
+				type={control.variant === "email" ? control.variant : "text"}
+				class="form-control"
+				data-parent={parentID}
+				name={`${parentID}.${control.id}`}
+				value={value?.[control.id]}
+			/>
+		)
+	}
 </label>

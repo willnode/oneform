@@ -5,14 +5,14 @@ import { getTeam } from "../model";
 import { backToLogin } from "../helper";
 const team = await getTeam(Astro.request);
 if (!team) {
-    return backToLogin();
+	return backToLogin();
 }
 const formList = await db.select().from(Form).where(eq(Form.teamId, team));
 ---
 
 <Layout title="Welcome to Astro.">
-    <div class="container">
-        <a href="/login">Logout</a>
-        <a href="/form">Form List</a>
-    </div>
+	<div class="container">
+		<a href="/login">Logout</a>
+		<a href="/form">Form List</a>
+	</div>
 </Layout>
