@@ -6,6 +6,7 @@ const { form: formID } = Astro.params;
 
 import { Form, db, eq } from "astro:db";
 import Control from "../../../components/control/Control.astro";
+import FormScript from "../../../components/editor/FormScript.astro";
 
 const formList = await db.select().from(Form).where(eq(Form.id, formID));
 if (formList.length === 0) {
@@ -24,3 +25,5 @@ import editorSchema from "../../../components/editor/schema";
         </div>
     </div>
 </Layout>
+
+<FormScript />

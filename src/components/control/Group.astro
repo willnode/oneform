@@ -1,7 +1,7 @@
 ---
 import Control from "./Control.astro";
 
-const { control, value } = Astro.props;
+const { parentID, control, value } = Astro.props;
 let cond = true;
 if (control.if) {
     var x = new Function("value", control.if);
@@ -10,16 +10,20 @@ if (control.if) {
 ---
 
 {
-    cond ? (
-        <div
+    (
+        <fieldset
             class={
-                "d-flex gap-2 " + (control.horizontal ? "flex-row" : "flex-column")
+                (cond ? "d-flex" : "d-none") +
+                " gap-2 oneform-group " +
+                (control.horizontal ? "flex-row" : "flex-column")
             }
+            disabled={!cond}
+            data-parent={parentID}
+            data-if={control.if}
         >
             {control.children.map((child: any) => (
-                // @ts-ignore
-                <Control control={child} value={value} key={child.id} />
+                <Control control={child} value={value} key={child.id} parentID={parentID} />
             ))}
-        </div>
-    ) : null
+        </fieldset>
+    )
 }

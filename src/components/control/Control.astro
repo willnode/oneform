@@ -5,11 +5,11 @@ import Text from "./Text.astro";
 import Group from "./Group.astro";
 import List from "./List.astro";
 
-const { control, value } = Astro.props;
+const { parentID, control, value } = Astro.props;
 ---
 
-{control?.type === "number" && <Number control={control} value={value} />}
-{control?.type === "option" && <Option control={control} value={value} />}
-{control?.type === "text" && <Text control={control} value={value} />}
-{control?.type === "group" && <Group control={control} value={value} />}
-{control?.type === "list" && <List control={control} value={value} />}
+{control?.type === "number" && <Number parentID={parentID} control={control} value={value} />}
+{control?.type === "option" && <Option parentID={parentID} control={control} value={value} />}
+{control?.type === "text" && <Text parentID={parentID} control={control} value={value} />}
+{control?.type === "group" && <Group parentID={parentID} control={control} value={value} />}
+{control?.type === "list" && <List parentID={parentID} control={control} value={value} />}

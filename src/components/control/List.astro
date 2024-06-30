@@ -1,27 +1,29 @@
 ---
-const { control, value } = Astro.props;
+const { parentID, control, value } = Astro.props;
 import Control from "./Control.astro";
+let id = parentID ? `${parentID}.${control.id}` : control.id;
 ---
 
-<div class="card">
+<div class="card oneform-list" id={id}>
     <div class="card-body">
         <h5 class="card-title">{control.label}</h5>
         {
             value?.[control.id]?.map((v: any, i: number) => (
                 // @ts-ignore
-                <>
+                <Fragment key={i}>
                     <div class="d-flex align-items-end">
                         <div class="flex-grow-1">
                             <Control
+                                parentID={`${id}.${i}`}
                                 control={control.child}
                                 value={v}
                                 key={i}
                             />
                         </div>
-                        <button class="btn btn-sm btn-danger">Remove</button>
+                        <button class="btn btn-sm btn-danger">🗑️</button>
                     </div>
                     <hr />
-                </>
+                </Fragment>
             ))
         }
     </div>

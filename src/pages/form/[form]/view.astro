@@ -1,6 +1,6 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import { notFound } from "../../../helper";
+import FormScript from "../../../components/editor/FormScript.astro";
 
 const { form: formID } = Astro.params;
 
@@ -23,3 +23,5 @@ const form = formList[0];
         </div>
     </div>
 </Layout>
+
+<FormScript />
