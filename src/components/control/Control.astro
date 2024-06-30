@@ -4,10 +4,14 @@ import Option from "./Option.astro";
 import Text from "./Text.astro";
 import Group from "./Group.astro";
 import List from "./List.astro";
+import Checkbox from "./Checkbox.astro";
+import Hidden from "./Hidden.astro";
 
 const { parentID, control, value } = Astro.props;
 ---
 
+{control?.type === "hidden" && <Hidden parentID={parentID} control={control} value={value} />}
+{control?.type === "checkbox" && <Checkbox parentID={parentID} control={control} value={value} />}
 {control?.type === "number" && <Number parentID={parentID} control={control} value={value} />}
 {control?.type === "option" && <Option parentID={parentID} control={control} value={value} />}
 {control?.type === "text" && <Text parentID={parentID} control={control} value={value} />}

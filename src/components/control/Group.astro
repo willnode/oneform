@@ -12,18 +12,33 @@ if (control.if) {
 {
 	(
 		<fieldset
-			class={
-				(cond ? "d-flex" : "d-none") +
-				" gap-2 oneform-group " +
-				(control.horizontal ? "flex-row" : "flex-column")
-			}
+			class={(cond ? "" : "d-none") + ' oneform-group'}
 			disabled={!cond}
 			data-parent={parentID}
 			data-if={control.if}
 		>
-			{control.children.map((child: any) => (
-				<Control control={child} value={value} key={child.id} parentID={parentID} />
-			))}
+			{control.label && <legend>{control.label}</legend>}
+			<div
+				class={
+					"d-flex gap-2 " +
+					(control.horizontal ? "flex-row" : "flex-column")
+				}
+			>
+				{control.children.map((child: any) => (
+					<Control
+						control={child}
+						value={value}
+						key={child.id}
+						parentID={parentID}
+					/>
+				))}
+			</div>
 		</fieldset>
 	)
 }
+
+<style is:global>
+	fieldset.oneform-group > .flex-row > * {
+		flex-grow: 1;
+	}
+</style>

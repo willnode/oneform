@@ -2770,6 +2770,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"flat@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "flat@npm:6.0.1"
+  bin:
+    flat: cli.js
+  checksum: 10c0/9dc0dbe6e2acc012512a53130d9ba1c82c1a596cdca91b23d11716348361c4a68928409bb4433c4493a17595c3efd0cab9f09e23dd3f9962a58af225c3efc23a
+  languageName: node
+  linkType: hard
+
 "flattie@npm:^1.1.1":
   version: 1.1.1
   resolution: "flattie@npm:1.1.1"
@@ -5199,6 +5208,7 @@ __metadata:
     astro: "npm:^4.11.3"
     auth-astro: "npm:^4.1.2"
     bcrypt: "npm:^5.1.1"
+    flat: "npm:^6.0.1"
     typescript: "npm:^5.5.2"
     ulid: "npm:^2.3.0"
   languageName: unknown

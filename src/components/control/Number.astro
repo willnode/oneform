@@ -1,12 +1,13 @@
 ---
 const { parentID, control, value } = Astro.props;
+let name = parentID ? `${parentID}.${control.id}` : control.id;
 ---
 
 <label>
 	{control.label && <div class="form-label">{control.label}</div>}
 	<input
 		type="number"
-		name={`${parentID}.${control.id}`}
+		name={name}
 		data-parent={parentID}
 		class="form-control"
 		value={value?.[control.id]}

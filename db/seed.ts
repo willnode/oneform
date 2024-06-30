@@ -25,9 +25,7 @@ export default async function seed() {
 				variant: 'single-line',
 				code: 'name',
 				label: 'Name',
-				validations: {
-					'required': true
-				},
+				required: true,
 			}, {
 				id: ulid(),
 				type: 'text',

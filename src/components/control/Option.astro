@@ -1,24 +1,26 @@
 ---
 const { parentID, control, value } = Astro.props;
+let name = parentID ? `${parentID}.${control.id}` : control.id;
 ---
 
 <label>
 	{control.label && <div class="form-label">{control.label}</div>}
-
-	<select
-		class="form-select"
-		name={`${parentID}.${control.id}`}
-		data-parent={parentID}
-	>
-		<option></option>
-		{
-			Array.isArray(control?.values)
-				? control.values.map((x: any) => (
-					  <option selected={x.value === value?.[control.id]}>
-						  {x.value}
-					  </option>
-				  ))
-				: null
-		}
-	</select>
+	{
+		(!control.variant || control.variant === "single-select") && (
+			<select
+				class="form-select"
+				name={name}
+				data-parent={parentID}
+			>
+				{(!value?.[control.id] || !control.required) && <option disabled={control.required} />}
+				{Array.isArray(control?.values)
+					? control.values.map((x: any) => (
+							<option selected={x.value === value?.[control.id]}>
+								{x.value}
+							</option>
+						))
+					: null}
+			</select>
+		)
+	}
 </label>

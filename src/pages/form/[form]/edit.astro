@@ -1,28 +1,34 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import { notFound } from "../../../helper";
-
-const { form: formID } = Astro.params;
-
 import { Form, db, eq } from "astro:db";
 import Control from "../../../components/control/Control.astro";
 import FormScript from "../../../components/editor/FormScript.astro";
+import editorSchema from "../../../components/editor/schema";
+import { asJson } from "../../../helper";
+import { unflatten } from "flat";
+
+const { form: formID } = Astro.params;
 
 const formList = await db.select().from(Form).where(eq(Form.id, formID));
 if (formList.length === 0) {
 	return notFound();
 }
 const form = formList[0];
-import editorSchema from "../../../components/editor/schema";
+if (Astro.request.method === "POST") {
+	const response = await Astro.request.formData();
+	return asJson(unflatten(Object.fromEntries(response)));
+}
 ---
 
 <Layout title="Welcome to Astro.">
-	<div class="container">
+	<div class="container" style="max-width: 800px;">
 		<a class="btn btn-secondary" href="/form">Back</a>
 		<a class="btn btn-primary" href="./view">Preview</a>
-		<div class="my-5">
+		<form id="form" name="form" method="post" class="my-5">
 			<Control control={editorSchema} value={form} />
-		</div>
+			<button class="btn btn-lg btn-primary">Save</button>
+		</form>
 	</div>
 </Layout>
 

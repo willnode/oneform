@@ -23,3 +23,11 @@ export function notFound() {
         status: 404,
     })
 }
+
+export function asJson(data: any) {
+    return new Response(JSON.stringify(data, null, 2), {
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+}

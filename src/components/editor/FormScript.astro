@@ -33,18 +33,101 @@
 					let fn = new Function("value", fnBody);
 					let cond = !!fn(inputData);
 					if (cond) {
-						fel.classList.add("d-flex");
 						fel.classList.remove("d-none");
 						fel.disabled = false;
 					} else {
 						fel.classList.add("d-none");
-						fel.classList.remove("d-flex");
 						fel.disabled = true;
 					}
 				});
 			});
 		});
 	}
+	// @ts-ignore
+	window.deleteItem = function deleteItem(button: HTMLButtonElement) {
+		let item = button.closest(".oneform-list-item");
+		let list = button.closest(".oneform-list");
+		if (!item || !list || item.classList.contains("oneform-list-proto")) {
+			return;
+		}
+		let index = parseInt(item.getAttribute("data-index") || "");
+		if (isNaN(index)) return;
+		item.remove();
+		let parentKey = list.id;
+		let childs = [
+			...list
+				.querySelectorAll(
+					`:scope .oneform-list-item[data-list-parent="${parentKey}"]`,
+				)
+				.values(),
+		];
+		childs.forEach((child) => {
+			let cIndex = parseInt(child.getAttribute("data-index") || "");
+			if (cIndex < index) {
+				return;
+			}
+			child.setAttribute("data-index", cIndex - 1 + "");
+			let findRegex = new RegExp(`^${parentKey}\.${cIndex}`);
+			let replaceTo = parentKey + "." + (cIndex - 1);
+			child
+				.querySelectorAll(`:scope [name^="${parentKey}"]`)
+				.forEach((x) => {
+					x.setAttribute(
+						"name",
+						x.getAttribute("name")?.replace(findRegex, replaceTo) ||
+							"",
+					);
+				});
+			child
+				.querySelectorAll(`:scope [data-parent^="${parentKey}"]`)
+				.forEach((x) => {
+					x.setAttribute(
+						"data-parent",
+						x
+							.getAttribute("data-parent")
+							?.replace(findRegex, replaceTo) || "",
+					);
+				});
+		});
+	};
+	// @ts-ignore
+	window.appendItem = function appendItem(button: HTMLButtonElement) {
+		let list = button.closest(".oneform-list");
+		let parentKey = list?.id;
+		let entry = list?.querySelector(
+			`:scope .oneform-list-entries[data-list-parent="${parentKey}"]`,
+		);
+		let proto = list?.querySelector(
+			`:scope .oneform-list-proto[data-list-parent="${parentKey}"]`,
+		);
+		if (!list || !entry || !proto) return;
+		let len = entry.children.length;
+		let cloned = proto.cloneNode(true) as HTMLElement;
+		entry.append(cloned);
+		cloned.classList.remove("oneform-list-proto");
+		cloned.setAttribute("data-index", len + "");
+		let findRegex = new RegExp(`^${parentKey}\\.\\[\\]`);
+		let replaceTo = parentKey + "." + len;
+		cloned
+			.querySelectorAll(`:scope [name^="${parentKey}"]`)
+			.forEach((x) => {
+				x.setAttribute(
+					"name",
+					x.getAttribute("name")?.replace(findRegex, replaceTo) || "",
+				);
+			});
+		cloned
+			.querySelectorAll(`:scope [data-parent^="${parentKey}"]`)
+			.forEach((x) => {
+				x.setAttribute(
+					"data-parent",
+					x
+						.getAttribute("data-parent")
+						?.replace(findRegex, replaceTo) || "",
+				);
+			});
+		cloned.querySelectorAll(`:scope .oneform-group`).forEach(handleGroup);
+	};
 	document.addEventListener("DOMContentLoaded", async function (event) {
 		document.querySelectorAll(".oneform-group").forEach(handleGroup);
 	});

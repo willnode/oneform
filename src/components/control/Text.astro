@@ -1,5 +1,6 @@
 ---
 const { parentID, control, value } = Astro.props;
+let name = parentID ? `${parentID}.${control.id}` : control.id;
 ---
 
 <label>
@@ -9,16 +10,15 @@ const { parentID, control, value } = Astro.props;
 			<textarea
 				class="form-control"
 				data-parent={parentID}
-				name={`${parentID}.${control.id}`}
-			>
-				{value?.[control.id]}
-			</textarea>
+				name={name}
+				set:text={value?.[control.id]}
+			/>
 		) : (
 			<input
 				type={control.variant === "email" ? control.variant : "text"}
 				class="form-control"
 				data-parent={parentID}
-				name={`${parentID}.${control.id}`}
+				name={name}
 				value={value?.[control.id]}
 			/>
 		)
