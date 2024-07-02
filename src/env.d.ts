@@ -5,7 +5,7 @@ declare const Astro: {
     request: Request
     props: any,
     params: any,
-    response: ResponseInit,
+    response: Response,
     cookies: any,
     redirect: any,
     canonicalURL: any,

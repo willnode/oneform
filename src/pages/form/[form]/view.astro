@@ -1,33 +1,56 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import FormScript from "../../../components/editor/FormScript.astro";
-
-const { form: formID } = Astro.params;
-
-import { Form, db, eq } from "astro:db";
 import Group from "../../../components/control/Group.astro";
-import { asJson } from "../../../helper";
-import { unflatten } from "flat";
 
-const formList = await db.select().from(Form).where(eq(Form.id, formID));
+const { form: formId } = Astro.params;
+
+import { Form, Entry, db, eq } from "astro:db";
+import { unflatten } from "flat";
+import { ulid } from "ulid";
+import { notFound } from "../../../helper";
+import { getTeam } from "../../../model";
+
+const formList = await db.select().from(Form).where(eq(Form.id, formId));
 if (formList.length === 0) {
 	return notFound();
 }
+
 const form = formList[0];
+const teamId = await getTeam(Astro.request);
+
+if (!teamId || form.privilenge !== 'public') {
+	return backToLogin();
+}
+
 
 if (Astro.request.method === "POST") {
 	const response = await Astro.request.formData();
-	return asJson(unflatten(Object.fromEntries(response)));
+	const data: any = unflatten(Object.fromEntries(response));
+	const id = ulid();
+	await db.insert(Entry).values({
+		formId,
+		data,
+		id,
+	});
+
+	return new Response("", {
+		status: 302,
+		headers: {
+			location: `/form/${formId}/posted`,
+		},
+	});
 }
 ---
 
-<Layout title="Welcome to Astro.">
-	<div class="container" style="max-width: 800px;">
-		<a class="btn btn-warning" href="./edit">Edit</a>
+<Layout title="View Form">
+	<div class="container my-5" style="max-width: 800px;">
+		<a class="btn btn-primary" href="./edit">Back to Edit</a>
+		<a class="btn btn-warning" href="./entries">Entries</a>
 		<form id="form" name="form" method="post" class="my-5">
 			<h1 class="display-4">{form.title}</h1>
 			<Group control={{ children: form.schema }} />
-			<button class="btn btn-lg btn-primary">Save</button>
+			<button class="btn btn-lg btn-primary my-3">Save</button>
 		</form>
 	</div>
 </Layout>

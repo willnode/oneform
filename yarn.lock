@@ -1386,6 +1386,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/papaparse@npm:^5":
+  version: 5.3.14
+  resolution: "@types/papaparse@npm:5.3.14"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/feb4d215903b67442feaa9836a6a5771e78dc6a9da24781e399c6f891622fa82245cd783ab2613c5be43e4a2d6a94da52325538e4485af258166864576ecd0d8
+  languageName: node
+  linkType: hard
+
 "@types/unist@npm:*, @types/unist@npm:^3.0.0":
   version: 3.0.2
   resolution: "@types/unist@npm:3.0.2"
@@ -4727,6 +4736,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"papaparse@npm:^5.4.1":
+  version: 5.4.1
+  resolution: "papaparse@npm:5.4.1"
+  checksum: 10c0/201f37c4813453fed5bfb4c01816696b099d2db9ff1e8fb610acc4771fdde91d2a22b6094721edb0fedb21ca3c46f04263f68be4beb3e35b8c72278f0cedc7b7
+  languageName: node
+  linkType: hard
+
 "parse-latin@npm:^7.0.0":
   version: 7.0.0
   resolution: "parse-latin@npm:7.0.0"
@@ -5205,10 +5221,12 @@ __metadata:
     "@auth/core": "npm:^0.32.0"
     "@libsql/client": "npm:^0.7.0"
     "@types/bcrypt": "npm:^5"
+    "@types/papaparse": "npm:^5"
     astro: "npm:^4.11.3"
     auth-astro: "npm:^4.1.2"
     bcrypt: "npm:^5.1.1"
     flat: "npm:^6.0.1"
+    papaparse: "npm:^5.4.1"
     typescript: "npm:^5.5.2"
     ulid: "npm:^2.3.0"
   languageName: unknown

@@ -50,22 +50,33 @@ function control(child: any) {
 						values: [
 							{ value: 'single-line' },
 							{ value: 'multi-line' },
+							{ value: 'numeric' },
+							{ value: 'email' },
+							{ value: 'tel' },
+							{ value: 'url' },
 						]
 					},
 					{
-						id: 'minlength',
-						type: "number",
-						label: "Min Length",
+						type: "group",
+						if: "return value && value.variant !== 'multi-line'",
+						children: [
+							{
+								id: 'pattern',
+								type: "text",
+								label: "Pattern",
+							}
+						]
 					},
 					{
-						id: 'maxlength',
-						type: "number",
-						label: "Max Length",
-					},
-					{
-						id: 'pattern',
-						type: "text",
-						label: "Pattern",
+						type: "group",
+						if: "return value && value.variant === 'multi-line'",
+						children: [
+							{
+								id: 'maxlength',
+								type: "number",
+								label: "Max Length",
+							}
+						]
 					}
 				]
 			},
@@ -95,9 +106,19 @@ function control(child: any) {
 			{
 				type: "group",
 				label: "Select Options",
-				horizontal: true,
 				if: "return value && value.type === 'option'",
 				children: [
+					{
+						type: "option",
+						label: "Variant",
+						id: 'variant',
+						values: [
+							{ value: 'single-select' },
+							{ value: 'multi-select' },
+							{ value: 'radio' },
+							{ value: 'checkbox' },
+						]
+					},
 					{
 						type: "list",
 						label: "Values",
@@ -160,10 +181,28 @@ export default {
 	type: "group",
 	children: [
 		{
-			type: "text",
-			id: "title",
-			label: "Form Title",
-			required: true,
+			type: "group",
+			horizontal: true,
+			children: [
+				{
+					type: "text",
+					id: "title",
+					label: "Form Title",
+					required: true,
+				},
+				{
+					type: "option",
+					id: "privilenge",
+					label: "Access Mode",
+					values: [
+						{ value: 'private' },
+						{ value: 'internal' },
+						{ value: 'open' },
+						{ value: 'public' }
+					],
+					required: true,
+				},
+			],
 		},
 		{
 			type: "list",

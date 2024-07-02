@@ -1,23 +1,25 @@
 ---
 import { db, User, UserAuth } from "astro:db";
-import bcrypt from "bcrypt";
 import { ulid } from "ulid";
+import { encryptPW } from "../helper";
 
 if (Astro.request.method === "POST") {
 	const response = await Astro.request.formData();
 	const uid = ulid();
-	const salt = await bcrypt.genSalt(10);
 	await db.insert(User).values({
 		id: uid,
 		name: response.get("name")?.toString() || "",
 		email: response.get("email")?.toString() || "",
 	});
 
+	const identifier = await encryptPW(
+		response.get("password")?.toString() || "",
+	);
 	await db
 		.insert(UserAuth)
 		.values({
 			id: ulid(),
-			identifier: await bcrypt.hash(response.get("password") || "", salt),
+			identifier,
 			type: "email",
 			userId: uid,
 		})
@@ -35,7 +37,7 @@ if (Astro.request.method === "POST") {
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Login Page</title>
+	<title>Register Page</title>
 	<link
 		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 		rel="stylesheet"

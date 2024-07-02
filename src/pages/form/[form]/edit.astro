@@ -1,30 +1,56 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import { notFound } from "../../../helper";
-import { Form, db, eq } from "astro:db";
+import { Form, db, eq, and } from "astro:db";
 import Control from "../../../components/control/Control.astro";
 import FormScript from "../../../components/editor/FormScript.astro";
 import editorSchema from "../../../components/editor/schema";
-import { asJson } from "../../../helper";
 import { unflatten } from "flat";
+import { getTeam } from "../../../model";
 
-const { form: formID } = Astro.params;
+const { form: formId } = Astro.params;
 
-const formList = await db.select().from(Form).where(eq(Form.id, formID));
+const teamId = await getTeam(Astro.request);
+if (!teamId) {
+	return backToLogin();
+}
+
+const formList = await db
+	.select()
+	.from(Form)
+	.where(and(eq(Form.id, formId), eq(Form.teamId, teamId)));
+	
 if (formList.length === 0) {
 	return notFound();
 }
 const form = formList[0];
+
 if (Astro.request.method === "POST") {
 	const response = await Astro.request.formData();
-	return asJson(unflatten(Object.fromEntries(response)));
+	const values: any = unflatten(Object.fromEntries(response));
+	delete values.id;
+	delete values.teamId;
+	await db
+		.update(Form)
+		.set({
+			...values,
+		})
+		.where(eq(Form.id, form.id));
+
+	return new Response("", {
+		status: 302,
+		headers: {
+			location: `/form/${form.id}/edit`,
+		},
+	});
 }
 ---
 
-<Layout title="Welcome to Astro.">
-	<div class="container" style="max-width: 800px;">
+<Layout title="Edit Form.">
+	<div class="container my-5" style="max-width: 800px;">
 		<a class="btn btn-secondary" href="/form">Back</a>
 		<a class="btn btn-primary" href="./view">Preview</a>
+		<a class="btn btn-warning" href="./entries">Entries</a>
 		<form id="form" name="form" method="post" class="my-5">
 			<Control control={editorSchema} value={form} />
 			<button class="btn btn-lg btn-primary">Save</button>

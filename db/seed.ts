@@ -43,7 +43,7 @@ export default async function seed() {
 			}, {
 				id: ulid(),
 				type: 'option',
-				variant: 'single-select',
+				variant: 'radio',
 				valueType: 'constant',
 				values: [{ value: 'meat' }, { value: 'vegan' }],
 				code: 'food-type',

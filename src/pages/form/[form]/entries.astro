@@ -1,0 +1,54 @@
+---
+import { Form, Entry, db, eq, and } from "astro:db";
+import Layout from "../../../layouts/Layout.astro";
+import { getTeam } from "../../../model";
+import { backToLogin, notFound } from "../../../helper";
+const team = await getTeam(Astro.request);
+if (!team) {
+    return backToLogin();
+}
+
+const { form: formId } = Astro.params;
+
+const teamId = await getTeam(Astro.request);
+if (!teamId) {
+    return backToLogin();
+}
+
+const formList = await db
+    .select()
+    .from(Form)
+    .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)));
+if (formList.length === 0) {
+    return notFound();
+}
+
+const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
+---
+
+<Layout title="Entries.">
+    <div class="container my-5" style="max-width: 800px;">
+        <a class="btn btn-secondary" href="/form">Back</a>
+        <a class="btn btn-primary" href="./view">Preview</a>
+        <a class="btn btn-warning" href="./entries">Entries</a>
+        <div class="container my-5">
+            <div class="my-3">
+                <a class="btn btn-success" href="./export/csv" download
+                    >Download CSV</a
+                >
+            </div>
+            <div class="list-group">
+                {
+                    entryList.map((entry) => (
+                        <a
+                            href={`/entry/${entry.id}/view`}
+                            class="list-group-item list-group-item-action"
+                        >
+                            {entry.created}
+                        </a>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</Layout>

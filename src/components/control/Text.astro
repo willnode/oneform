@@ -1,6 +1,20 @@
 ---
 const { parentID, control, value } = Astro.props;
 let name = parentID ? `${parentID}.${control.id}` : control.id;
+const variantMap = {
+	numeric: "text",
+	email: "email",
+	tel: "tel",
+	url: "url",
+	"single-line": "text",
+};
+const inputModeMap = {
+	numeric: "numeric",
+	email: "email",
+	tel: "tel",
+	url: "url",
+	"single-line": "text",
+};
 ---
 
 <label>
@@ -12,12 +26,20 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 				data-parent={parentID}
 				name={name}
 				placeholder={control.placeholder}
+				maxlength={control.maxlength}
 				required={!!control.required}
 				set:text={value?.[control.id]}
 			/>
 		) : (
 			<input
-				type={control.variant === "email" ? control.variant : "text"}
+				type={
+					// @ts-ignore
+					variantMap?.[control.variant] || "text"
+				}
+				inputmode={
+					// @ts-ignore
+					inputModeMap?.[control.variant] || "text"
+				}
 				class="form-control"
 				data-parent={parentID}
 				placeholder={control.placeholder}
