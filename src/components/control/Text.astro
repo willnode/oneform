@@ -11,6 +11,8 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 				class="form-control"
 				data-parent={parentID}
 				name={name}
+				placeholder={control.placeholder}
+				required={!!control.required}
 				set:text={value?.[control.id]}
 			/>
 		) : (
@@ -18,7 +20,9 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 				type={control.variant === "email" ? control.variant : "text"}
 				class="form-control"
 				data-parent={parentID}
+				placeholder={control.placeholder}
 				name={name}
+				required={!!control.required}
 				value={value?.[control.id]}
 			/>
 		)

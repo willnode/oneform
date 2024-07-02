@@ -12,7 +12,10 @@ const formList = await db.select().from(Form).where(eq(Form.teamId, team));
 
 <Layout title="Welcome to Astro.">
 	<div class="container my-5">
-		<h1>Form List</h1>
+		<h1>
+			Form List
+			<a href="/form/new" class="float-end btn btn-success"> New</a>
+		</h1>
 		<div class="list-group">
 			{
 				formList.map((form) => (

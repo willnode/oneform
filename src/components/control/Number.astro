@@ -11,5 +11,6 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 		data-parent={parentID}
 		class="form-control"
 		value={value?.[control.id]}
+		required={!!control.required}
 	/>
 </label>

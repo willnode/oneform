@@ -10,6 +10,7 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 			<select
 				class="form-select"
 				name={name}
+				required={!!control.required}
 				data-parent={parentID}
 			>
 				{(!value?.[control.id] || !control.required) && <option disabled={control.required} />}

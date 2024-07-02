@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Control from "../../components/control/Control.astro";
+import FormScript from "../../components/editor/FormScript.astro";
+import editorSchema from "../../components/editor/schema";
+import { asJson } from "../../helper";
+import { unflatten } from "flat";
+
+if (Astro.request.method === "POST") {
+	const response = await Astro.request.formData();
+	return asJson(unflatten(Object.fromEntries(response)));
+}
+---
+
+<Layout title="Welcome to Astro.">
+	<div class="container" style="max-width: 800px;">
+		<a class="btn btn-secondary" href="/form">Back</a>
+		<form id="form" name="form" method="post" class="my-5">
+			<Control control={editorSchema} value={[]} />
+			<button class="btn btn-lg btn-primary">Create</button>
+		</form>
+	</div>
+</Layout>
+
+<FormScript />

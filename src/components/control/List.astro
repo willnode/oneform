@@ -14,12 +14,13 @@ let id = parentID ? `${parentID}.${control.id}` : control.id;
 				onclick="appendItem(this)">Add</button
 			>
 		</h5>
+		<hr />
 		<fieldset disabled class="d-none">
 			<div
 				class="oneform-list-item oneform-list-proto"
 				data-list-parent={id}
 			>
-				<div class="d-flex align-items-end">
+				<div class="d-flex align-items-center">
 					<div class="flex-grow-1">
 						<Control
 							parentID={`${id}.[]`}
@@ -27,7 +28,7 @@ let id = parentID ? `${parentID}.${control.id}` : control.id;
 							value={{}}
 						/>
 					</div>
-					<div class="d-flex flex-column">
+					<div class="ms-2 d-flex flex-column">
 						<button
 							type="button"
 							onclick="deleteItem(this)"
@@ -46,7 +47,7 @@ let id = parentID ? `${parentID}.${control.id}` : control.id;
 						data-index={i}
 						class="oneform-list-item"
 					>
-						<div class="d-flex align-items-end">
+						<div class="d-flex align-items-center">
 							<div class="flex-grow-1">
 								<Control
 									parentID={`${id}.${i}`}
@@ -54,7 +55,7 @@ let id = parentID ? `${parentID}.${control.id}` : control.id;
 									value={v}
 								/>
 							</div>
-							<div class="d-flex flex-column">
+							<div class="ms-2 d-flex flex-column">
 								<button
 									type="button"
 									onclick="deleteItem(this)"

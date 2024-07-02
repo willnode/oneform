@@ -57,7 +57,7 @@
 		let childs = [
 			...list
 				.querySelectorAll(
-					`:scope .oneform-list-item[data-list-parent="${parentKey}"]`,
+					`:scope .oneform-list-item:not(.oneform-list-proto)[data-list-parent="${parentKey}"]`,
 				)
 				.values(),
 		];
@@ -69,25 +69,18 @@
 			child.setAttribute("data-index", cIndex - 1 + "");
 			let findRegex = new RegExp(`^${parentKey}\.${cIndex}`);
 			let replaceTo = parentKey + "." + (cIndex - 1);
-			child
-				.querySelectorAll(`:scope [name^="${parentKey}"]`)
-				.forEach((x) => {
-					x.setAttribute(
-						"name",
-						x.getAttribute("name")?.replace(findRegex, replaceTo) ||
-							"",
-					);
+
+			let parameters = ["name", "id", "data-parent", "data-list-parent"];
+			for (const param of parameters) {
+				let items = child.querySelectorAll(
+					`:scope [${param}^="${parentKey}"]`,
+				);
+				items.forEach((item) => {
+					let value = item.getAttribute(param) || "";
+					value = value.replace(findRegex, replaceTo);
+					item.setAttribute(param, value);
 				});
-			child
-				.querySelectorAll(`:scope [data-parent^="${parentKey}"]`)
-				.forEach((x) => {
-					x.setAttribute(
-						"data-parent",
-						x
-							.getAttribute("data-parent")
-							?.replace(findRegex, replaceTo) || "",
-					);
-				});
+			}
 		});
 	};
 	// @ts-ignore
@@ -108,24 +101,17 @@
 		cloned.setAttribute("data-index", len + "");
 		let findRegex = new RegExp(`^${parentKey}\\.\\[\\]`);
 		let replaceTo = parentKey + "." + len;
-		cloned
-			.querySelectorAll(`:scope [name^="${parentKey}"]`)
-			.forEach((x) => {
-				x.setAttribute(
-					"name",
-					x.getAttribute("name")?.replace(findRegex, replaceTo) || "",
-				);
+		let parameters = ["name", "id", "data-parent", "data-list-parent"];
+		for (const param of parameters) {
+			let items = cloned.querySelectorAll(
+				`:scope [${param}^="${parentKey}"]`,
+			);
+			items.forEach((item) => {
+				let value = item.getAttribute(param) || "";
+				value = value.replace(findRegex, replaceTo);
+				item.setAttribute(param, value);
 			});
-		cloned
-			.querySelectorAll(`:scope [data-parent^="${parentKey}"]`)
-			.forEach((x) => {
-				x.setAttribute(
-					"data-parent",
-					x
-						.getAttribute("data-parent")
-						?.replace(findRegex, replaceTo) || "",
-				);
-			});
+		}
 		cloned.querySelectorAll(`:scope .oneform-group`).forEach(handleGroup);
 	};
 	document.addEventListener("DOMContentLoaded", async function (event) {
