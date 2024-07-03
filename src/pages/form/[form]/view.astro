@@ -20,14 +20,14 @@ if (formList.length === 0) {
 }
 
 const form = formList[0];
-const teamId = await getTeam(Astro.request);
+// const teamId = await getTeam(Astro.request);
 
-if (!teamId || form.privilenge !== "public") {
+if (form.privilenge !== "public") {
 	return backToLogin();
 }
 
 if (Astro.request.method === "POST") {
-	const data: any = await handleFormUpload(Astro.request, formId, teamId);
+	const data: any = await handleFormUpload(Astro.request, formId, form.teamId);
 	const id = ulid();
 	await db.insert(Entry).values({
 		formId,
