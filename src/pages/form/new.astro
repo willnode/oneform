@@ -7,6 +7,7 @@ import { unflatten } from "flat";
 import { db, Form } from "astro:db";
 import { getTeam } from "../../model";
 import { ulid } from "ulid";
+import { backToLogin } from "../../helper";
 
 const team = await getTeam(Astro.request);
 if (!team) {

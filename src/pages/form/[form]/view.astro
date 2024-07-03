@@ -7,7 +7,7 @@ const { form: formId } = Astro.params;
 
 import { Form, Entry, db, eq } from "astro:db";
 import { ulid } from "ulid";
-import { notFound } from "../../../helper";
+import { backToLogin, notFound } from "../../../helper";
 import { getTeam, handleFormUpload } from "../../../model";
 
 if (!formId) {
