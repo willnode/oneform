@@ -16,9 +16,9 @@
     "@auth/core": "^0.32.0",
     "@libsql/client": "^0.7.0",
     "astro": "^4.11.3",
-    "auth-astro": "^4.1.2",
     "bcrypt": "^5.1.1",
     "flat": "^6.0.1",
+    "jsonwebtoken": "^9.0.2",
     "papaparse": "^5.4.1",
     "typescript": "^5.5.2",
     "ulid": "^2.3.0"
@@ -26,6 +26,7 @@
   "packageManager": "yarn@4.3.1",
   "devDependencies": {
     "@types/bcrypt": "^5",
+    "@types/jsonwebtoken": "^9",
     "@types/papaparse": "^5"
   }
 }

@@ -3,6 +3,7 @@ import { db, User, UserAuth } from "astro:db";
 import { ulid } from "ulid";
 import { encryptPW } from "../helper";
 import Layout from "../layouts/Layout.astro";
+import { Team } from "astro:db";
 
 if (Astro.request.method === "POST") {
 	const response = await Astro.request.formData();
@@ -16,15 +17,17 @@ if (Astro.request.method === "POST") {
 	const identifier = await encryptPW(
 		response.get("password")?.toString() || "",
 	);
-	await db
-		.insert(UserAuth)
-		.values({
-			id: ulid(),
-			identifier,
-			type: "email",
-			userId: uid,
-		})
-		.returning();
+	await db.insert(UserAuth).values({
+		id: ulid(),
+		identifier,
+		type: "email",
+		userId: uid,
+	});
+
+	await db.insert(Team).values({
+		id: ulid(),
+		userId: uid,
+	});
 
 	return new Response("", {
 		status: 302,

@@ -1,23 +1,38 @@
 import { Team, File as FileDB, db, eq } from "astro:db";
-import { getSession } from "auth-astro/server";
 import { unflatten } from "flat";
 import path from "node:path";
 import fsp from "node:fs/promises";
 import fs from "node:fs";
 import { ulid } from "ulid";
+import jwt from 'jsonwebtoken';
 
+function getSession(req: Request): any | null {
+    let token = Object.fromEntries(req.headers)
+        .cookie?.split(";")
+        .find((x) => x.trim().startsWith("jwt="));
+    if (token) {
+        token = token.split("=", 2)[1].trimEnd();
+        let j = jwt.verify(token, "secret");
+        if (j) {
+            return j;
+        }
+    }
+    return null;
+
+}
 export async function getTeam(req: Request) {
     try {
-        const session = await getSession(req);
-        if (!session?.user?.id) {
+        const session = getSession(req);
+        if (!session?.user) {
             return null;
         }
-        let q = await db.select().from(Team).where(eq(Team.userId, session.user.id));
+        let q = await db.select().from(Team).where(eq(Team.userId, session.user));
         if (q.length == 0) {
             return null;
         }
         return q[0].id;
     } catch (error) {
+        console.error(error);
         return null;
     }
 }
