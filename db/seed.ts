@@ -4,9 +4,10 @@ import { encryptPW } from '../src/helper';
 
 // https://astro.build/db/seed
 export default async function seed() {
-	let uid = "01J1JEY8ZJHYHBYYBHAVBEDMRS"; // avoid relogin on reseed
-	let tid = ulid();
-	let fid = ulid();
+	// avoid relogin on reseed
+	let uid = "01J1JEY8ZJHYHBYYBHAVBEDMRS";
+	let tid = "01J1V1RJ2ZWKRX3MEYA7RB6YSQ";
+	let fid = "01J1V1S83HZG78JWD31K2BT9ZB";
 	await db.insert(User).values([
 		{ id: uid, email: 'user@user', name: 'Test W' },
 	]);
@@ -48,6 +49,11 @@ export default async function seed() {
 				values: [{ value: 'meat' }, { value: 'vegan' }],
 				code: 'food-type',
 				label: 'Food Type',
+			}, {
+				id: ulid(),
+				type: 'file',
+				accept: 'image',
+				multiple: true,
 			}
 		];
 	await db.insert(Form).values([{

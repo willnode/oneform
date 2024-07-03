@@ -7,6 +7,7 @@ import List from "./List.astro";
 import Checkbox from "./Checkbox.astro";
 import Hidden from "./Hidden.astro";
 import Time from "./Time.astro";
+import File from "./File.astro";
 
 const { parentID, control, value } = Astro.props;
 ---
@@ -17,5 +18,6 @@ const { parentID, control, value } = Astro.props;
 {control?.type === "number" && <Number parentID={parentID} control={control} value={value} />}
 {control?.type === "option" && <Option parentID={parentID} control={control} value={value} />}
 {control?.type === "text" && <Text parentID={parentID} control={control} value={value} />}
+{control?.type === "file" && <File parentID={parentID} control={control} value={value} />}
 {control?.type === "group" && <Group parentID={parentID} control={control} value={value} />}
 {control?.type === "list" && <List parentID={parentID} control={control} value={value} />}

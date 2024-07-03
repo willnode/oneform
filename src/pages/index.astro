@@ -1,18 +1,55 @@
 ---
-import { Team, Form, db, eq } from "astro:db";
 import Layout from "../layouts/Layout.astro";
 import { getTeam } from "../model";
-import { backToLogin } from "../helper";
 const team = await getTeam(Astro.request);
-if (!team) {
-	return backToLogin();
-}
-const formList = await db.select().from(Form).where(eq(Form.teamId, team));
 ---
 
 <Layout title="Welcome to Astro.">
-	<div class="container">
-		<a href="/login">Logout</a>
-		<a href="/form">Form List</a>
+	<div class="container my-5 text-center" style="max-width: 800px;">
+		<div class="navbar gap-3">
+			<span class="flex-grow-1"></span>
+			{!team && <a href="/login">Login</a>}
+			{team && <button class="btn btn-link" onclick="window.logOut()">Logout</button>}
+			{team && <a href="/form">Form List</a>}
+			<span class="flex-grow-1"></span>
+		</div>
+
+		<h1 class="my-5">One Form rules them all</h1>
+		<div class="row">
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h2>Nested Form</h2>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h2>API Hooks</h2>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-body">
+						<h2>Export as CSV</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="my-5">
+			{!team && <a href="/register" class="btn btn-primary btn-lg">Get Started For Free</a>}
+		</div>
 	</div>
+
+	<script>
+		// @ts-ignore
+		window.logOut = async function () {
+			const { signIn, signOut } = await import("auth-astro/client");
+			signOut({
+				redirect: true,
+			})
+		}
+	</script>
 </Layout>

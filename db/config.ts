@@ -83,11 +83,12 @@ const File = defineTable({
       optional: true,
     }),
     teamId: column.text({
-      references: () => User.columns.id,
+      references: () => Team.columns.id,
     }),
     size: column.number(),
     type: column.text(),
-    values: column.json(),
+    name: column.text(),
+    path: column.text(),
     created: column.date({
       default: NOW,
     }),

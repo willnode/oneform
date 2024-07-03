@@ -20,6 +20,7 @@ function control(child: any) {
 							{ value: 'checkbox' },
 							{ value: 'option' },
 							{ value: 'time' },
+							{ value: 'file' },
 							child ? { value: 'group' } : null,
 							child ? { value: 'list' } : null,
 						].filter(x => x),
@@ -147,6 +148,36 @@ function control(child: any) {
 							{ value: 'week' },
 						],
 						required: true,
+					}
+				]
+			},
+			{
+				type: "group",
+				label: "File Options",
+				horizontal: true,
+				if: "return value && value.type === 'file'",
+				children: [
+					{
+						type: "option",
+						id: "accept",
+						values: [
+							{ "value": "all" },
+							{ "value": "audio" },
+							{ "value": "video" },
+							{ "value": "image" },
+							{ "value": "pdf" },
+							{ "value": "zip" },
+							{ "value": "text" },
+							{ "value": "word" },
+							{ "value": "sheet" },
+							{ "value": "slides" }
+						],
+						required: true,
+					},
+					{
+						type: 'checkbox',
+						id: 'multiple',
+						label: 'Multiple files',
 					}
 				]
 			},

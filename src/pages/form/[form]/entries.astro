@@ -15,6 +15,10 @@ if (!teamId) {
     return backToLogin();
 }
 
+if (!formId) {
+	return notFound();
+}
+
 const formList = await db
     .select()
     .from(Form)

@@ -9,6 +9,15 @@ export async function checkPW(pw: string, hash: string) {
     return await bcrypt.compare(pw, hash);
 }
 
+export function backTo(location: string) {
+    return new Response(null, {
+        status: 302,
+        headers: {
+            location,
+        }
+    })
+}
+
 export function backToLogin() {
     return new Response(null, {
         status: 302,

@@ -6,10 +6,13 @@ import Group from "../../../components/control/Group.astro";
 const { form: formId } = Astro.params;
 
 import { Form, Entry, db, eq } from "astro:db";
-import { unflatten } from "flat";
 import { ulid } from "ulid";
 import { notFound } from "../../../helper";
-import { getTeam } from "../../../model";
+import { getTeam, handleFormUpload } from "../../../model";
+
+if (!formId) {
+	return notFound();
+}
 
 const formList = await db.select().from(Form).where(eq(Form.id, formId));
 if (formList.length === 0) {
@@ -19,14 +22,12 @@ if (formList.length === 0) {
 const form = formList[0];
 const teamId = await getTeam(Astro.request);
 
-if (!teamId || form.privilenge !== 'public') {
+if (!teamId || form.privilenge !== "public") {
 	return backToLogin();
 }
 
-
 if (Astro.request.method === "POST") {
-	const response = await Astro.request.formData();
-	const data: any = unflatten(Object.fromEntries(response));
+	const data: any = await handleFormUpload(Astro.request, formId, teamId);
 	const id = ulid();
 	await db.insert(Entry).values({
 		formId,
@@ -47,7 +48,7 @@ if (Astro.request.method === "POST") {
 	<div class="container my-5" style="max-width: 800px;">
 		<a class="btn btn-primary" href="./edit">Back to Edit</a>
 		<a class="btn btn-warning" href="./entries">Entries</a>
-		<form id="form" name="form" method="post" class="my-5">
+		<form id="form" name="form" enctype="multipart/form-data" method="post" class="my-5">
 			<h1 class="display-4">{form.title}</h1>
 			<Group control={{ children: form.schema }} />
 			<button class="btn btn-lg btn-primary my-3">Save</button>

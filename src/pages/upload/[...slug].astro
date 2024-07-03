@@ -1,0 +1,34 @@
+---
+import { notFound } from "../../helper";
+import { File, db, eq } from "astro:db";
+import fs from "node:fs/promises";
+import { backTo } from "../../helper";
+
+const { slug } = Astro.params;
+const parts = (slug + "").split("/");
+if (Astro.request.method !== "GET" || parts.length < 2 || parts[0] != "file") {
+    return notFound();
+}
+
+const fileList = await db.select().from(File).where(eq(File.id, parts[1]));
+if (fileList.length === 0) {
+    return notFound();
+}
+const file = fileList[0];
+
+if (parts.length === 2) {
+    return backTo(`/upload/file/${parts[1]}/${file.name}`);
+}
+
+Astro.response.headers.append("Content-Type", file.type);
+Astro.response.headers.append("Content-Length", file.size + "");
+
+let fileb = await fs.readFile(file.path);
+
+return new Response(fileb, {
+    headers: {
+        "Content-Type": file.type,
+        "Content-Length": file.size + "",
+    },
+});
+---

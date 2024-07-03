@@ -4,7 +4,6 @@ import { getTeam } from "../../../../model";
 import { backToLogin } from "../../../../helper";
 import { flatten } from "flat";
 import papaparse from "papaparse";
-import Group from "../../../../components/control/Group.astro";
 const { unparse } = papaparse;
 
 const team = await getTeam(Astro.request);
@@ -17,6 +16,10 @@ const { form: formId } = Astro.params;
 const teamId = await getTeam(Astro.request);
 if (!teamId) {
     return backToLogin();
+}
+
+if (!formId) {
+	return notFound();
 }
 
 const formList = await db

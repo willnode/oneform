@@ -5,12 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "build": "ASTRO_DATABASE_FILE=.astro/sqlite.db astro build",
+    "preview": "ASTRO_DATABASE_FILE=.astro/sqlite.db node dist/server/entry.mjs",
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",

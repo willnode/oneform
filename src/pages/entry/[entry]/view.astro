@@ -6,11 +6,15 @@ const { entry: entryID } = Astro.params;
 
 import { Form, Entry, db, eq } from "astro:db";
 import Group from "../../../components/control/Group.astro";
+import { notFound } from "../../../helper";
 
+if (!entryID) {
+	return notFound();
+}
 
 const entryList = await db.select().from(Entry).where(eq(Entry.id, entryID));
 if (entryList.length === 0) {
-    return notFound();
+	return notFound();
 }
 const entry = entryList[0];
 
@@ -20,15 +24,18 @@ if (formList.length === 0) {
 }
 
 const form = formList[0];
-
 ---
 
 <Layout title="View Form">
 	<div class="container my-5" style="max-width: 800px;">
-		<a class="btn btn-warning" href=`/form/${form.id}/entries`>Back to Entries</a>
+		<a class="btn btn-warning" href=`/form/${form.id}/entries`
+			>Back to Entries</a
+		>
 		<form id="form" class="my-5">
 			<h1 class="display-4">{form.title}</h1>
-			<Group control={{ children: form.schema }} value={entry.data} />
+			<fieldset disabled>
+				<Group control={{ children: form.schema }} value={entry.data} />
+			</fieldset>
 		</form>
 	</div>
 </Layout>
