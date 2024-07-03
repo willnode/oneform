@@ -4,6 +4,7 @@ import { defineConfig } from 'auth-astro';
 import { compare } from 'bcrypt';
 
 export default defineConfig({
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
