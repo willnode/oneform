@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export async function encryptPW(pw: string) {
   const salt = await bcrypt.genSalt(10);
