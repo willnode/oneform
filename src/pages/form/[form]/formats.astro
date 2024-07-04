@@ -1,8 +1,8 @@
 ---
-import { Form, View, db, eq, and } from "astro:db";
+import { Form, Format, db, eq, and } from "astro:db";
 import Layout from "../../../layouts/Layout.astro";
 import { getTeam } from "../../../model";
-import { backToLogin, notFound } from "../../../helper";
+import { backTo, backToLogin, notFound } from "../../../helper";
 import { desc } from "astro:db";
 import FormNavbar from "../../../components/editor/FormNavbar.astro";
 import { ulid } from "ulid";
@@ -32,23 +32,24 @@ if (formList.length === 0) {
 }
 
 if (Astro.request.method === "DELETE") {
-  await db.delete(View).where(eq(View.formId, formId));
+  await db.delete(Format).where(eq(Format.formId, formId));
   return "";
 } else if (Astro.request.method === "POST") {
   const data = await Astro.request.formData();
   const id = ulid();
-  await db.insert(View).values({
+  await db.insert(Format).values({
     formId,
     privilenge: formList[0].privilenge,
     schema: {},
     teamId: formList[0].teamId,
-    title: "New View " + data.get("type")?.toString(),
+    title: "Create New Format " + data.get("type")?.toString(),
     type: data.get("type")?.toString() || "",
     id,
   });
+  return backTo(`/view/${id}/edit`);
 }
 
-const ViewList = await db.select().from(View).where(eq(View.formId, formId));
+const formatList = await db.select().from(Format).where(eq(Format.formId, formId));
 ---
 
 <Layout title="Entries.">
@@ -74,12 +75,12 @@ const ViewList = await db.select().from(View).where(eq(View.formId, formId));
       </div>
       <div class="list-group">
         {
-          ViewList.map((View) => (
+          formatList.map((format) => (
             <a
-              href={`/View/${View.id}/view`}
+              href={`/format/${format.id}/edit`}
               class="list-group-item list-group-item-action"
             >
-              {View.created}
+              {format.title} <div class="badge bg-primary">{format.type}</div>
             </a>
           ))
         }

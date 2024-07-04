@@ -72,7 +72,7 @@ const Form = defineTable({
   },
 });
 
-const View = defineTable({
+const Format = defineTable({
   columns: {
     id: column.text({
       primaryKey: true,
@@ -106,6 +106,9 @@ const Hook = defineTable({
     }),
     teamId: column.text({
       references: () => Team.columns.id,
+    }),
+    formatId: column.text({
+      references: () => Format.columns.id,
     }),
     title: column.text(),
     type: column.text(),
@@ -195,5 +198,5 @@ const EntryHook = defineTable({
 
 // https://astro.build/db/config
 export default defineDb({
-  tables: { User, UserAuth, Team, Form, File, Entry, View, Hook, EntryHook },
+  tables: { User, UserAuth, Team, Form, File, Entry, Format, Hook, EntryHook },
 })

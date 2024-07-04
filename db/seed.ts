@@ -1,4 +1,4 @@
-import { User, UserAuth, Team, Form, db, Entry } from "astro:db";
+import { User, UserAuth, Team, Form, db, Entry, Format } from "astro:db";
 import { ulid } from "ulid";
 import { encryptPW } from "../src/helper";
 
@@ -8,6 +8,8 @@ export default async function seed() {
   let uid = "01J1JEY8ZJHYHBYYBHAVBEDMRS";
   let tid = "01J1V1RJ2ZWKRX3MEYA7RB6YSQ";
   let fid = "01J1V1S83HZG78JWD31K2BT9ZB";
+  let eid = "01J1Y4ZZH8ENAMQ5T7ME12V32P";
+  let aid = "01J1Y50PMDYFFX0E5TB4B0YBRG";
   await db
     .insert(User)
     .values([{ id: uid, email: "user@user", name: "Test W" }]);
@@ -75,7 +77,7 @@ export default async function seed() {
   ]);
   await db.insert(Entry).values([
     {
-      id: ulid(),
+      id: eid,
       formId: fid,
       data: {
         [schema[0].id]: "Rogan",
@@ -86,4 +88,15 @@ export default async function seed() {
       authorId: null,
     },
   ]);
+  await db.insert(Format).values([
+    {
+      id: aid,
+      formId: fid,
+      privilenge: "public",
+      schema: {},
+      teamId: tid,
+      title: "New JSON",
+      type: "json",
+    }
+  ])
 }

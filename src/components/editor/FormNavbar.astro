@@ -5,6 +5,10 @@ var page = Astro.url.pathname.split("/").findLast(() => true);
 <div class="d-flex gap-1">
   <a class="btn btn-secondary" href="/form">Back</a>
   <a
+    class:list={["btn btn-outline-primary", { active: page === "edit" }]}
+    href="./edit">Edit</a
+  >
+  <a
     class:list={["btn btn-outline-primary", { active: page === "view" }]}
     href="./view">Preview</a
   >
@@ -13,8 +17,8 @@ var page = Astro.url.pathname.split("/").findLast(() => true);
     href="./entries">Entries</a
   >
   <a
-    class:list={["btn btn-outline-primary", { active: page === "views" }]}
-    href="./views">Views</a
+    class:list={["btn btn-outline-primary", { active: page === "formats" }]}
+    href="./formats">Formats</a
   >
   <a
     class:list={["btn btn-outline-primary", { active: page === "hooks" }]}

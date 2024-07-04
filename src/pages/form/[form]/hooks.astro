@@ -41,7 +41,7 @@ if (Astro.request.method === "DELETE") {
 const hookList = await db.select().from(Hook).where(eq(Hook.formId, formId));
 ---
 
-<Layout title="Entries.">
+<Layout title="Hooks">
   <div class="container my-5" style="max-width: 800px;">
     <FormNavbar />
     <div class="container my-5">
