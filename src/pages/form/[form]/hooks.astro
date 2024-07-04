@@ -1,5 +1,5 @@
 ---
-import { Form, Entry, db, eq, and } from "astro:db";
+import { Form, Hook, db, eq, and } from "astro:db";
 import Layout from "../../../layouts/Layout.astro";
 import { getTeam } from "../../../model";
 import { backToLogin, notFound } from "../../../helper";
@@ -34,11 +34,11 @@ if (formList.length === 0) {
 }
 
 if (Astro.request.method === "DELETE") {
-  await db.delete(Entry).where(eq(Entry.formId, formId));
+  await db.delete(Hook).where(eq(Hook.formId, formId));
   return "";
 }
 
-const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
+const hookList = await db.select().from(Hook).where(eq(Hook.formId, formId));
 ---
 
 <Layout title="Entries.">
@@ -46,23 +46,19 @@ const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
     <FormNavbar />
     <div class="container my-5">
       <div class="my-3">
-        <a class="btn btn-success" href="./export/csv" download>
-          Download CSV
-        </a>
       </div>
       <div class="list-group">
         {
-          entryList.map((entry) => (
+          hookList.map((hook) => (
             <a
-              href={`/entry/${entry.id}/view`}
+              href={`/hook/${hook.id}/view`}
               class="list-group-item list-group-item-action"
             >
-              {entry.created}
+              {hook.title}
             </a>
           ))
         }
       </div>
     </div>
   </div>
-</div>
-</Layout >
+</Layout>

@@ -7,6 +7,7 @@ import FormScript from "../../../components/editor/FormScript.astro";
 import editorSchema from "../../../components/editor/schema";
 import { unflatten } from "flat";
 import { getTeam } from "../../../model";
+import FormNavbar from "../../../components/editor/FormNavbar.astro";
 
 const { form: formId } = Astro.params;
 
@@ -52,9 +53,7 @@ if (Astro.request.method === "POST") {
 
 <Layout title="Edit Form.">
   <div class="container my-5" style="max-width: 800px;">
-    <a class="btn btn-secondary" href="/form">Back</a>
-    <a class="btn btn-primary" href="./view">Preview</a>
-    <a class="btn btn-warning" href="./entries">Entries</a>
+    <FormNavbar />
     <form id="form" name="form" method="post" class="my-5">
       <Control control={editorSchema} value={form} />
       <button class="btn btn-lg btn-primary">Save</button>

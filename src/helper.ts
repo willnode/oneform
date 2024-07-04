@@ -40,3 +40,20 @@ export function asJson(data: any) {
     },
   });
 }
+
+export function extractFormData(data: FormData) {
+  const entries: Record<string, FormDataEntryValue | FormDataEntryValue[]> = {};
+  for (const [key, value] of data.entries()) {
+    const existing = entries[key];
+    if (existing) {
+      if (Array.isArray(existing)) {
+        existing.push(value);
+      } else {
+        entries[key] = [existing, value];
+      }
+    } else {
+      entries[key] = value;
+    }
+  }
+  return entries;
+}

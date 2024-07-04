@@ -1,0 +1,89 @@
+---
+import { Form, View, db, eq, and } from "astro:db";
+import Layout from "../../../layouts/Layout.astro";
+import { getTeam } from "../../../model";
+import { backToLogin, notFound } from "../../../helper";
+import { desc } from "astro:db";
+import FormNavbar from "../../../components/editor/FormNavbar.astro";
+import { ulid } from "ulid";
+const team = await getTeam(Astro.request);
+if (!team) {
+  return backToLogin();
+}
+
+const { form: formId } = Astro.params;
+
+const teamId = await getTeam(Astro.request);
+if (!teamId) {
+  return backToLogin();
+}
+
+if (!formId) {
+  return notFound();
+}
+
+const formList = await db
+  .select()
+  .from(Form)
+  .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)))
+  .orderBy(desc(Form.id));
+if (formList.length === 0) {
+  return notFound();
+}
+
+if (Astro.request.method === "DELETE") {
+  await db.delete(View).where(eq(View.formId, formId));
+  return "";
+} else if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData();
+  const id = ulid();
+  await db.insert(View).values({
+    formId,
+    privilenge: formList[0].privilenge,
+    schema: {},
+    teamId: formList[0].teamId,
+    title: "New View " + data.get("type")?.toString(),
+    type: data.get("type")?.toString() || "",
+    id,
+  });
+}
+
+const ViewList = await db.select().from(View).where(eq(View.formId, formId));
+---
+
+<Layout title="Entries.">
+  <div class="container my-5" style="max-width: 800px;">
+    <FormNavbar />
+    <div class="container my-5">
+      <div class="my-3">
+        <form method="post">
+          Create New :
+          <button class="btn btn-success" name="type" value="json">
+            JSON
+          </button>
+          <button class="btn btn-success" name="type" value="text">
+            TEXT
+          </button>
+          <button class="btn btn-success" name="type" value="html">
+            HTML
+          </button>
+          <button class="btn btn-success" name="type" value="pdf">
+            PDF
+          </button>
+        </form>
+      </div>
+      <div class="list-group">
+        {
+          ViewList.map((View) => (
+            <a
+              href={`/View/${View.id}/view`}
+              class="list-group-item list-group-item-action"
+            >
+              {View.created}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

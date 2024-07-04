@@ -72,6 +72,53 @@ const Form = defineTable({
   },
 });
 
+const View = defineTable({
+  columns: {
+    id: column.text({
+      primaryKey: true,
+    }),
+    formId: column.text({
+      references: () => Form.columns.id,
+    }),
+    title: column.text(),
+    teamId: column.text({
+      references: () => Team.columns.id,
+    }),
+    type: column.text(),
+    schema: column.json(),
+    privilenge: column.text(),
+    created: column.date({
+      default: NOW,
+    }),
+    modified: column.date({
+      default: NOW,
+    }),
+  },
+})
+
+const Hook = defineTable({
+  columns: {
+    id: column.text({
+      primaryKey: true,
+    }),
+    formId: column.text({
+      references: () => Form.columns.id,
+    }),
+    teamId: column.text({
+      references: () => Team.columns.id,
+    }),
+    title: column.text(),
+    type: column.text(),
+    status: column.text(),
+    created: column.date({
+      default: NOW,
+    }),
+    modified: column.date({
+      default: NOW,
+    }),
+  }
+})
+
 const File = defineTable({
   columns: {
     id: column.text({
@@ -125,7 +172,28 @@ const Entry = defineTable({
   },
 });
 
+const EntryHook = defineTable({
+  columns: {
+    id: column.text({
+      primaryKey: true,
+    }),
+    entryId: column.text({
+      references: () => Form.columns.id,
+    }),
+    hookId: column.text({
+      references: () => Hook.columns.id,
+    }),
+    status: column.text(),
+    created: column.date({
+      default: NOW,
+    }),
+    modified: column.date({
+      default: NOW,
+    })
+  }
+})
+
 // https://astro.build/db/config
 export default defineDb({
-  tables: { User, UserAuth, Team, Form, File, Entry },
-});
+  tables: { User, UserAuth, Team, Form, File, Entry, View, Hook, EntryHook },
+})

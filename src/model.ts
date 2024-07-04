@@ -5,6 +5,7 @@ import fsp from "node:fs/promises";
 import fs from "node:fs";
 import { ulid } from "ulid";
 import jwt from "jsonwebtoken";
+import { extractFormData } from "./helper";
 
 function getSession(req: Request): any | null {
   let token = Object.fromEntries(req.headers)
@@ -42,18 +43,17 @@ export async function handleFormUpload(
   teamId: string,
 ) {
   const data = await request.formData();
-  const entries = Object.fromEntries(data);
+  const entries = extractFormData(data);
   for (const entry of Object.keys(entries)) {
     let v = entries[entry];
     if (v instanceof File) {
-      var dir = ".astro/uploads/";
+      var dir = '.astro/uploads/';
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
 
       var id = ulid();
       var p = path.join(dir, id);
-      const destination = fs.createWriteStream("thumb.png");
       const r = await v.stream().getReader().read();
       if (!r.value) {
         continue;
