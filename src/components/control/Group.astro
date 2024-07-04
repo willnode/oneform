@@ -5,45 +5,38 @@ const { parentID, control, value } = Astro.props;
 let id = [parentID, control?.id].filter((x) => x).join(".");
 let cond = true;
 if (control.if && typeof control.if === "string") {
-	// basic sanitasion
-	control.if = control.if.replace(/[;\n]/g, "");
-	var x = new Function("value", control.if);
-	cond = !!x(value);
+  // basic sanitasion
+  control.if = control.if.replace(/[;\n]/g, "");
+  var x = new Function("value", control.if);
+  cond = !!x(value);
 }
 ---
 
 {
-	(
-		<fieldset
-			class={(cond ? "" : "d-none") + " oneform-group"}
-			disabled={!cond}
-			data-parent={parentID}
-			data-if={control.if}
-		>
-			{control.label && <legend>{control.label}</legend>}
-			<div
-				class={
-					"d-flex gap-2 " +
-					(control.horizontal
-						? "align-items-center flex-row"
-						: "flex-column")
-				}
-			>
-				{control.children.map((child: any) => (
-					<Control
-						control={child}
-						value={value}
-						key={child.id}
-						parentID={id}
-					/>
-				))}
-			</div>
-		</fieldset>
-	)
+  (
+    <fieldset
+      class={(cond ? "" : "d-none") + " oneform-group"}
+      disabled={!cond}
+      data-parent={parentID}
+      data-if={control.if}
+    >
+      {control.label && <legend>{control.label}</legend>}
+      <div
+        class={
+          "d-flex gap-2 " +
+          (control.horizontal ? "align-items-center flex-row" : "flex-column")
+        }
+      >
+        {control.children.map((child: any) => (
+          <Control control={child} value={value} key={child.id} parentID={id} />
+        ))}
+      </div>
+    </fieldset>
+  )
 }
 
 <style is:global>
-	fieldset.oneform-group > .flex-row > * {
-		flex-grow: 1;
-	}
+  fieldset.oneform-group > .flex-row > * {
+    flex-grow: 1;
+  }
 </style>

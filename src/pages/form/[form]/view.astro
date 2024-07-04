@@ -11,49 +11,55 @@ import { backToLogin, notFound } from "../../../helper";
 import { getTeam, handleFormUpload } from "../../../model";
 
 if (!formId) {
-	return notFound();
+  return notFound();
 }
 
 const formList = await db.select().from(Form).where(eq(Form.id, formId));
 if (formList.length === 0) {
-	return notFound();
+  return notFound();
 }
 
 const form = formList[0];
 // const teamId = await getTeam(Astro.request);
 
 if (form.privilenge !== "public") {
-	return backToLogin();
+  return backToLogin();
 }
 
 if (Astro.request.method === "POST") {
-	const data: any = await handleFormUpload(Astro.request, formId, form.teamId);
-	const id = ulid();
-	await db.insert(Entry).values({
-		formId,
-		data,
-		id,
-	});
+  const data: any = await handleFormUpload(Astro.request, formId, form.teamId);
+  const id = ulid();
+  await db.insert(Entry).values({
+    formId,
+    data,
+    id,
+  });
 
-	return new Response("", {
-		status: 302,
-		headers: {
-			location: `/form/${formId}/posted`,
-		},
-	});
+  return new Response("", {
+    status: 302,
+    headers: {
+      location: `/form/${formId}/posted`,
+    },
+  });
 }
 ---
 
 <Layout title="View Form">
-	<div class="container my-5" style="max-width: 800px;">
-		<a class="btn btn-primary" href="./edit">Back to Edit</a>
-		<a class="btn btn-warning" href="./entries">Entries</a>
-		<form id="form" name="form" enctype="multipart/form-data" method="post" class="my-5">
-			<h1 class="display-4">{form.title}</h1>
-			<Group control={{ children: form.schema }} />
-			<button class="btn btn-lg btn-primary my-3">Save</button>
-		</form>
-	</div>
+  <div class="container my-5" style="max-width: 800px;">
+    <a class="btn btn-primary" href="./edit">Back to Edit</a>
+    <a class="btn btn-warning" href="./entries">Entries</a>
+    <form
+      id="form"
+      name="form"
+      enctype="multipart/form-data"
+      method="post"
+      class="my-5"
+    >
+      <h1 class="display-4">{form.title}</h1>
+      <Group control={{ children: form.schema }} />
+      <button class="btn btn-lg btn-primary my-3">Save</button>
+    </form>
+  </div>
 </Layout>
 
 <FormScript />

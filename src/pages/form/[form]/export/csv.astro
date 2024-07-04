@@ -8,68 +8,68 @@ const { unparse } = papaparse;
 
 const team = await getTeam(Astro.request);
 if (!team) {
-    return backToLogin();
+  return backToLogin();
 }
 
 const { form: formId } = Astro.params;
 
 const teamId = await getTeam(Astro.request);
 if (!teamId) {
-    return backToLogin();
+  return backToLogin();
 }
 
 if (!formId) {
-	return notFound();
+  return notFound();
 }
 
 const formList = await db
-    .select()
-    .from(Form)
-    .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)));
+  .select()
+  .from(Form)
+  .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)));
 if (formList.length === 0) {
-    return notFound();
+  return notFound();
 }
 
 const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
 
 function renameKey(data: any, schema: any[]) {
-    let obj: Record<string, any> = {};
-    if (!Array.isArray(schema)) {
-        return obj;
-    }
-    for (const item of schema) {
-        if (item.type === "group") {
-            if (item.id) {
-                if (item.label) {
-                    obj[item.label] = renameKey(data[item.id], item.children);
-                }
-            } else {
-                Object.assign(obj, renameKey(data, item.children));
-            }
-        } else if (item.type === "list") {
-            if (item.id && item.label) {
-                obj[item.label] = renameKey(data[item.id], [item.child]);
-            }
-        } else if (item.label) {
-            obj[item.label] = data[item.id];
-        }
-    }
+  let obj: Record<string, any> = {};
+  if (!Array.isArray(schema)) {
     return obj;
+  }
+  for (const item of schema) {
+    if (item.type === "group") {
+      if (item.id) {
+        if (item.label) {
+          obj[item.label] = renameKey(data[item.id], item.children);
+        }
+      } else {
+        Object.assign(obj, renameKey(data, item.children));
+      }
+    } else if (item.type === "list") {
+      if (item.id && item.label) {
+        obj[item.label] = renameKey(data[item.id], [item.child]);
+      }
+    } else if (item.label) {
+      obj[item.label] = data[item.id];
+    }
+  }
+  return obj;
 }
 
 const entryCSV = [];
 for (const entry of entryList) {
-    entryCSV.push(flatten(renameKey(entry.data, formList[0].schema as any[])));
+  entryCSV.push(flatten(renameKey(entry.data, formList[0].schema as any[])));
 }
 
 return new Response(
-    unparse(entryCSV, {
-        header: true,
-    }),
-    {
-        headers: {
-            "content-type": "text/csv",
-        },
+  unparse(entryCSV, {
+    header: true,
+  }),
+  {
+    headers: {
+      "content-type": "text/csv",
     },
+  },
 );
 ---

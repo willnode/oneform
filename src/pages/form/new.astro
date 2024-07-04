@@ -11,36 +11,36 @@ import { backToLogin } from "../../helper";
 
 const team = await getTeam(Astro.request);
 if (!team) {
-	return backToLogin();
+  return backToLogin();
 }
 
 if (Astro.request.method === "POST") {
-	const response = await Astro.request.formData();
-	const values: any = unflatten(Object.fromEntries(response));
-	const id = ulid();
-	await db.insert(Form).values({
-		...values,
-		id,
-		teamId: team,
-	});
+  const response = await Astro.request.formData();
+  const values: any = unflatten(Object.fromEntries(response));
+  const id = ulid();
+  await db.insert(Form).values({
+    ...values,
+    id,
+    teamId: team,
+  });
 
-	return new Response("", {
-		status: 302,
-		headers: {
-			location: `/form/${id}/edit`,
-		},
-	});
+  return new Response("", {
+    status: 302,
+    headers: {
+      location: `/form/${id}/edit`,
+    },
+  });
 }
 ---
 
 <Layout title="Welcome to Astro.">
-	<div class="container my-5" style="max-width: 800px;">
-		<a class="btn btn-secondary" href="/form">Back</a>
-		<form id="form" name="form" method="post" class="my-5">
-			<Control control={editorSchema} value={{}} />
-			<button class="btn btn-lg btn-primary">Create</button>
-		</form>
-	</div>
+  <div class="container my-5" style="max-width: 800px;">
+    <a class="btn btn-secondary" href="/form">Back</a>
+    <form id="form" name="form" method="post" class="my-5">
+      <Control control={editorSchema} value={{}} />
+      <button class="btn btn-lg btn-primary">Create</button>
+    </form>
+  </div>
 </Layout>
 
 <FormScript />

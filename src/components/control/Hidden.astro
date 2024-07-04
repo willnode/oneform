@@ -4,9 +4,9 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 ---
 
 <input
-    type="hidden"
-    data-parent={parentID}
-    data-hidden-variant={control.variant}
-    name={name}
-    value={value?.[control.id]}
+  type="hidden"
+  data-parent={parentID}
+  data-hidden-variant={control.variant}
+  name={name}
+  value={value?.[control.id]}
 />

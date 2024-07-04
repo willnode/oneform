@@ -2,58 +2,60 @@
 const { parentID, control, value } = Astro.props;
 let name = parentID ? `${parentID}.${control.id}` : control.id;
 const mimes = {
-    all: "*",
-    audio: "audio/mpeg",
-    video: "video/mp4",
-    image: "image/jpeg,image/png",
-    pdf: "application/pdf",
-    zip: "application/zip,application/x-zip",
-    text: "plain/text,application/json,application/csv,application/yaml,application/xml",
-    word: "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    sheet: "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    slides: "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  all: "*",
+  audio: "audio/mpeg",
+  video: "video/mp4",
+  image: "image/jpeg,image/png",
+  pdf: "application/pdf",
+  zip: "application/zip,application/x-zip",
+  text: "plain/text,application/json,application/csv,application/yaml,application/xml",
+  word: "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  sheet:
+    "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  slides:
+    "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.openxmlformats-officedocument.presentationml.presentation",
 };
 ---
 
 <label>
-    {control.label && <div class="form-label">{control.label}</div>}
+  {control.label && <div class="form-label">{control.label}</div>}
+  {
+    // control.accept == "image" && !control.multiline && (
+    //     <img
+    //         src={
+    //             value?.[control.id] ||
+    //             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="
+    //         }
+    //         id={`${name}_thumb`}
+    //         height="100px"
+    //         class="me-2"
+    //     />
+    // )
+  }
+  <div class="d-flex input-group">
     {
-        // control.accept == "image" && !control.multiline && (
-        //     <img
-        //         src={
-        //             value?.[control.id] ||
-        //             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII="
-        //         }
-        //         id={`${name}_thumb`}
-        //         height="100px"
-        //         class="me-2"
-        //     />
-        // )
+      value?.[control.id] && (
+        <a
+          href={`/upload/file/${value?.[control.id]}/`}
+          class="btn btn-success"
+          target="_blank"
+        >
+          Open File
+        </a>
+      )
     }
-    <div class="d-flex input-group">
-        {
-            value?.[control.id] && (
-                <a
-                    href={`/upload/file/${value?.[control.id]}/`}
-                    class="btn btn-success"
-                    target="_blank"
-                >
-                    Open File  
-                </a>
-            )
-        }
-        <input
-            type="file"
-            accept={// @ts-ignore
-            mimes[control.accept] || "*"}
-            class="form-control"
-            data-parent={parentID}
-            placeholder={control.placeholder}
-            multiple={control.multiple}
-            name={name}
-            required={!!control.required}
-            value={}
-            onchange=""
-        />
-    </div>
+    <input
+      type="file"
+      accept={// @ts-ignore
+      mimes[control.accept] || "*"}
+      class="form-control"
+      data-parent={parentID}
+      placeholder={control.placeholder}
+      multiple={control.multiple}
+      name={name}
+      required={!!control.required}
+      value={}
+      onchange=""
+    />
+  </div>
 </label>

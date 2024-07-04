@@ -1,4 +1,4 @@
-import { defineDb, defineTable, column, NOW } from 'astro:db';
+import { defineDb, defineTable, column, NOW } from "astro:db";
 
 const User = defineTable({
   columns: {
@@ -14,9 +14,9 @@ const User = defineTable({
     }),
     modified: column.date({
       default: NOW,
-    })
-  }
-})
+    }),
+  },
+});
 
 const UserAuth = defineTable({
   columns: {
@@ -29,11 +29,13 @@ const UserAuth = defineTable({
     type: column.text(),
     identifier: column.text(),
   },
-  indexes: [{
-    on: ['userId', 'type'],
-    unique: true,
-  }]
-})
+  indexes: [
+    {
+      on: ["userId", "type"],
+      unique: true,
+    },
+  ],
+});
 
 const Team = defineTable({
   columns: {
@@ -47,8 +49,8 @@ const Team = defineTable({
     storageSize: column.number({
       default: 0,
     }),
-  }
-})
+  },
+});
 
 const Form = defineTable({
   columns: {
@@ -67,8 +69,8 @@ const Form = defineTable({
       default: NOW,
     }),
     privilenge: column.text(),
-  }
-})
+  },
+});
 
 const File = defineTable({
   columns: {
@@ -94,9 +96,9 @@ const File = defineTable({
     }),
     modified: column.date({
       default: NOW,
-    })
-  }
-})
+    }),
+  },
+});
 
 const Entry = defineTable({
   columns: {
@@ -119,11 +121,11 @@ const Entry = defineTable({
     }),
     modified: column.date({
       default: NOW,
-    })
-  }
-})
+    }),
+  },
+});
 
 // https://astro.build/db/config
 export default defineDb({
   tables: { User, UserAuth, Team, Form, File, Entry },
-})
+});

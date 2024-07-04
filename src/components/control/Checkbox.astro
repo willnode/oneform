@@ -4,12 +4,12 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 ---
 
 <label>
-    <input
-        type="checkbox"
-        class="form-check-input"
-        data-parent={parentID}
-        name={name}
-        checked={!!value?.[control.id]}
-    />
-    {control.label && <span class="form-check-label">{control.label}</span>}
+  <input
+    type="checkbox"
+    class="form-check-input"
+    data-parent={parentID}
+    name={name}
+    checked={!!value?.[control.id]}
+  />
+  {control.label && <span class="form-check-label">{control.label}</span>}
 </label>

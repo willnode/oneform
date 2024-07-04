@@ -4,16 +4,16 @@ let name = parentID ? `${parentID}.${control.id}` : control.id;
 ---
 
 <label>
-	{control.label && <div class="form-label">{control.label}</div>}
-	<input
-		type="number"
-		name={name}
-		data-parent={parentID}
-		class="form-control"
-		value={value?.[control.id]}
-		required={!!control.required}
-		min={control.min}
-		max={control.max}
-		step={control.step}
-	/>
+  {control.label && <div class="form-label">{control.label}</div>}
+  <input
+    type="number"
+    name={name}
+    data-parent={parentID}
+    class="form-control"
+    value={value?.[control.id]}
+    required={!!control.required}
+    min={control.min}
+    max={control.max}
+    step={control.step}
+  />
 </label>

@@ -12,12 +12,48 @@ import File from "./File.astro";
 const { parentID, control, value } = Astro.props;
 ---
 
-{control?.type === "hidden" && <Hidden parentID={parentID} control={control} value={value} />}
-{control?.type === "checkbox" && <Checkbox parentID={parentID} control={control} value={value} />}
-{control?.type === "time" && <Time parentID={parentID} control={control} value={value} />}
-{control?.type === "number" && <Number parentID={parentID} control={control} value={value} />}
-{control?.type === "option" && <Option parentID={parentID} control={control} value={value} />}
-{control?.type === "text" && <Text parentID={parentID} control={control} value={value} />}
-{control?.type === "file" && <File parentID={parentID} control={control} value={value} />}
-{control?.type === "group" && <Group parentID={parentID} control={control} value={value} />}
-{control?.type === "list" && <List parentID={parentID} control={control} value={value} />}
+{
+  control?.type === "hidden" && (
+    <Hidden parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "checkbox" && (
+    <Checkbox parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "time" && (
+    <Time parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "number" && (
+    <Number parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "option" && (
+    <Option parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "text" && (
+    <Text parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "file" && (
+    <File parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "group" && (
+    <Group parentID={parentID} control={control} value={value} />
+  )
+}
+{
+  control?.type === "list" && (
+    <List parentID={parentID} control={control} value={value} />
+  )
+}
