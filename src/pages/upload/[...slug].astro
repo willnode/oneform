@@ -1,8 +1,8 @@
 ---
-import { notFound } from "../../helper";
+import { notFound } from "@components/helper";
 import { File, db, eq } from "astro:db";
 import fs from "node:fs/promises";
-import { backTo } from "../../helper";
+import { backTo } from "@components/helper";
 
 const { slug } = Astro.params;
 const parts = (slug + "").split("/");

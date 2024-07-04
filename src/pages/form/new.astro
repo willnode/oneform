@@ -5,9 +5,9 @@ import FormScript from "../../components/editor/FormScript.astro";
 import editorSchema from "../../components/editor/schema";
 import { unflatten } from "flat";
 import { db, Form } from "astro:db";
-import { getTeam } from "../../model";
+import { getTeam } from "@components/model";
 import { ulid } from "ulid";
-import { backToLogin } from "../../helper";
+import { backToLogin } from "@components/helper";
 
 const team = await getTeam(Astro.request);
 if (!team) {

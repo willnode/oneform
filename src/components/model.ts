@@ -5,7 +5,7 @@ import fsp from "node:fs/promises";
 import fs from "node:fs";
 import { ulid } from "ulid";
 import jwt from "jsonwebtoken";
-import { extractFormData } from "./helper";
+import { extractFormData } from "../components/helper";
 
 function getSession(req: Request): any | null {
   let token = Object.fromEntries(req.headers)

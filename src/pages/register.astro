@@ -1,8 +1,8 @@
 ---
 import { db, User, UserAuth } from "astro:db";
 import { ulid } from "ulid";
-import { encryptPW } from "../helper";
-import Layout from "../layouts/Layout.astro";
+import { encryptPW } from "@components/helper";
+import Layout from "@layouts/Layout.astro";
 import { Team } from "astro:db";
 
 if (Astro.request.method === "POST") {

@@ -1,12 +1,12 @@
 ---
-import Layout from "../../../layouts/Layout.astro";
-import FormScript from "../../../components/editor/FormScript.astro";
+import Layout from "@layouts/Layout.astro";
+import FormScript from "@components/editor/FormScript.astro";
 
 const { entry: entryID } = Astro.params;
 
 import { Form, Entry, db, eq, Hook } from "astro:db";
-import Group from "../../../components/control/Group.astro";
-import { notFound } from "../../../helper";
+import Group from "@components/control/Group.astro";
+import { notFound } from "@components/helper";
 import { Format } from "astro:db";
 
 if (!entryID) {

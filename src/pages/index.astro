@@ -1,6 +1,6 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { getTeam } from "../model";
+import Layout from "@layouts/Layout.astro";
+import { getTeam } from "@components/model";
 const team = await getTeam(Astro.request);
 ---
 
