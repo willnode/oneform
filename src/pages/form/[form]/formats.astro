@@ -49,7 +49,10 @@ if (Astro.request.method === "DELETE") {
   return backTo(`/view/${id}/edit`);
 }
 
-const formatList = await db.select().from(Format).where(eq(Format.formId, formId));
+const formatList = await db
+  .select()
+  .from(Format)
+  .where(eq(Format.formId, formId));
 ---
 
 <Layout title="Entries.">
@@ -68,9 +71,7 @@ const formatList = await db.select().from(Format).where(eq(Format.formId, formId
           <button class="btn btn-success" name="type" value="html">
             HTML
           </button>
-          <button class="btn btn-success" name="type" value="pdf">
-            PDF
-          </button>
+          <button class="btn btn-success" name="type" value="pdf"> PDF </button>
         </form>
       </div>
       <div class="list-group">
@@ -84,6 +85,10 @@ const formatList = await db.select().from(Format).where(eq(Format.formId, formId
             </a>
           ))
         }
+      </div>
+
+      <div class="alert alert-info my-3">
+        To Use Format, go Entries and open an entry, then click one of the formats.
       </div>
     </div>
   </div>

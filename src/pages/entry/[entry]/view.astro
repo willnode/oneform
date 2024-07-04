@@ -4,9 +4,10 @@ import FormScript from "../../../components/editor/FormScript.astro";
 
 const { entry: entryID } = Astro.params;
 
-import { Form, Entry, db, eq } from "astro:db";
+import { Form, Entry, db, eq, Hook } from "astro:db";
 import Group from "../../../components/control/Group.astro";
 import { notFound } from "../../../helper";
+import { Format } from "astro:db";
 
 if (!entryID) {
   return notFound();
@@ -24,6 +25,10 @@ if (formList.length === 0) {
 }
 
 const form = formList[0];
+const formatList = await db
+  .select()
+  .from(Format)
+  .where(eq(Format.formId, form.id));
 ---
 
 <Layout title="View Form">
@@ -33,6 +38,23 @@ const form = formList[0];
     >
     <form id="form" class="my-5">
       <h1 class="display-4">{form.title}</h1>
+      <div class="alert">
+        Display as new format
+        {
+          formatList.map((x) => (
+            <a
+              href={`/format/${x.id}/entry/${entry.id}/view`}
+              class="btn btn-primary"
+            >
+              {x.title}
+            </a>
+          ))
+        }
+        Or
+        <a href={`/form/${form.id}/formats`} class="btn btn-success">
+          create new format</a
+        >
+      </div>
       <fieldset disabled>
         <Group control={{ children: form.schema }} value={entry.data} />
       </fieldset>

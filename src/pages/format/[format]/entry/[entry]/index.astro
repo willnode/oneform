@@ -1,0 +1,40 @@
+---
+import Layout from "../../../../../layouts/Layout.astro";
+import FormScript from "@components/editor/FormScript.astro";
+
+const { entry: entryID, format: formatId } = Astro.params;
+
+import { Form, Entry, db, eq, Hook } from "astro:db";
+import Group from "../../../../../components/control/Group.astro";
+import { notFound } from "../../../../../helper";
+import { Format } from "astro:db";
+import { generate } from "@components/format/json";
+if (!entryID || !formatId) {
+  return notFound();
+}
+
+const entryList = await db.select().from(Entry).where(eq(Entry.id, entryID));
+if (entryList.length === 0) {
+  return notFound();
+}
+const entry = entryList[0];
+
+const formList = await db.select().from(Form).where(eq(Form.id, entry.formId));
+if (formList.length === 0) {
+  return notFound();
+}
+const form = formList[0];
+
+const formatList = await db
+  .select()
+  .from(Format)
+  .where(eq(Format.id, formatId));
+if (formatList.length === 0) {
+  return notFound();
+}
+const format = formatList[0];
+
+Astro.response.headers.append("content-type", "application/json");
+
+return new Response(generate(form, format, entry), Astro.response);
+---

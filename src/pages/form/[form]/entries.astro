@@ -1,5 +1,5 @@
 ---
-import { Form, Entry, db, eq, and } from "astro:db";
+import { Form, Entry, db, eq, and, Hook } from "astro:db";
 import Layout from "../../../layouts/Layout.astro";
 import { getTeam } from "../../../model";
 import { backToLogin, notFound } from "../../../helper";
@@ -64,5 +64,4 @@ const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
       </div>
     </div>
   </div>
-</div>
-</Layout >
+</Layout>
