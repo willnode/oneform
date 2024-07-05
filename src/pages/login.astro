@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { User, UserAuth, and, db, eq } from "astro:db";
-import { compare } from "bcrypt";
+import compare  from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 let err = null;
@@ -21,7 +21,7 @@ if (Astro.request.method === "POST") {
         and(...[eq(UserAuth.type, "email"), eq(UserAuth.userId, q[0].id)]),
       );
     if (qa.length > 0) {
-      if (await compare(response.password.toString(), qa[0].identifier)) {
+      if (await compare.compare(response.password.toString(), qa[0].identifier)) {
         let token = await new Promise((resolve, reject) => {
           jwt.sign(
             { user: q[0].id, exp: Date.now() / 1000 + 604800 },
