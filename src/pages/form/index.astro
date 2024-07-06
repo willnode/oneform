@@ -14,7 +14,7 @@ const formList = await db.select().from(Form).where(eq(Form.teamId, team));
   <div class="container my-5" style="max-width: 800px;">
     <h1>
       Form List
-      <a href="/form/new" class="float-end btn btn-success"> New</a>
+      <a href="/form/new" class="float-end select-none rounded-lg bg-green-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"> New</a>
     </h1>
     <div class="list-group">
       {

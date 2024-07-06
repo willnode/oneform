@@ -5,7 +5,7 @@ const team = await getTeam(Astro.request);
 ---
 
 <Layout title="Welcome to Astro.">
-  <div class="container my-5 text-center" style="max-width: 800px;">
+  <div class="container my-5 text-center " style="max-width: 800px;">
     <div class="navbar gap-3">
       <span class="flex-grow-1"></span>
       {!team && <a href="/login">Login</a>}
