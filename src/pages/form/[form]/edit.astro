@@ -1,13 +1,13 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import { backToLogin, notFound } from "@components/helper";
+import Layout from "@/layouts/Layout.astro";
+import { backToLogin, notFound } from "@/components/helper";
 import { Form, db, eq, and } from "astro:db";
-import Control from "@components/control/Control.astro";
-import FormScript from "@components/editor/FormScript.astro";
-import editorSchema from "@components/editor/schema";
+import Control from "@/components/control/Control.astro";
+import FormScript from "@/components/editor/FormScript.astro";
+import editorSchema from "@/components/editor/schema";
 import { unflatten } from "flat";
-import { getTeam } from "@components/model";
-import FormNavbar from "@components/editor/FormNavbar.astro";
+import { getTeam } from "@/components/model";
+import FormNavbar from "@/components/editor/FormNavbar.astro";
 
 const { form: formId } = Astro.params;
 

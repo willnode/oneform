@@ -3139,6 +3139,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hono@npm:^4.4.12":
+  version: 4.4.12
+  resolution: "hono@npm:4.4.12"
+  checksum: 10c0/8461839a821599d0cdf4ee92793a999510f61cb46d0e21cd23fb6564be3732fabf005aec66538622091740a4e871dc876c530022030c2a003f98b1fcb8616719
+  languageName: node
+  linkType: hard
+
 "html-escaper@npm:^3.0.3":
   version: 3.0.3
   resolution: "html-escaper@npm:3.0.3"
@@ -5329,6 +5336,7 @@ __metadata:
     astro: "npm:^4.11.3"
     bcryptjs: "npm:^2.4.3"
     flat: "npm:^6.0.1"
+    hono: "npm:^4.4.12"
     jsonwebtoken: "npm:^9.0.2"
     papaparse: "npm:^5.4.1"
     prettier: "npm:^3.3.2"

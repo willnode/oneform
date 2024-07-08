@@ -1,12 +1,12 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import FormScript from "@components/editor/FormScript.astro";
+import Layout from "@/layouts/Layout.astro";
+import FormScript from "@/components/editor/FormScript.astro";
 
 const { format: formatID } = Astro.params;
 
 import { Form, Format, db, eq } from "astro:db";
-import Group from "@components/control/Group.astro";
-import { notFound } from "@components/helper";
+import Group from "@/components/control/Group.astro";
+import { notFound } from "@/components/helper";
 
 if (!formatID) {
   return notFound();

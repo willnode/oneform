@@ -1,15 +1,15 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import FormScript from "@components/editor/FormScript.astro";
-import Group from "@components/control/Group.astro";
+import Layout from "@/layouts/Layout.astro";
+import FormScript from "@/components/editor/FormScript.astro";
+import Group from "@/components/control/Group.astro";
 
 const { form: formId } = Astro.params;
 
 import { Form, Entry, db, eq } from "astro:db";
 import { ulid } from "ulid";
-import { backToLogin, notFound } from "@components/helper";
-import { getTeam, handleFormUpload } from "@components/model";
-import FormNavbar from "@components/editor/FormNavbar.astro";
+import { backToLogin, notFound } from "@/components/helper";
+import { getTeam, handleFormUpload } from "@/components/model";
+import FormNavbar from "@/components/editor/FormNavbar.astro";
 
 if (!formId) {
   return notFound();

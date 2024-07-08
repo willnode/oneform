@@ -1,10 +1,10 @@
 ---
 import { Form, Entry, db, eq, and, Hook } from "astro:db";
-import Layout from "@layouts/Layout.astro";
-import { getTeam } from "@components/model";
-import { backToLogin, notFound } from "@components/helper";
+import Layout from "@/layouts/Layout.astro";
+import { getTeam } from "@/components/model";
+import { backToLogin, notFound } from "@/components/helper";
 import { desc } from "astro:db";
-import FormNavbar from "@components/editor/FormNavbar.astro";
+import FormNavbar from "@/components/editor/FormNavbar.astro";
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();
