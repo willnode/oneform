@@ -1,0 +1,23 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import {
+  Card,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import LoginForm from "./Login.tsx";
+---
+
+<script></script>
+<Layout title="Login">
+  <Card className="w-[380px]">
+    <CardHeader>
+      <CardTitle>Login</CardTitle>
+    </CardHeader>
+    <LoginForm client:load />
+    <CardFooter>
+      <a href="/auth/register" class="btn btn-link">Register New Account</a>
+    </CardFooter>
+  </Card>
+</Layout>

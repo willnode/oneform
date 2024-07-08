@@ -8,7 +8,7 @@ const team = await getTeam(Astro.request);
   <div class="container my-5 text-center" style="max-width: 800px;">
     <div class="navbar gap-3">
       <span class="flex-grow-1"></span>
-      {!team && <a href="/login">Login</a>}
+      {!team && <a href="/auth/login">Login</a>}
       {
         team && (
           <a class="btn btn-link" href="/logout">
@@ -47,7 +47,7 @@ const team = await getTeam(Astro.request);
     <div class="my-5">
       {
         !team && (
-          <a href="/register" class="btn btn-primary btn-lg">
+          <a href="/auth/register" class="btn btn-primary btn-lg">
             Get Started For Free
           </a>
         )

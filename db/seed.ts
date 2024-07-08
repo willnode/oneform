@@ -12,7 +12,7 @@ export default async function seed() {
   let aid = "01J1Y50PMDYFFX0E5TB4B0YBRG";
   await db
     .insert(User)
-    .values([{ id: uid, email: "user@user", name: "Test W" }]);
+    .values([{ id: uid, email: "user@example.com", name: "Test W" }]);
   await db
     .insert(UserAuth)
     .values([
