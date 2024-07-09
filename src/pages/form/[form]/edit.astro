@@ -7,7 +7,8 @@ import FormScript from "@/components/editor/FormScript.astro";
 import editorSchema from "@/components/editor/schema";
 import { unflatten } from "flat";
 import { getTeam } from "@/components/model";
-import FormNavbar from "@/components/editor/FormNavbar.astro";
+import FormNavbar from "@/components/editor/FormNavbar.tsx";
+import * as query from "@/api/query";
 
 const { form: formId } = Astro.params;
 
@@ -20,15 +21,10 @@ if (!teamId) {
   return backToLogin();
 }
 
-const formList = await db
-  .select()
-  .from(Form)
-  .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)));
-
-if (formList.length === 0) {
+const form = await query.getFormById(formId);
+if (!form || form.teamId != teamId) {
   return notFound();
 }
-const form = formList[0];
 
 if (Astro.request.method === "POST") {
   const response = await Astro.request.formData();
@@ -53,7 +49,7 @@ if (Astro.request.method === "POST") {
 
 <Layout title="Edit Form.">
   <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar />
+    <FormNavbar page="edit"/>
     <form id="form" name="form" method="post" class="my-5">
       <Control control={editorSchema} value={form} />
       <button class="btn btn-lg btn-primary">Save</button>

@@ -4,33 +4,25 @@ import path from "node:path";
 import fsp from "node:fs/promises";
 import fs from "node:fs";
 import { ulid } from "ulid";
-import jwt from "jsonwebtoken";
+import { getSignedCookie } from "hono/cookie";
 import { extractFormData } from "../components/helper";
+import type { Context } from "hono";
+import * as query from "@/api/query";
 
-function getSession(req: Request): any | null {
-  let token = Object.fromEntries(req.headers)
-    .cookie?.split(";")
-    .find((x) => x.trim().startsWith("jwt="));
-  if (token) {
-    token = token.split("=", 2)[1].trimEnd();
-    let j = jwt.verify(token, "secret");
-    if (j) {
-      return j;
-    }
-  }
-  return null;
+const authSecret: string = process.env.AUTH_SECRET || "secret";
+
+async function getSession(req: Request): Promise<string | null> {
+  let c = { req: { raw: req } } as Context;
+  return (await getSignedCookie(c, authSecret, "uid")) || null;
 }
 export async function getTeam(req: Request) {
   try {
-    const session = getSession(req);
-    if (!session?.user) {
+    const session = await getSession(req);
+    if (!session) {
       return null;
     }
-    let q = await db.select().from(Team).where(eq(Team.userId, session.user));
-    if (q.length == 0) {
-      return null;
-    }
-    return q[0].id;
+    let q = await query.getTeamByUser(session);
+    return q?.id || null;
   } catch (error) {
     console.error(error);
     return null;
@@ -47,7 +39,7 @@ export async function handleFormUpload(
   for (const entry of Object.keys(entries)) {
     let v = entries[entry];
     if (v instanceof File) {
-      var dir = '.astro/uploads/';
+      var dir = ".astro/uploads/";
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }

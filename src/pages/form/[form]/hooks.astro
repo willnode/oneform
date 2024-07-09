@@ -4,7 +4,7 @@ import Layout from "@/layouts/Layout.astro";
 import { getTeam } from "@/components/model";
 import { backToLogin, notFound } from "@/components/helper";
 import { desc } from "astro:db";
-import FormNavbar from "@/components/editor/FormNavbar.astro";
+import FormNavbar from "@/components/editor/FormNavbar.tsx";
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();
@@ -43,7 +43,7 @@ const hookList = await db.select().from(Hook).where(eq(Hook.formId, formId));
 
 <Layout title="Hooks">
   <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar />
+    <FormNavbar page="hooks"/>
     <div class="container my-5">
       <div class="my-3">
       </div>

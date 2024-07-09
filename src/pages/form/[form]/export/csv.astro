@@ -5,6 +5,7 @@ import { backToLogin } from "@/components/helper";
 import { flatten } from "flat";
 import papaparse from "papaparse";
 const { unparse } = papaparse;
+import * as query from "@/api/query";
 
 const team = await getTeam(Astro.request);
 if (!team) {
@@ -22,11 +23,8 @@ if (!formId) {
   return notFound();
 }
 
-const formList = await db
-  .select()
-  .from(Form)
-  .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)));
-if (formList.length === 0) {
+const form = await query.getFormById(formId);
+if (!form || form.teamId != teamId) {
   return notFound();
 }
 
@@ -59,7 +57,7 @@ function renameKey(data: any, schema: any[]) {
 
 const entryCSV = [];
 for (const entry of entryList) {
-  entryCSV.push(flatten(renameKey(entry.data, formList[0].schema as any[])));
+  entryCSV.push(flatten(renameKey(entry.data, form.schema as any[])));
 }
 
 return new Response(

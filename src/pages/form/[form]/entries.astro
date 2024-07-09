@@ -3,8 +3,9 @@ import { Form, Entry, db, eq, and, Hook } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
 import { getTeam } from "@/components/model";
 import { backToLogin, notFound } from "@/components/helper";
-import { desc } from "astro:db";
-import FormNavbar from "@/components/editor/FormNavbar.astro";
+import FormNavbar from "@/components/editor/FormNavbar.tsx";
+import * as query from "@/api/query";
+
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();
@@ -21,15 +22,8 @@ if (!formId) {
   return notFound();
 }
 
-const formList = await db
-  .select({
-    id: Form.id,
-    created: Form.created,
-  })
-  .from(Form)
-  .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)))
-  .orderBy(desc(Form.id));
-if (formList.length === 0) {
+const form = await query.getFormById(formId);
+if (!form || form.teamId != teamId) {
   return notFound();
 }
 
@@ -43,7 +37,7 @@ const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
 
 <Layout title="Entries.">
   <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar />
+    <FormNavbar page="entries" />
     <div class="container my-5">
       <div class="my-3">
         <a class="btn btn-success" href="./export/csv" download>

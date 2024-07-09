@@ -20,6 +20,7 @@
     "@libsql/client": "^0.7.0",
     "@material-tailwind/html": "^2.2.2",
     "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-navigation-menu": "^1.2.0",
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@types/react": "^18.3.3",

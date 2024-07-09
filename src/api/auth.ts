@@ -2,7 +2,7 @@ import { Hono, type Context } from "hono";
 import { z, ZodError } from "zod";
 import { Team, User, UserAuth, and, db, eq } from "astro:db";
 import * as query from "./query";
-import { rError, rOK } from "./helper";
+import { encryptPW, rError, rOK } from "./helper";
 import * as cookie from "hono/cookie";
 import { ulid } from "ulid";
 import bcrypt from "bcryptjs";
@@ -21,7 +21,7 @@ const registerSchema = z.object({
 });
 
 const auth = new Hono()
-.get("/id")
+  .get("/id")
   .post("/login", async (c) => {
     let body = loginSchema.parse(await c.req.json());
     let u = await query.getUserByEmail(body.email);
@@ -48,11 +48,9 @@ const auth = new Hono()
       name: body.name,
       email: body.email,
     });
-    const salt = await bcrypt.genSalt(10);
-    const identifier = await bcrypt.hash(body.password, salt);
     await db.insert(UserAuth).values({
       id: ulid(),
-      identifier,
+      identifier: await encryptPW(body.password),
       type: "email",
       userId: uid,
     });
@@ -65,14 +63,6 @@ const auth = new Hono()
   .post("/logout", async (c) => {
     cookie.deleteCookie(c, "uid");
     return rOK(c);
-  })
-  .onError((err, c) => {
-    if (err instanceof ZodError) {
-      // Get the custom response
-      return rError(c, err.errors.map((x) => x.message).join(", "));
-    }
-    return rError(c, "unknown error");
-    //...
   });
 
 export default auth;

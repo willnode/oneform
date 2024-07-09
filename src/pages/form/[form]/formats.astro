@@ -3,9 +3,10 @@ import { Form, Format, db, eq, and } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
 import { getTeam } from "@/components/model";
 import { backTo, backToLogin, notFound } from "@/components/helper";
-import { desc } from "astro:db";
-import FormNavbar from "@/components/editor/FormNavbar.astro";
+import FormNavbar from "@/components/editor/FormNavbar.tsx";
 import { ulid } from "ulid";
+import * as query from "@/api/query";
+
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();
@@ -22,12 +23,8 @@ if (!formId) {
   return notFound();
 }
 
-const formList = await db
-  .select()
-  .from(Form)
-  .where(and(eq(Form.id, formId), eq(Form.teamId, teamId)))
-  .orderBy(desc(Form.id));
-if (formList.length === 0) {
+const form = await query.getFormById(formId);
+if (!form || form.teamId != teamId) {
   return notFound();
 }
 
@@ -39,9 +36,9 @@ if (Astro.request.method === "DELETE") {
   const id = ulid();
   await db.insert(Format).values({
     formId,
-    privilenge: formList[0].privilenge,
+    privilenge: form.privilenge,
     schema: {},
-    teamId: formList[0].teamId,
+    teamId: form.teamId,
     title: "Create New Format " + data.get("type")?.toString(),
     type: data.get("type")?.toString() || "",
     id,
@@ -57,7 +54,7 @@ const formatList = await db
 
 <Layout title="Entries.">
   <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar />
+    <FormNavbar page="formats"/>
     <div class="container my-5">
       <div class="my-3">
         <form method="post">
@@ -88,7 +85,8 @@ const formatList = await db
       </div>
 
       <div class="alert alert-info my-3">
-        To Use Format, go Entries and open an entry, then click one of the formats.
+        To Use Format, go Entries and open an entry, then click one of the
+        formats.
       </div>
     </div>
   </div>

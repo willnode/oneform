@@ -1,4 +1,5 @@
 import type { Context } from "hono";
+import bcrypt from "bcryptjs";
 
 export function rError(c: Context, message: string) {
   c.status(400);
@@ -19,4 +20,13 @@ export function rOK<T>(c: Context, data?: T) {
     status: "ok";
     data: T;
   });
+}
+
+export async function encryptPW(pw: string) {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(pw, salt);
+}
+
+export async function checkPW(pw: string, hash: string) {
+  return await bcrypt.compare(pw, hash);
 }
