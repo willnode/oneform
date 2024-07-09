@@ -1,7 +1,5 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import FormScript from "@/components/editor/FormScript.astro";
-import Group from "@/components/control/Group.astro";
 
 const { form: formId } = Astro.params;
 
@@ -10,6 +8,7 @@ import { ulid } from "ulid";
 import { backToLogin, notFound } from "@/components/helper";
 import { getTeam, handleFormUpload } from "@/components/model";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
+import FormControl from "@/components/control/FormControl";
 
 if (!formId) {
   return notFound();
@@ -48,12 +47,16 @@ if (Astro.request.method === "POST") {
 <Layout title="View Form">
   <div class="container my-5" style="max-width: 800px;">
     <FormNavbar page="view" />
-    <form id="form" name="form" enctype="multipart/form-data" method="post" class="my-5">
+    <form
+      id="form"
+      name="form"
+      enctype="multipart/form-data"
+      method="post"
+      class="my-5"
+    >
       <h1 class="display-4">{form.title}</h1>
-      <Group control={{ children: form.schema }} />
+      <FormControl client:only="react" schema={form.schema} value={{}} />
       <button class="btn btn-lg btn-primary my-3">Save</button>
     </form>
   </div>
 </Layout>
-
-<FormScript />

@@ -818,6 +818,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^3.9.0":
+  version: 3.9.0
+  resolution: "@hookform/resolvers@npm:3.9.0"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 10c0/0e0e55f63abbd212cf14abbd39afad1f9b6105d6b25ce827fc651b624ed2be467ebe9b186026e0f032062db59ce2370b14e9583b436ae2d057738bdd6f04356c
+  languageName: node
+  linkType: hard
+
 "@img/sharp-darwin-arm64@npm:0.33.4":
   version: 0.33.4
   resolution: "@img/sharp-darwin-arm64@npm:0.33.4"
@@ -6092,6 +6101,7 @@ __metadata:
     "@astrojs/tailwind": "npm:^5.1.0"
     "@astrojs/ts-plugin": "npm:^1.8.0"
     "@auth/core": "npm:^0.32.0"
+    "@hookform/resolvers": "npm:^3.9.0"
     "@libsql/client": "npm:^0.7.0"
     "@material-tailwind/html": "npm:^2.2.2"
     "@radix-ui/react-label": "npm:^2.1.0"

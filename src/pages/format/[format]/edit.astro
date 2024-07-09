@@ -5,7 +5,7 @@ import FormScript from "@/components/editor/FormScript.astro";
 const { format: formatID } = Astro.params;
 
 import { Form, Format, db, eq } from "astro:db";
-import Group from "@/components/control/Group.astro";
+import Group from "@/components/control/Group.tsx";
 import { notFound } from "@/components/helper";
 
 if (!formatID) {

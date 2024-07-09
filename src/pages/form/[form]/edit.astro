@@ -1,9 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { backToLogin, notFound } from "@/components/helper";
-import { Form, db, eq, and } from "astro:db";
-import Control from "@/components/control/Control.astro";
-import FormScript from "@/components/editor/FormScript.astro";
+import { backToLogin, notFound, asJson } from "@/components/helper";
+import FormControl from "@/components/control/FormControl.tsx";
 import editorSchema from "@/components/editor/schema";
 import { unflatten } from "flat";
 import { getTeam } from "@/components/model";
@@ -31,30 +29,25 @@ if (Astro.request.method === "POST") {
   const values: any = unflatten(Object.fromEntries(response));
   delete values.id;
   delete values.teamId;
-  await db
-    .update(Form)
-    .set({
-      ...values,
-    })
-    .where(eq(Form.id, form.id));
+  return asJson(values);
+  // await db
+  //   .update(Form)
+  //   .set({
+  //     ...values,
+  //   })
+  //   .where(eq(Form.id, form.id));
 
-  return new Response("", {
-    status: 302,
-    headers: {
-      location: `/form/${form.id}/edit`,
-    },
-  });
+  // return new Response("", {
+  //   status: 302,
+  //   headers: {
+  //     location: `/form/${form.id}/edit`,
+  //   },
+  // });
 }
 ---
 
 <Layout title="Edit Form.">
-  <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar page="edit"/>
-    <form id="form" name="form" method="post" class="my-5">
-      <Control control={editorSchema} value={form} />
-      <button class="btn btn-lg btn-primary">Save</button>
-    </form>
-  </div>
+  <FormNavbar page="edit" />
+  <FormControl client:only="react" schema={editorSchema} value={form} />
+  <button class="btn btn-lg btn-primary">Save</button>
 </Layout>
-
-<FormScript />

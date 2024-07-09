@@ -36,7 +36,7 @@ const auth = new Hono()
       return rError(c, "Login failed, try again");
     }
     await cookie.setSignedCookie(c, "uid", u.id, authSecret, {
-      expires: new Date(Date.now() + 604800),
+      expires: new Date(Date.now() + 604800 * 1000),
     });
     return rOK(c);
   })

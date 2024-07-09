@@ -31,10 +31,10 @@
           let fn = new Function("value", fnBody);
           let cond = !!fn(inputData);
           if (cond) {
-            fel.classList.remove("d-none");
+            fel.classList.remove("hidden");
             fel.disabled = false;
           } else {
-            fel.classList.add("d-none");
+            fel.classList.add("hidden");
             fel.disabled = true;
           }
         });

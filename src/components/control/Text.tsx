@@ -1,0 +1,63 @@
+import { FormField, FormItem, FormLabel } from "../ui/form";
+import { Input } from "../ui/input";
+import type { ControlProps } from "./Control";
+import { Textarea } from "../ui/textarea";
+
+export default function Text({ parentID, form, schema }: ControlProps) {
+  let name = parentID ? `${parentID}.${schema.id}` : schema.id;
+  const variantMap = {
+    numeric: "text",
+    email: "email",
+    tel: "tel",
+    url: "url",
+    "single-line": "text",
+  };
+  const inputModeMap = {
+    numeric: "numeric",
+    email: "email",
+    tel: "tel",
+    url: "url",
+    "single-line": "text",
+  };
+
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          {schema.label && <FormLabel>{schema.label}</FormLabel>}
+          {schema.variant === "multi-line" ? (
+            <Textarea
+              className="form-control"
+              data-parent={parentID}
+              name={name}
+              placeholder={schema.placeholder}
+              maxLength={schema.maxlength}
+              required={!!schema.required}
+              defaultValue={field.value}
+            />
+          ) : (
+            <Input
+              type={
+                // @ts-ignore
+                variantMap?.[schema.variant] || "text"
+              }
+              inputMode={
+                // @ts-ignore
+                inputModeMap?.[schema.variant] || "text"
+              }
+              className="form-control"
+              data-parent={parentID}
+              placeholder={schema.placeholder}
+              name={name}
+              required={!!schema.required}
+              onChange={field.onChange}
+              defaultValue={field.value}
+            />
+          )}
+        </FormItem>
+      )}
+    />
+  );
+}
