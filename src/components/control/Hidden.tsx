@@ -10,7 +10,6 @@ export default function Hidden({ parentID, form, schema }: ControlProps) {
       render={({ field }) => (
         <input
           type="hidden"
-          data-parent={parentID}
           data-hidden-variant={schema.variant}
           name={name}
           onChange={field.onChange}

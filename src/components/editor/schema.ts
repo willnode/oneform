@@ -1,7 +1,9 @@
-function control(child: any) {
-  return {
-    type: "group",
-    children: [
+class Control {
+  type: any;
+  children: any;
+  constructor() {
+    this.type = "group";
+    this.children = [
       {
         id: "id",
         type: "hidden",
@@ -21,8 +23,8 @@ function control(child: any) {
               { value: "option" },
               { value: "time" },
               { value: "file" },
-              child ? { value: "group" } : null,
-              child ? { value: "list" } : null,
+              { value: "group" },
+              { value: "list" },
             ].filter((x) => x),
             required: true,
           },
@@ -37,13 +39,35 @@ function control(child: any) {
             id: "required",
             label: "Required",
           },
+          {
+            type: "group",
+            variant: "dropdown",
+            children: [
+              {
+                type: "checkbox",
+                id: "_keep_desc",
+                label: "Show Description",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "group",
+        if: "_keep_desc || description",
+        children: [
+          {
+            id: "description",
+            type: "text",
+            label: "Description",
+          },
         ],
       },
       {
         type: "group",
         label: "Text Options",
         horizontal: true,
-        if: "return value && value.type === 'text'",
+        if: 'type == "text"',
         children: [
           {
             id: "variant",
@@ -61,7 +85,7 @@ function control(child: any) {
           },
           {
             type: "group",
-            if: "return value && value.variant !== 'multi-line'",
+            if: 'variant != "multi-line"',
             children: [
               {
                 id: "pattern",
@@ -72,7 +96,7 @@ function control(child: any) {
           },
           {
             type: "group",
-            if: "return value && value.variant === 'multi-line'",
+            if: 'variant == "multi-line"',
             children: [
               {
                 id: "maxlength",
@@ -87,7 +111,7 @@ function control(child: any) {
         type: "group",
         label: "Number Options",
         horizontal: true,
-        if: "return value && value.type === 'number'",
+        if: 'type == "number"',
         children: [
           {
             id: "min",
@@ -109,7 +133,7 @@ function control(child: any) {
       {
         type: "group",
         label: "Select Options",
-        if: "return value && value.type === 'option'",
+        if: 'type == "option"',
         children: [
           {
             type: "option",
@@ -137,7 +161,7 @@ function control(child: any) {
         type: "group",
         label: "Time Options",
         horizontal: true,
-        if: "return value && value.type === 'time'",
+        if: 'type == "time"',
         children: [
           {
             type: "option",
@@ -157,7 +181,7 @@ function control(child: any) {
         type: "group",
         label: "File Options",
         horizontal: true,
-        if: "return value && value.type === 'file'",
+        if: 'type == "file"',
         children: [
           {
             type: "option",
@@ -187,13 +211,13 @@ function control(child: any) {
         type: "group",
         label: "Group Options",
         horizontal: true,
-        if: "return value && value.type === 'group'",
+        if: 'type == "group"',
         children: [
           {
             type: "list",
             label: "Group Items",
             id: "children",
-            child,
+            child: this,
           },
         ],
       },
@@ -202,12 +226,13 @@ function control(child: any) {
         type: "group",
         label: "List Options",
         horizontal: true,
-        if: "return value && value.type === 'list'",
-        children: child ? [child] : [],
+        if: 'type == "list"',
+        children: [this],
       },
-    ],
-  };
+    ];
+  }
 }
+
 export default {
   type: "group",
   children: [
@@ -239,7 +264,7 @@ export default {
       type: "list",
       id: "schema",
       label: "Form Input",
-      child: control(control(null)),
+      child: new Control(),
     },
   ],
 };

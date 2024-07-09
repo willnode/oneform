@@ -1,8 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import { backToLogin, notFound, asJson } from "@/components/helper";
-import FormControl from "@/components/control/FormControl.tsx";
-import editorSchema from "@/components/editor/schema";
+import EditForm from "./_edit.tsx";
 import { unflatten } from "flat";
 import { getTeam } from "@/components/model";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
@@ -48,6 +47,5 @@ if (Astro.request.method === "POST") {
 
 <Layout title="Edit Form.">
   <FormNavbar page="edit" />
-  <FormControl client:only="react" schema={editorSchema} value={form} />
-  <button class="btn btn-lg btn-primary">Save</button>
+  <EditForm client:only="react" value={form} />
 </Layout>

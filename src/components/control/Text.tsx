@@ -25,12 +25,11 @@ export default function Text({ parentID, form, schema }: ControlProps) {
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
-          {schema.label && <FormLabel>{schema.label}</FormLabel>}
+        <FormItem className="grow">
+          <FormLabel>{schema.label}</FormLabel>
           {schema.variant === "multi-line" ? (
             <Textarea
               className="form-control"
-              data-parent={parentID}
               name={name}
               placeholder={schema.placeholder}
               maxLength={schema.maxlength}
@@ -48,7 +47,6 @@ export default function Text({ parentID, form, schema }: ControlProps) {
                 inputModeMap?.[schema.variant] || "text"
               }
               className="form-control"
-              data-parent={parentID}
               placeholder={schema.placeholder}
               name={name}
               required={!!schema.required}

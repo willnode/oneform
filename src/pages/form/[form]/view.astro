@@ -6,9 +6,10 @@ const { form: formId } = Astro.params;
 import { Form, Entry, db, eq } from "astro:db";
 import { ulid } from "ulid";
 import { backToLogin, notFound } from "@/components/helper";
-import { getTeam, handleFormUpload } from "@/components/model";
+import { handleFormUpload } from "@/components/model";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
-import FormControl from "@/components/control/FormControl";
+import { FormControl } from "@/components/control/FormControl";
+import ViewForm from "./_view.tsx";
 
 if (!formId) {
   return notFound();
@@ -47,16 +48,7 @@ if (Astro.request.method === "POST") {
 <Layout title="View Form">
   <div class="container my-5" style="max-width: 800px;">
     <FormNavbar page="view" />
-    <form
-      id="form"
-      name="form"
-      enctype="multipart/form-data"
-      method="post"
-      class="my-5"
-    >
-      <h1 class="display-4">{form.title}</h1>
-      <FormControl client:only="react" schema={form.schema} value={{}} />
-      <button class="btn btn-lg btn-primary my-3">Save</button>
-    </form>
+    <h1 class="display-4">{form.title}</h1>
+    <ViewForm client:load schema={form.schema} value={{}} />
   </div>
 </Layout>

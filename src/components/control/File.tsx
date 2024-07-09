@@ -29,7 +29,7 @@ export default function File({ parentID, form, schema }: ControlProps) {
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="grow">
           {schema.label && <FormLabel>{schema.label}</FormLabel>}
           {
             // schema.accept == "image" && !schema.multiline && (
@@ -61,7 +61,6 @@ export default function File({ parentID, form, schema }: ControlProps) {
                 mimes[schema.accept] || "*"
               }
               className="form-control"
-              data-parent={parentID}
               placeholder={schema.placeholder}
               multiple={schema.multiple}
               name={name}

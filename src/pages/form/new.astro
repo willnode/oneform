@@ -1,6 +1,5 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Control from "../../components/control/Control.astro";
 import FormScript from "../../components/editor/FormScript.astro";
 import editorSchema from "../../components/editor/schema";
 import { unflatten } from "flat";
@@ -8,6 +7,7 @@ import { db, Form } from "astro:db";
 import { getTeam } from "@/components/model";
 import { ulid } from "ulid";
 import { backToLogin } from "@/components/helper";
+import { EditorFormControl } from "@/components/control/FormControl";
 
 const team = await getTeam(Astro.request);
 if (!team) {
@@ -37,7 +37,7 @@ if (Astro.request.method === "POST") {
   <div class="container my-5" style="max-width: 800px;">
     <a class="btn btn-secondary" href="/form">Back</a>
     <form id="form" name="form" method="post" class="my-5">
-      <Control control={editorSchema} value={{}} />
+      <EditorFormControl value={{}} />
       <button class="btn btn-lg btn-primary">Create</button>
     </form>
   </div>

@@ -1,12 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import FormScript from "@/components/editor/FormScript.astro";
 
 const { entry: entryID } = Astro.params;
 
-import { Form, Entry, db, eq, Hook } from "astro:db";
+import { Form, Entry, db, eq } from "astro:db";
 import { Format } from "astro:db";
-import FormControl from "@/components/control/FormControl";
+import { FormControl } from "@/components/control/FormControl";
 
 if (!entryID) {
   return notFound();
@@ -60,5 +59,3 @@ const formatList = await db
     </form>
   </div>
 </Layout>
-
-<FormScript />

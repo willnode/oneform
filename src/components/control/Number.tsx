@@ -6,7 +6,6 @@ export default function Number({
   parentID,
   form,
   schema,
-  value,
 }: ControlProps) {
   let name = parentID ? `${parentID}.${schema.id}` : schema.id;
 
@@ -15,12 +14,11 @@ export default function Number({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
-          {schema.label && <FormLabel>{schema.label}</FormLabel>}
+        <FormItem className="grow">
+          <FormLabel>{schema.label}</FormLabel>
           <Input
             type="number"
             name={name}
-            data-parent={parentID}
             className="form-control"
             onChange={field.onChange}
             defaultValue={field.value}

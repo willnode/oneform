@@ -1,25 +1,29 @@
 import type { Context } from "hono";
 import bcrypt from "bcryptjs";
 
+type rType<T> = {
+  status: "ok",
+  data?: T,
+} |  {
+  status: "error",
+  message: string,
+} 
+
 export function rError(c: Context, message: string) {
   c.status(400);
-  return c.json({
+  let body: rType<any> = {
     status: "error",
     message,
-  } as {
-    status: "error";
-    message: string;
-  });
+  } 
+  return c.json(body);
 }
 
 export function rOK<T>(c: Context, data?: T) {
-  return c.json({
+  let body  = {
     status: "ok",
     data,
-  } as {
-    status: "ok";
-    data: T;
-  });
+  }  as rType<T>
+  return c.json(body);
 }
 
 export async function encryptPW(pw: string) {

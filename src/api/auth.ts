@@ -21,7 +21,6 @@ const registerSchema = z.object({
 });
 
 const auth = new Hono()
-  .get("/id")
   .post("/login", async (c) => {
     let body = loginSchema.parse(await c.req.json());
     let u = await query.getUserByEmail(body.email);

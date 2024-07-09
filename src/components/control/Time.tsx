@@ -18,7 +18,7 @@ export default function Time({ parentID, form, schema }: ControlProps) {
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="grow">
           {schema.label && <FormLabel>{schema.label}</FormLabel>}
           {
             <Input
@@ -27,7 +27,6 @@ export default function Time({ parentID, form, schema }: ControlProps) {
                 variantMap?.[schema.variant] || "time"
               }
               className="form-control"
-              data-parent={parentID}
               name={name}
               required={!!schema.required}
               onChange={field.onChange}

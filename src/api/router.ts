@@ -3,10 +3,12 @@ import { logger } from "hono/logger";
 import auth from "./auth";
 import { ZodError } from "zod";
 import { rError } from "./helper";
+import form from "./form";
 
 const app = new Hono()
   .use(logger())
   .route("/api/auth", auth)
+  .route("/api/form", form)
   .get("/api/health", async (c) => {
     return c.json({ status: "OK" });
   })

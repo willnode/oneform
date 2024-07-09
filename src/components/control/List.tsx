@@ -1,58 +1,65 @@
 import { useFieldArray } from "react-hook-form";
 import Control, { type ControlProps } from "./Control.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card.tsx";
+import { Button } from "../ui/button.tsx";
+import React from "react";
 
 export default function List({ parentID, form, schema }: ControlProps) {
   let id = parentID ? `${parentID}.${schema.id}` : schema.id;
-  let {fields, append, remove } = useFieldArray({
+  let { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: id || '',
+    name: id || "",
   });
 
   return (
-    <div className="card oneform-list" id={id}>
-      <div className="card-body">
-        <h5 className="card-title flex">
-          <span className="flex-grow-1">{schema.label}</span>
-          <button
+    <Card className="oneform-list" id={id}>
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <span className="grow">{schema.label}</span>
+          <Button
             type="button"
-            className="btn btn-sm btn-success"
-            // onclick="appendItem(this)"
+            size="sm"
+            onClick={() => append({})}
+            variant="secondary"
           >
             Add
-          </button>
-        </h5>
+          </Button>
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent>
         <hr />
-        <div className="oneform-list-entries" data-list-parent={id}>
+        <div className="oneform-list-entries space-y-2" data-list-parent={id}>
           {fields.map((v: any, i: number) => (
-            <div
-              data-list-parent={id}
-              data-index={i}
-              className="oneform-list-item"
-              key={i}
-            >
-              <div className="flex items-center">
-                <div className="flex-grow-1">
+            <React.Fragment key={fields.length + " " + i}>
+              <hr />
+              <div
+                data-list-parent={id}
+                data-index={i}
+                className="flex items-start oneform-list-item"
+              >
+                <div className="grow">
                   <Control
                     form={form}
                     parentID={`${id}.${i}`}
                     schema={schema.child}
                   />
                 </div>
-                <div className="ms-2 flex flex-col">
-                  <button
+                <div className="ms-2 mt-1.5 flex flex-col">
+                  <Button
                     type="button"
-                    // onclick="deleteItem(this)"
-                    className="btn btn-sm btn-danger"
+                    size="sm"
+                    onClick={() => remove(i)}
+                    variant="destructive"
                   >
                     🗑️
-                  </button>
+                  </Button>
                 </div>
               </div>
-              <hr />
-            </div>
+            </React.Fragment>
           ))}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
