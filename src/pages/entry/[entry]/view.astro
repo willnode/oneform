@@ -5,7 +5,7 @@ const { entry: entryID } = Astro.params;
 
 import { Form, Entry, db, eq } from "astro:db";
 import { Format } from "astro:db";
-import { FormControl } from "@/components/control/FormControl";
+import ViewEntry from "./_view";
 
 if (!entryID) {
   return notFound();
@@ -30,32 +30,5 @@ const formatList = await db
 ---
 
 <Layout title="View Form">
-  <div class="container my-5" style="max-width: 800px;">
-    <a class="btn btn-warning" href=`/form/${form.id}/entries`
-      >Back to Entries</a
-    >
-    <form id="form" class="my-5">
-      <h1 class="display-4">{form.title}</h1>
-      <div class="alert">
-        Display as new format
-        {
-          formatList.map((x) => (
-            <a
-              href={`/format/${x.id}/entry/${entry.id}/view`}
-              class="btn btn-primary"
-            >
-              {x.title}
-            </a>
-          ))
-        }
-        Or
-        <a href={`/form/${form.id}/formats`} class="btn btn-success">
-          create new format</a
-        >
-      </div>
-      <fieldset disabled>
-        <FormControl schema={form.schema} value={entry.data} />
-      </fieldset>
-    </form>
-  </div>
+  <ViewEntry entry={entry} form={form} formats={formatList} />
 </Layout>

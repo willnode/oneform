@@ -5,6 +5,7 @@ import { getTeam } from "@/components/model";
 import { backToLogin, notFound } from "@/components/helper";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
 import * as query from "@/api/query";
+import FormEntries from "./_entries";
 
 const team = await getTeam(Astro.request);
 if (!team) {
@@ -36,26 +37,6 @@ const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
 ---
 
 <Layout title="Entries.">
-  <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar page="entries" />
-    <div class="container my-5">
-      <div class="my-3">
-        <a class="btn btn-success" href="./export/csv" download>
-          Download CSV
-        </a>
-      </div>
-      <div class="list-group">
-        {
-          entryList.map((entry) => (
-            <a
-              href={`/entry/${entry.id}/view`}
-              class="list-group-item list-group-item-action"
-            >
-              {entry.created}
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </div>
+  <FormNavbar page="entries" />
+  <FormEntries list={entryList} />
 </Layout>

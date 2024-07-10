@@ -3,6 +3,7 @@ import { Form, db, eq } from "astro:db";
 import Layout from "../../layouts/Layout.astro";
 import { getTeam } from "@/components/model";
 import { backToLogin } from "@/components/helper";
+import FormList from "./_index";
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();
@@ -10,23 +11,6 @@ if (!team) {
 const formList = await db.select().from(Form).where(eq(Form.teamId, team));
 ---
 
-<Layout title="Welcome to Astro.">
-  <div class="container my-5" style="max-width: 800px;">
-    <h1>
-      Form List
-      <a href="/form/new" class="float-end btn btn-success"> New</a>
-    </h1>
-    <div class="list-group">
-      {
-        formList.map((form) => (
-          <a
-            href={`/form/${form.id}/edit`}
-            class="list-group-item list-group-item-action"
-          >
-            {form.title}
-          </a>
-        ))
-      }
-    </div>
-  </div>
+<Layout title="List of Forms">
+  <FormList list={formList} />
 </Layout>

@@ -30,7 +30,7 @@ export default function File({ parentID, form, schema }: ControlProps) {
       name={name}
       render={({ field }) => (
         <FormItem className="grow">
-          {schema.label && <FormLabel>{schema.label}</FormLabel>}
+          <FormLabel>{schema.label}</FormLabel>
           {
             // schema.accept == "image" && !schema.multiline && (
             //     <img
@@ -44,29 +44,26 @@ export default function File({ parentID, form, schema }: ControlProps) {
             //     />
             // )
           }
-          <div className="flex input-group">
-            {value && (
-              <a
-                href={`/upload/file/${value}/`}
-                className="btn btn-success"
-                target="_blank"
-              >
-                Open File
-              </a>
-            )}
-            <Input
-              type="file"
-              accept={
-                // @ts-ignore
-                mimes[schema.accept] || "*"
-              }
-              className="form-control"
-              placeholder={schema.placeholder}
-              multiple={schema.multiple}
-              name={name}
-              required={!!schema.required}
-            />
-          </div>
+          {value && (
+            <a
+              href={`/upload/file/${value}/`}
+              className="btn btn-success"
+              target="_blank"
+            >
+              Open File
+            </a>
+          )}
+          <Input
+            type="file"
+            accept={
+              // @ts-ignore
+              mimes[schema.accept] || "*"
+            }
+            placeholder={schema.placeholder}
+            multiple={schema.multiple}
+            name={name}
+            required={!!schema.required}
+          />
         </FormItem>
       )}
     />

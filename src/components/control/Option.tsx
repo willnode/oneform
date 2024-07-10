@@ -1,6 +1,5 @@
 import { Checkbox } from "../ui/checkbox";
-import { FormField, FormItem, FormLabel } from "../ui/form";
-import { Input } from "../ui/input";
+import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import {
   Select,
   SelectValue,
@@ -51,12 +50,14 @@ export default function Option({ parentID, form, schema }: ControlProps) {
               ? schema.values.map((x: any) => (
                   <FormItem className="grow" key={x.value}>
                     <FormLabel className="items-top flex space-x-2">
-                      <Checkbox
-                        name={name}
-                        checked={x.value === field.value}
-                        required={schema.required}
-                        onCheckedChange={(e) => e && field.onChange(x.value)}
-                      />
+                      <FormControl>
+                        <Checkbox
+                          name={name}
+                          checked={x.value === field.value}
+                          required={schema.required}
+                          onCheckedChange={(e) => e && field.onChange(x.value)}
+                        />
+                      </FormControl>
                       <span>{x.value}</span>
                     </FormLabel>
                   </FormItem>

@@ -6,6 +6,7 @@ import { backTo, backToLogin, notFound } from "@/components/helper";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
 import { ulid } from "ulid";
 import * as query from "@/api/query";
+import { Button } from "@/components/ui/button";
 
 const team = await getTeam(Astro.request);
 if (!team) {
@@ -53,41 +54,33 @@ const formatList = await db
 ---
 
 <Layout title="Entries.">
-  <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar page="formats"/>
-    <div class="container my-5">
-      <div class="my-3">
-        <form method="post">
-          Create New :
-          <button class="btn btn-success" name="type" value="json">
-            JSON
-          </button>
-          <button class="btn btn-success" name="type" value="text">
-            TEXT
-          </button>
-          <button class="btn btn-success" name="type" value="html">
-            HTML
-          </button>
-          <button class="btn btn-success" name="type" value="pdf"> PDF </button>
-        </form>
-      </div>
-      <div class="list-group">
-        {
-          formatList.map((format) => (
-            <a
-              href={`/format/${format.id}/edit`}
-              class="list-group-item list-group-item-action"
-            >
-              {format.title} <div class="badge bg-primary">{format.type}</div>
-            </a>
-          ))
-        }
-      </div>
+  <FormNavbar page="formats" />
+  <div class="container my-5">
+    <div class="my-3">
+      <form method="post">
+        Create New :
+        <Button variant="secondary" name="type" value="json"> JSON </Button>
+        <Button variant="secondary" name="type" value="text"> TEXT </Button>
+        <Button variant="secondary" name="type" value="html"> HTML </Button>
+        <Button variant="secondary" name="type" value="pdf"> PDF </Button>
+      </form>
+    </div>
+    <div class="list-group">
+      {
+        formatList.map((format) => (
+          <a
+            href={`/format/${format.id}/edit`}
+            class="list-group-item list-group-item-action"
+          >
+            {format.title} <span class="badge">{format.type}</span>
+          </a>
+        ))
+      }
+    </div>
 
-      <div class="alert alert-info my-3">
-        To Use Format, go Entries and open an entry, then click one of the
-        formats.
-      </div>
+    <div class="alert alert-info my-3">
+      To Use Format, go Entries and open an entry, then click one of the
+      formats.
     </div>
   </div>
 </Layout>

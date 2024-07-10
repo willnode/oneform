@@ -6,25 +6,29 @@ const { form: formId } = Astro.params;
 import { Form, Entry, db, eq } from "astro:db";
 import { ulid } from "ulid";
 import { backToLogin, notFound } from "@/components/helper";
-import { handleFormUpload } from "@/components/model";
+import { getTeam, handleFormUpload } from "@/components/model";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
 import { FormControl } from "@/components/control/FormControl";
 import ViewForm from "./_view.tsx";
+import * as query from "@/api/query";
 
 if (!formId) {
   return notFound();
 }
 
-const formList = await db.select().from(Form).where(eq(Form.id, formId));
-if (formList.length === 0) {
+const teamId = await getTeam(Astro.request);
+
+const form = await query.getFormById(formId);
+if (!form) {
   return notFound();
 }
 
-const form = formList[0];
-// const teamId = await getTeam(Astro.request);
-
 if (form.privilenge !== "public") {
-  return backToLogin();
+  if (teamId && form.teamId != teamId) {
+    return notFound();
+  } else {
+    return backToLogin();
+  }
 }
 
 if (Astro.request.method === "POST") {
@@ -46,9 +50,9 @@ if (Astro.request.method === "POST") {
 ---
 
 <Layout title="View Form">
-  <div class="container my-5" style="max-width: 800px;">
-    <FormNavbar page="view" />
-    <h1 class="display-4">{form.title}</h1>
+  {teamId && <FormNavbar page="view" />}
+  <div class="my-5">
+    <h1 class="text-2xl mb-5">{form.title}</h1>
     <ViewForm client:load schema={form.schema} value={{}} />
   </div>
 </Layout>

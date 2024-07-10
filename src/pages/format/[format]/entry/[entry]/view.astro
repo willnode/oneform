@@ -1,13 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import FormScript from "@/components/editor/FormScript.astro";
 
 const { entry: entryID, format: formatId } = Astro.params;
 
 import { Form, Entry, db, eq, Hook } from "astro:db";
 import { notFound } from "@/components/helper";
 import { Format } from "astro:db";
-import { generate } from "@/components/format/json";
+import EntryView from "./_view";
 if (!entryID || !formatId) {
   return notFound();
 }
@@ -35,17 +34,5 @@ const format = formatList[0];
 ---
 
 <Layout title="View Form">
-  <div class="container my-5" style="max-width: 800px;">
-    <a class="btn btn-warning" href=`/entry/${entry.id}/view`>
-      Back to Entry
-    </a>
-    <a class="btn btn-secondary" href=`/format/${format.id}/entry/${entry.id}`>
-      Open Raw
-    </a>
-    <code class="text-wrap">
-      <pre set:text={generate(form, format, entry)} />
-    </code>
-  </div>
+  <EntryView form={form} format={format} entry={entry} />
 </Layout>
-
-<FormScript />
