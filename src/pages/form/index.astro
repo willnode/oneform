@@ -1,6 +1,6 @@
 ---
 import { Form, db, eq } from "astro:db";
-import Layout from "../../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
 import { getTeam } from "@/components/model";
 import { backToLogin } from "@/components/helper";
 import FormList from "./_index";
@@ -12,5 +12,5 @@ const formList = await db.select().from(Form).where(eq(Form.teamId, team));
 ---
 
 <Layout title="List of Forms">
-  <FormList list={formList} />
+  <FormList list={formList} client:load />
 </Layout>

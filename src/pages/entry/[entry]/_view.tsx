@@ -6,7 +6,7 @@ export default function ViewEntry({ form, formats, entry }: any) {
   return (
     <>
       <Button asChild variant="secondary">
-        <a className="btn btn-warning" href={`/form/${form.id}/entries`}>
+        <a href={`/form/${form.id}/entries`}>
           Back to Entries
         </a>
       </Button>

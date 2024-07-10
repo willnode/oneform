@@ -16,6 +16,7 @@ const app = new Hono()
     if (err instanceof ZodError) {
       return rError(c, err.errors.map((x) => x.message).join(", "));
     }
+    console.error(err);
     return rError(c, "unknown error");
     //...
   });

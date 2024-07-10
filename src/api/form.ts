@@ -1,15 +1,73 @@
 import { Hono } from "hono";
-import { rOK } from "./helper";
+import { rError, rOK } from "./helper";
+import { unflatten } from "flat";
+import { db, Entry, eq, Form } from "astro:db";
+import { validator } from "hono/validator";
+import { ulid } from "ulid";
+import query from "../lib/query";
+import { getTeam } from "@/lib/auth";
+import { handleFormUpload } from "@/components/model";
 
 const form = new Hono()
-  .post("/new", async (c) => {
-    return rOK(c, await c.req.json());
-  })
-  .post("/edit", async (c) => {
-    return rOK(c, await c.req.json());
-  })
-  .post("/view", async (c) => {
-    return rOK(c, await c.req.json());
-  });
+  .post(
+    "/new",
+    validator("form", (v) => v),
+    async (c) => {
+      const values: any = unflatten(Object.fromEntries(await c.req.formData()));
+      const id = ulid();
+      const team = await getTeam(c.req.raw);
+      let r = await db.insert(Form).values({
+        ...values,
+        teamId: team,
+        id,
+      });
+      if (r.rowsAffected == 0) {
+        return rError(c, "Emm no shit");
+      }
+      return rOK(c);
+    },
+  )
+  .post(
+    "/edit/:id",
+    validator("form", (v) => v),
+    async (c) => {
+      const values: any = unflatten(Object.fromEntries(await c.req.formData()));
+      let id = c.req.param("id");
+      delete values.id;
+      delete values.teamId;
+      let r = await db
+        .update(Form)
+        .set({
+          ...values,
+        })
+        .where(eq(Form.id, id));
+      if (r.rowsAffected == 0) {
+        return rError(c, "Emm no shit");
+      }
+      return rOK(c);
+    },
+  )
+  .post(
+    "/view/:id",
+    validator("form", (v) => v),
+    async (c) => {
+      let formId = c.req.param("id");
+
+      const form = await query.getFormById(formId);
+      if (!form) {
+        return rError(c, "not found");
+      }
+
+      const data: any = await handleFormUpload(await c.req.formData(), formId, form.teamId);
+      const id = ulid();
+      await db.insert(Entry).values({
+        formId,
+        data,
+        id,
+      });
+
+      return rOK(c);
+    },
+  );
 
 export default form;

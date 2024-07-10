@@ -5,7 +5,7 @@ import { backToLogin } from "@/components/helper";
 import { flatten } from "flat";
 import papaparse from "papaparse";
 const { unparse } = papaparse;
-import * as query from "@/api/query";
+import query from "@/lib/query";
 
 const team = await getTeam(Astro.request);
 if (!team) {

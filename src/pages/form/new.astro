@@ -31,7 +31,22 @@ if (Astro.request.method === "POST") {
 }
 ---
 
-<Layout title="Welcome to Astro.">
-  <a class="btn btn-secondary" href="/form">Back</a>
-  <NewForm client:only="react" value={{}} />
+<Layout title="New Form">
+  <NewForm
+    client:only="react"
+    value={{
+      title: "New Form",
+      privilenge: "public",
+      schema: [
+        {
+          id: ulid(),
+          type: "text",
+          variant: "single-line",
+          code: "name",
+          label: "Name",
+          required: true,
+        },
+      ],
+    }}
+  />
 </Layout>

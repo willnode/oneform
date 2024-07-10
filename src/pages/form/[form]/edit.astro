@@ -3,9 +3,9 @@ import Layout from "@/layouts/Layout.astro";
 import { backToLogin, notFound, asJson } from "@/components/helper";
 import EditForm from "./_edit.tsx";
 import { unflatten } from "flat";
-import { getTeam } from "@/components/model";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
-import * as query from "@/api/query";
+import query from "@/lib/query.ts";
+import { getTeam } from "@/lib/auth";
 
 const { form: formId } = Astro.params;
 
@@ -23,26 +23,6 @@ if (!form || form.teamId != teamId) {
   return notFound();
 }
 
-if (Astro.request.method === "POST") {
-  const response = await Astro.request.formData();
-  const values: any = unflatten(Object.fromEntries(response));
-  delete values.id;
-  delete values.teamId;
-  return asJson(values);
-  // await db
-  //   .update(Form)
-  //   .set({
-  //     ...values,
-  //   })
-  //   .where(eq(Form.id, form.id));
-
-  // return new Response("", {
-  //   status: 302,
-  //   headers: {
-  //     location: `/form/${form.id}/edit`,
-  //   },
-  // });
-}
 ---
 
 <Layout title="Edit Form.">

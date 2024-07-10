@@ -4,7 +4,7 @@ import Layout from "@/layouts/Layout.astro";
 import { getTeam } from "@/components/model";
 import { backToLogin, notFound } from "@/components/helper";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
-import * as query from "@/api/query";
+import query from "@/lib/query";
 import FormEntries from "./_entries";
 
 const team = await getTeam(Astro.request);
