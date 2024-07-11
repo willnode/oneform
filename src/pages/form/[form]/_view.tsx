@@ -1,9 +1,7 @@
 import { client } from "@/api/client";
 import { FormControl } from "@/components/control/FormControl";
 import { extractFormData } from "@/components/helper";
-import { Toaster } from "@/components/ui/sonner";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export default function ViewForm({ value, schema, id }: any) {
   const [error, setError] = useState("");
@@ -22,7 +20,7 @@ export default function ViewForm({ value, schema, id }: any) {
       });
       let rj = await r.json();
       if (rj.status == "ok") {
-        toast("Form is saved");
+        window.location.assign('./posted');
       } else {
         setError(rj.message);
       }
@@ -39,7 +37,6 @@ export default function ViewForm({ value, schema, id }: any) {
         disabled={loading}
         value={value}
       />
-      <Toaster />
     </div>
   );
 }

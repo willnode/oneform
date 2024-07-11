@@ -6,12 +6,16 @@ const { format: formatID } = Astro.params;
 import { Form, Format, db, eq } from "astro:db";
 import Group from "@/components/control/Group.tsx";
 import { notFound } from "@/components/helper";
+import EditFormat from "./_edit";
 
 if (!formatID) {
   return notFound();
 }
 
-const formatList = await db.select().from(Format).where(eq(Format.id, formatID));
+const formatList = await db
+  .select()
+  .from(Format)
+  .where(eq(Format.id, formatID));
 if (formatList.length === 0) {
   return notFound();
 }
@@ -26,15 +30,5 @@ const form = formList[0];
 ---
 
 <Layout title="View Form">
-  <div class="container my-5" style="max-width: 800px;">
-    <a class="btn btn-warning" href=`/form/${form.id}/entries`
-      >Back to Formats</a
-    >
-    <form id="form" class="my-5">
-      <h1 class="display-4">{form.title}</h1>
-      
-      
-    </form>
-  </div>
+  <EditFormat form={form} />
 </Layout>
-

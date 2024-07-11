@@ -1,11 +1,11 @@
 ---
 import { Form, Entry, db, eq, and } from "astro:db";
-import { getTeam } from "@/components/model";
 import { backToLogin } from "@/components/helper";
 import { flatten } from "flat";
 import papaparse from "papaparse";
 const { unparse } = papaparse;
 import query from "@/lib/query";
+import { getTeam } from "@/lib/auth";
 
 const team = await getTeam(Astro.request);
 if (!team) {

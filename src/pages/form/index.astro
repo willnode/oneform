@@ -1,9 +1,9 @@
 ---
 import { Form, db, eq } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
-import { getTeam } from "@/components/model";
 import { backToLogin } from "@/components/helper";
 import FormList from "./_index";
+import { getTeam } from "@/lib/auth";
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();

@@ -1,5 +1,6 @@
 ---
-import { getTeam } from "@/components/model";
+import { getTeam } from "@/lib/auth";
+
 const team = await getTeam(Astro.request);
 return Astro.redirect(team ? "/form" : "/auth/login");
 ---

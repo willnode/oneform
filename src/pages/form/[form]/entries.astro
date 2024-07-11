@@ -1,11 +1,11 @@
 ---
 import { Form, Entry, db, eq, and, Hook } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
-import { getTeam } from "@/components/model";
 import { backToLogin, notFound } from "@/components/helper";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
 import query from "@/lib/query";
 import FormEntries from "./_entries";
+import { getTeam } from "@/lib/auth";
 
 const team = await getTeam(Astro.request);
 if (!team) {

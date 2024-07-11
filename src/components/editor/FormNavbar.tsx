@@ -6,6 +6,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { RxArrowLeft } from 'react-icons/rx'
 
 export default function FormNavbar({ page }: { page: string }) {
   return (
@@ -16,7 +17,7 @@ export default function FormNavbar({ page }: { page: string }) {
             href="../"
             className={navigationMenuTriggerStyle()}
           >
-            Back
+            <RxArrowLeft />
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
@@ -48,20 +49,11 @@ export default function FormNavbar({ page }: { page: string }) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink
-            href="./formats"
+            href="./config"
             className={navigationMenuTriggerStyle()}
-            active={page === "formats"}
+            active={page === "config"}
           >
-            Formats
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink
-            href="./hooks"
-            className={navigationMenuTriggerStyle()}
-            active={page === "hooks"}
-          >
-            Hooks
+            Config
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>

@@ -1,12 +1,12 @@
 ---
-import { Form, Format, db, eq, and } from "astro:db";
+import { Form, Format, db, eq, and, Hook } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
-import { getTeam } from "@/components/model";
 import { backTo, backToLogin, notFound } from "@/components/helper";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
 import { ulid } from "ulid";
 import query from "@/lib/query";
-import { Button } from "@/components/ui/button";
+import { getTeam } from "@/lib/auth";
+import FormConfig from "./_config";
 
 const team = await getTeam(Astro.request);
 if (!team) {
@@ -51,36 +51,11 @@ const formatList = await db
   .select()
   .from(Format)
   .where(eq(Format.formId, formId));
+
+const hookList = await db.select().from(Hook).where(eq(Hook.formId, formId));
 ---
 
-<Layout title="Entries.">
-  <FormNavbar page="formats" />
-  <div class="container my-5">
-    <div class="my-3">
-      <form method="post">
-        Create New :
-        <Button variant="secondary" name="type" value="json"> JSON </Button>
-        <Button variant="secondary" name="type" value="text"> TEXT </Button>
-        <Button variant="secondary" name="type" value="html"> HTML </Button>
-        <Button variant="secondary" name="type" value="pdf"> PDF </Button>
-      </form>
-    </div>
-    <div class="list-group">
-      {
-        formatList.map((format) => (
-          <a
-            href={`/format/${format.id}/edit`}
-            class="list-group-item list-group-item-action"
-          >
-            {format.title} <span class="badge">{format.type}</span>
-          </a>
-        ))
-      }
-    </div>
-
-    <div class="alert alert-info my-3">
-      To Use Format, go Entries and open an entry, then click one of the
-      formats.
-    </div>
-  </div>
+<Layout title="Form config">
+  <FormNavbar page="config" />
+  <FormConfig formatList={formatList} client:load />
 </Layout>
