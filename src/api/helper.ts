@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 type rType<T> = {
   status: "ok",
-  data?: T,
+  data: T,
 } |  {
   status: "error",
   message: string,

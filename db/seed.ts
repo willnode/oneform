@@ -71,6 +71,7 @@ export default async function seed() {
       id: fid,
       teamId: tid,
       title: "Restaurat Review",
+      config: {},
       schema,
       privilenge: "public",
     },

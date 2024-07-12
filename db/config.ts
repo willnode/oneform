@@ -62,6 +62,7 @@ const Form = defineTable({
     }),
     title: column.text(),
     schema: column.json(),
+    config: column.json(),
     created: column.date({
       default: NOW,
     }),

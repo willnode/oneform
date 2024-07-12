@@ -18,13 +18,14 @@ const form = new Hono()
       const team = await getTeam(c.req.raw);
       let r = await db.insert(Form).values({
         ...values,
+        config: {},
         teamId: team,
         id,
       });
       if (r.rowsAffected == 0) {
         return rError(c, "Emm no shit");
       }
-      return rOK(c);
+      return rOK(c, id);
     },
   )
   .post(

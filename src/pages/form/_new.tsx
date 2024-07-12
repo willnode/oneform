@@ -8,17 +8,34 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { extractFormData } from "@/components/helper";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function NewForm({ value }: any) {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  async function onSubmit(json: any) {
-    let r = await client.api.form.new.$post({ json });
-    let rj = await r.json();
-    if (rj.status == "ok") {
-      alert(JSON.stringify(rj));
-    } else {
-      setError(rj.message);
+  async function onSubmit(
+    json: any,
+    e: React.BaseSyntheticEvent<object, any, HTMLFormElement> | undefined,
+  ) {
+    try {
+      setLoading(true);
+      const form: any = extractFormData(new FormData(e?.target));
+      let r = await client.api.form.new.$post({
+        form,
+      });
+      let rj = await r.json();
+      if (rj.status == "ok") {
+        toast("Form is saved");
+        window.location.assign(`/form/${rj.data}/edit`)
+      } else {
+        setError(rj.message);
+        setLoading(false);
+      }
+    } catch {
+      setLoading(false);
     }
   }
 
@@ -36,7 +53,8 @@ export default function NewForm({ value }: any) {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <EditorFormControl onSubmit={onSubmit} value={value} />
+      <EditorFormControl onSubmit={onSubmit} disabled={loading} value={value} />
+      <Toaster />
     </div>
   );
 }
