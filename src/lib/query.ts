@@ -1,4 +1,6 @@
-import { db, User, and, UserAuth, eq, Team, Form, Entry } from "astro:db";
+import { User, UserAuth, Team, Form, Entry } from "@/db/schema";
+import db from "@/lib/db";
+import { and, eq } from "drizzle-orm";
 
 const query = {
   async getUserByEmail(email: string) {

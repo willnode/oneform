@@ -1,6 +1,7 @@
-import { User, UserAuth, Team, Form, db, Entry, Format } from "astro:db";
+import { User, UserAuth, Team, Form, Entry, Format } from "./schema";
 import { ulid } from "ulid";
 import { encryptPW } from "@/api/helper";
+import db from "@/lib/db";
 
 // https://astro.build/db/seed
 export default async function seed() {

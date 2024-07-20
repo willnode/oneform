@@ -1,6 +1,7 @@
 import { Hono, type Context } from "hono";
 import { z, ZodError } from "zod";
-import { Team, User, UserAuth, and, db, eq } from "astro:db";
+import { User, UserAuth, Team } from "@/db/schema";
+import db from "@/lib/db";
 import query from "../lib/query";
 import { encryptPW, rError, rOK } from "./helper";
 import * as cookie from "hono/cookie";
