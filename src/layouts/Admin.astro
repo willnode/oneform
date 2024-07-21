@@ -1,0 +1,22 @@
+---
+import { Sidebar } from "@/components/sidebar/sidebar";
+import Layout from "./Layout.astro";
+import { Footer } from "@/components/sidebar/footer";
+import { Navbar } from "@/components/sidebar/navbar";
+const { title } = Astro.props;
+---
+
+<Layout title={title}>
+    <Sidebar client:load pathname={Astro.url.pathname} />
+    <main
+        id="main"
+        class={" bg-zinc-50 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300 lg:ml-72"}
+    >
+        <div class="min-h-[calc(100vh_-_56px)]">
+            <Navbar client:load title={title} />
+            <slot />
+        </div>
+
+        <Footer />
+    </main>
+</Layout>

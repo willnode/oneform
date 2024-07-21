@@ -1,0 +1,34 @@
+---
+import { ulid } from "ulid";
+import { backToLogin } from "@/components/helper";
+import NewForm from "./_new";
+import { getTeam } from "@/lib/auth";
+import Admin from "@/layouts/Admin.astro";
+
+const team = await getTeam(Astro.request);
+if (!team) {
+  return backToLogin();
+}
+---
+
+<Admin title="New Form">
+  <div class="p-5">
+    <NewForm
+      client:only="react"
+      value={{
+        title: "New Form",
+        privilenge: "public",
+        schema: [
+          {
+            id: ulid(),
+            type: "text",
+            variant: "single-line",
+            code: "name",
+            label: "Name",
+            required: true,
+          },
+        ],
+      }}
+    />
+  </div>
+</Admin>

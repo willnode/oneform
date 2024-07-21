@@ -1,0 +1,30 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { backToLogin, notFound } from "@/components/helper";
+import EditForm from "./_edit.tsx";
+import FormNavbar from "@/components/editor/FormNavbar.tsx";
+import query from "@/lib/query.ts";
+import { getTeam } from "@/lib/auth";
+
+const { view: viewId } = Astro.params;
+
+if (!viewId) {
+  return notFound();
+}
+
+const teamId = await getTeam(Astro.request);
+if (!teamId) {
+  return backToLogin();
+}
+
+const view = await query.getViewById(viewId);
+if (!view || view.teamId != teamId) {
+  return notFound();
+}
+
+---
+
+<Layout title="Edit Form.">
+  <FormNavbar page="edit" />
+  <EditForm client:only="react" value={view} />
+</Layout>

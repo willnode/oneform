@@ -4,11 +4,13 @@ import auth from "./auth";
 import { ZodError } from "zod";
 import { rError } from "./helper";
 import form from "./form";
+import view from "./view";
 
 const app = new Hono()
   .use(logger())
   .route("/api/auth", auth)
   .route("/api/form", form)
+  .route("/api/view", view)
   .get("/api/health", async (c) => {
     return c.json({ status: "OK" });
   })

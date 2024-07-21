@@ -93,7 +93,8 @@
     "ulid": "^2.3.0",
     "vaul": "^0.9.1",
     "yaml": "^2.4.5",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.4"
   },
   "packageManager": "yarn@4.3.1",
   "devDependencies": {

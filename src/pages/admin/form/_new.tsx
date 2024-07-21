@@ -29,7 +29,7 @@ export default function NewForm({ value }: any) {
       let rj = await r.json();
       if (rj.status == "ok") {
         toast("Form is saved");
-        window.location.assign(`/form/${rj.data}/edit`)
+        window.location.assign(`/admin/form/${rj.data}/edit`)
       } else {
         setError(rj.message);
         setLoading(false);

@@ -1,9 +1,9 @@
 ---
-import Layout from "@/layouts/Layout.astro";
 import { backToLogin } from "@/components/helper";
 import FormList from "./_index";
 import { getTeam } from "@/lib/auth";
 import query from "@/lib/query";
+import Admin from "@/layouts/Admin.astro";
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();
@@ -11,6 +11,8 @@ if (!team) {
 const formList = await query.getFormListByTeamId(team);
 ---
 
-<Layout title="List of Forms">
-  <FormList list={formList} client:load />
-</Layout>
+<Admin title="List of Forms">
+  <div class="p-5">
+    <FormList list={formList} client:load />
+  </div>
+</Admin>

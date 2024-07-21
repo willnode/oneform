@@ -253,7 +253,6 @@ export default {
           values: [
             { value: "private" },
             { value: "internal" },
-            { value: "open" },
             { value: "public" },
           ],
           required: true,

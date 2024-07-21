@@ -29,14 +29,14 @@ export default function ListForm({ list }: Props) {
               New
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <NavigationMenuItem>
+          {/* <NavigationMenuItem>
             <NavigationMenuLink
               href="/api/auth/logout"
               className={navigationMenuTriggerStyle()}
             >
               Logout
             </NavigationMenuLink>
-          </NavigationMenuItem>
+          </NavigationMenuItem> */}
         </NavigationMenuList>
       </NavigationMenu>
 

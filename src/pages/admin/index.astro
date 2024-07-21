@@ -1,0 +1,6 @@
+---
+import { getTeam } from "@/lib/auth";
+
+const team = await getTeam(Astro.request);
+return Astro.redirect(team ? "/admin/form" : "/auth/login");
+---

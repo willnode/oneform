@@ -78,6 +78,9 @@ const config: Config = {
       },
     },
     Card: {
+      defaultProps: {
+        title: "Card Here"
+      },
       fields: {
         title: {
           type: "text",

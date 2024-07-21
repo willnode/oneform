@@ -1,7 +1,8 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import Control from "./Control.tsx";
 import { Form } from "../ui/form.tsx";
-import schema from "../editor/schema.ts";
+import formSchema from "../editor/form.ts";
+import viewSchema from "../editor/view.ts";
 import { Button } from "../ui/button.tsx";
 
 export type FormProps = {
@@ -12,7 +13,11 @@ export type FormProps = {
 };
 
 export function EditorFormControl(props: Omit<FormProps, "schema">) {
-  return <FormControl {...props} schema={schema} />;
+  return <FormControl {...props} schema={formSchema} />;
+}
+
+export function EditorViewControl(props: Omit<FormProps, "schema">) {
+  return <FormControl {...props} schema={viewSchema} />;
 }
 
 export function FormControl({ schema, onSubmit, disabled, value }: FormProps) {

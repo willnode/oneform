@@ -54,6 +54,17 @@ const query = {
       .select()
       .from(View);
   },
+  async getViewById(viewId: string) {
+    let qa = await db
+      .select()
+      .from(View)
+      .where(and(eq(View.id, viewId)))
+      .limit(1);
+    if (qa.length > 0) {
+      return qa[0];
+    }
+    return null;
+  },
   async getEntryById(entryId: string) {
     let qa = await db
       .select()
