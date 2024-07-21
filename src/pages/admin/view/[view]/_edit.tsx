@@ -16,7 +16,7 @@ export default function EditForm({ value }: any) {
     try {
       setLoading(true);
       const form: any = extractFormData(new FormData(e?.target));
-      let r = await client.api.form.edit[":id"].$post({
+      let r = await client.api.view.edit[":id"].$post({
         param: { id: value.id },
         form,
       });

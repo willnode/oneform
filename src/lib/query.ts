@@ -76,6 +76,19 @@ const query = {
     }
     return null;
   },
+  async getViewByRoute(route: string) {
+    let qa = await db
+      .select()
+      .from(View)
+      .where(eq(View.route, route))
+      .limit(1);
+
+    console.log(qa);
+    if (qa.length > 0) {
+      return qa[0];
+    }
+    return null;
+  },
 };
 
 export default query;

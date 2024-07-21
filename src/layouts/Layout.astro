@@ -5,10 +5,11 @@ interface Props {
 
 import "@/styles/globals.css";
 const { title } = Astro.props;
+const theme = Astro.cookies.get('theme')?.value;
 ---
 
 <!doctype html>
-<html class="dark" lang="en">
+<html class={theme || 'light'} lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />

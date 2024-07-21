@@ -5,13 +5,13 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
 
 import {
   buttonVariants,
 } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
   list: any[];
@@ -43,10 +43,26 @@ export default function ListForm({ list }: Props) {
       <h1 className="text-2xl mb-5">View List</h1>
 
       <div className="list-group grid xl:grid-cols-3 md:grid-cols-2 my-3 gap-3">
-        {list?.map((form) => (
-          <Button variant="outline" asChild>
-            <a href={`/admin/view/${form.id}/edit`}>{form.title}</a>
-          </Button>
+        {list?.map((view, i) => (
+          <Card>
+            <CardHeader>
+              <CardTitle>{view.route}</CardTitle>
+            </CardHeader>
+            <CardContent>
+
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" asChild>
+                <a href={`/admin/view/${view.id}/edit`}>Edit</a>
+              </Button>
+              <Button variant="outline" asChild>
+                <a href={`${view.route}`} target="_blank">Preview</a>
+              </Button>
+              <Button variant="outline" asChild>
+                <a href={`/admin/view/${view.id}/builder`}>Builder</a>
+              </Button>
+            </CardFooter>
+          </Card>
         ))}
       </div>
     </>

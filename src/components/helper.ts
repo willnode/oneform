@@ -54,7 +54,7 @@ export function twToStyle(str: string) {
   if (typeof str !== 'string') return {};
   return twj(str);
 }
-export function cssToStyle(str: string) {
+export function cssToStyle(str: string | undefined) {
   if (typeof str !== 'string') return {};
   return str.split(';').reduce((obj: Record<string, string>, line) => {
     let [key, ...value] = _.split(line, ':');

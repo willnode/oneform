@@ -6,9 +6,7 @@ import db from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { validator } from "hono/validator";
 import { ulid } from "ulid";
-import query from "../lib/query";
 import { getTeam } from "@/lib/auth";
-import { handleFormUpload } from "@/components/model";
 
 const view = new Hono()
   .post(
@@ -20,7 +18,6 @@ const view = new Hono()
       const team = await getTeam(c.req.raw);
       let r = await db.insert(View).values({
         ...values,
-        config: {},
         teamId: team,
         id,
       });
@@ -42,6 +39,23 @@ const view = new Hono()
         .update(View)
         .set({
           ...values,
+        })
+        .where(eq(View.id, id));
+      if (r[0].affectedRows == 0) {
+        return rError(c, "Emm no shit");
+      }
+      return rOK(c);
+    },
+  )
+  .post(
+    "/builder/:id",
+    validator("json", (v) => v),
+    async (c) => {
+      let id = c.req.param("id");
+      let r = await db
+        .update(View)
+        .set({
+          schema: await c.req.json(),
         })
         .where(eq(View.id, id));
       if (r[0].affectedRows == 0) {

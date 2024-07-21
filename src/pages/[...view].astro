@@ -1,0 +1,26 @@
+---
+import { backToLogin, notFound } from "@/components/helper";
+import query from "@/lib/query";
+import Render from "./_view";
+import Layout from "@/layouts/Layout.astro";
+
+let path = Astro.url.pathname;
+
+let route = await query.getViewByRoute(path);
+if (!route) {
+    if (path === "/") {
+        return backToLogin();
+    }
+    return notFound();
+}
+if (!route.schema) {
+    return new Response("empty page here");
+}
+
+let schema =
+    typeof route.schema === "string" ? JSON.parse(route.schema) : route.schema;
+---
+
+<Layout title="A">
+    <Render schema={schema} />
+</Layout>

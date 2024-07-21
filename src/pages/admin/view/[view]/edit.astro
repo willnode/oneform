@@ -5,6 +5,7 @@ import EditForm from "./_edit.tsx";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
 import query from "@/lib/query.ts";
 import { getTeam } from "@/lib/auth";
+import Admin from "@/layouts/Admin.astro";
 
 const { view: viewId } = Astro.params;
 
@@ -21,10 +22,11 @@ const view = await query.getViewById(viewId);
 if (!view || view.teamId != teamId) {
   return notFound();
 }
-
 ---
 
-<Layout title="Edit Form.">
-  <FormNavbar page="edit" />
-  <EditForm client:only="react" value={view} />
-</Layout>
+<Admin title="Edit Form.">
+  <div class="p-5">
+    <FormNavbar page="edit" />
+    <EditForm client:only="react" value={view} />
+  </div>
+</Admin>

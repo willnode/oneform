@@ -15,7 +15,7 @@ export const UserAuth = mysqlTable("user_auth", {
   id: varchar("id", { length: 26 }).primaryKey(),
   userId: varchar("user_id", { length: 26 }).references(() => User.id).notNull(),
   type: varchar("type", { length: 255 }).notNull(),
-  identifier: varchar("identifier", { length: 255 }).notNull(),
+  identifier: varchar("identifier", { length: 1024 }).notNull(),
 },
   (table) => {
     return {
@@ -36,20 +36,20 @@ export const Team = mysqlTable("team", {
 export const Form = mysqlTable("form", {
   id: varchar("id", { length: 26 }).primaryKey(),
   teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
-  title: text("title"),
+  title: text("title").notNull(),
   schema: json("schema"),
   config: json("config"),
+  privilenge: text("privilenge").notNull(),
   created: timestamp("created").defaultNow(),
   modified: timestamp("modified").defaultNow(),
-  privilenge: text("privilenge"),
 });
 
 export const View = mysqlTable("view", {
   id: varchar("id", { length: 26 }).primaryKey(),
-  teamId: varchar("id", { length: 26 }).references(() => Team.id).notNull(),
-  route: json("route"),
+  teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
+  route: varchar("route", { length: 1024 }).notNull().unique(),
   schema: json("schema"),
-  privilenge: text("privilenge"),
+  privilenge: text("privilenge").notNull(),
   created: timestamp("created").defaultNow(),
   modified: timestamp("modified").defaultNow(),
 });

@@ -14,5 +14,6 @@ const formList = await query.getFormListByTeamId(team);
 <Admin title="List of Forms">
   <div class="p-5">
     <FormList list={formList} client:load />
+    {formList.length == 0 && <div class="italic opacity-50">This list is empty</div>}
   </div>
 </Admin>

@@ -69,6 +69,7 @@
     "hono": "^4.4.12",
     "input-otp": "^1.2.4",
     "jexl": "^2.3.0",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "liquidjs": "^10.15.0",
     "lodash-es": "^4.17.21",
@@ -100,6 +101,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2",
     "@types/jexl": "^2",
+    "@types/js-cookie": "^3",
     "@types/jsonwebtoken": "^9",
     "@types/lodash-es": "^4",
     "@types/papaparse": "^5",

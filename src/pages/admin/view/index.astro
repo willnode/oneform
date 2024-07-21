@@ -14,5 +14,6 @@ const viewList = await query.getViewListByTeamId(team);
 <Admin title="List of Views">
   <div class="p-5">
     <ViewList list={viewList} client:load />
+    {viewList.length == 0 && <div class="italic opacity-50">This list is empty</div>}
   </div>
 </Admin>

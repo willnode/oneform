@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { useState, useEffect } from 'react';
+import CookieStorage from './cookie';
 
 interface useSidebarToggleStore {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface useSidebarToggleStore {
 interface useThemeStore {
   theme: "light" | "dark";
   toggleTheme: () => void;
+  apply: () => void;
 }
 
 export const useSidebarToggle = create(
@@ -50,15 +52,36 @@ export const useSidebarToggle = create(
 
 export const useTheme = create(
   persist<useThemeStore>(
-    (set, get) => ({
-      theme: 'light',
-      toggleTheme: () => {
-        set({ theme: get().theme == 'light' ? 'dark' : 'light' });
+    function (set, get) {
+      function applyEffect(theme: string) {
+        // console.log(isOpen)
+        let main = document.documentElement;
+        if (!main) return;
+        if (theme == 'light') {
+          main.classList.remove('dark');
+          main.classList.add('light');
+        } else {
+          main.classList.remove('light');
+          main.classList.add('dark');
+        }
+        console.log(main.classList);
       }
-    }),
+      return ({
+        theme: 'light',
+        toggleTheme: () => {
+          let theme: "light" | "dark" = get().theme == 'light' ? 'dark' : 'light';
+          applyEffect(theme);
+          set({ theme });
+        },
+        apply: () => applyEffect((get() || { theme: 'light' }).theme)
+      })
+    },
     {
       name: 'theme',
-      storage: createJSONStorage(() => localStorage)
+      storage: createJSONStorage(() => CookieStorage('theme')),
+      onRehydrateStorage: () => {
+        return (state) => state?.apply();
+      }
     }
   )
 );

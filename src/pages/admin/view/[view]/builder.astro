@@ -1,0 +1,33 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import BuilderView from "./_builder";
+import { notFound } from "@/components/helper";
+import { getTeam } from "@/lib/auth";
+import query from "@/lib/query";
+const { view: id } = Astro.params;
+
+if (!id) {
+    return notFound();
+}
+
+const teamId = await getTeam(Astro.request);
+if (!teamId) {
+  return backToLogin();
+}
+
+const view = await query.getViewById(id);
+if (!view || view.teamId != teamId) {
+  return notFound();
+}
+
+
+let schema =
+    typeof view.schema === "string" ? JSON.parse(view.schema) : view.schema;
+
+---
+
+<Layout title="New View">
+    <BuilderView id={id} schema={schema} client:only="react" />
+</Layout>
+
+
