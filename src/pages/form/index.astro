@@ -1,14 +1,14 @@
 ---
-import { Form, db, eq } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
 import { backToLogin } from "@/components/helper";
 import FormList from "./_index";
 import { getTeam } from "@/lib/auth";
+import query from "@/lib/query";
 const team = await getTeam(Astro.request);
 if (!team) {
   return backToLogin();
 }
-const formList = await db.select().from(Form).where(eq(Form.teamId, team));
+const formList = await query.getFormListByTeamId(team);
 ---
 
 <Layout title="List of Forms">

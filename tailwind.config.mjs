@@ -1,4 +1,5 @@
 import animate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -70,8 +71,27 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: null,
+            h1: {
+              color: null,
+            },
+            h2: {
+              color: null,
+            },
+            h3: {
+              color: null,
+            },
+            h4: {
+              color: null,
+            }
+          }
+        }
+      }
     },
   },
-  plugins: [animate],
+  plugins: [animate, typography],
 };
 

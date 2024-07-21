@@ -11,7 +11,6 @@ export const User = mysqlTable("user", {
     mode: 'string'
   }).defaultNow(),
 });
-
 export const UserAuth = mysqlTable("user_auth", {
   id: varchar("id", { length: 26 }).primaryKey(),
   userId: varchar("user_id", { length: 26 }).references(() => User.id).notNull(),
@@ -27,7 +26,6 @@ export const UserAuth = mysqlTable("user_auth", {
       userTypeIdx: uniqueIndex("user_type_idx").on(table.userId, table.type),
     };
   });
-
 
 export const Team = mysqlTable("team", {
   id: varchar("id", { length: 26 }).primaryKey(),
@@ -46,28 +44,16 @@ export const Form = mysqlTable("form", {
   privilenge: text("privilenge"),
 });
 
-export const Format = mysqlTable("format", {
+export const View = mysqlTable("view", {
   id: varchar("id", { length: 26 }).primaryKey(),
-  formId: varchar("form_id", { length: 26 }).references(() => Form.id).notNull(),
-  title: text("title"),
-  teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
-  type: text("type"),
+  teamId: varchar("id", { length: 26 }).references(() => Team.id).notNull(),
+  route: json("route"),
   schema: json("schema"),
   privilenge: text("privilenge"),
   created: timestamp("created").defaultNow(),
   modified: timestamp("modified").defaultNow(),
 });
-export const Hook = mysqlTable("hook", {
-  id: varchar("id", { length: 26 }).primaryKey(),
-  formId: varchar("form_id", { length: 26 }).references(() => Form.id).notNull(),
-  teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
-  formatId: varchar("format_id", { length: 26 }).references(() => Format.id).notNull(),
-  title: text("title"),
-  type: text("type"),
-  status: text("status"),
-  created: timestamp("created").defaultNow(),
-  modified: timestamp("modified").defaultNow(),
-});
+
 
 export const File = mysqlTable("file", {
   id: varchar("id", { length: 26 }).primaryKey(),
@@ -81,6 +67,7 @@ export const File = mysqlTable("file", {
   created: timestamp("created").defaultNow(),
   modified: timestamp("modified").defaultNow(),
 });
+
 export const Entry = mysqlTable("entry", {
   id: varchar("id", { length: 26 }).primaryKey(),
   formId: varchar("form_id", { length: 26 }).references(() => Form.id).notNull(),
@@ -89,12 +76,3 @@ export const Entry = mysqlTable("entry", {
   created: timestamp("created").defaultNow(),
   modified: timestamp("modified").defaultNow(),
 });
-export const EntryHook = mysqlTable("entry_hook", {
-  id: varchar("id", { length: 26 }).primaryKey(),
-  entryId: varchar("entry_id", { length: 26 }).references(() => Entry.id).notNull(),
-  hookId: varchar("hook_id", { length: 26 }).references(() => Hook.id).notNull(),
-  status: text("status"),
-  created: timestamp("created").defaultNow(),
-  modified: timestamp("modified").defaultNow(),
-});
-

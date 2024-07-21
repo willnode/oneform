@@ -1,4 +1,5 @@
-import { Team, File as FileDB, db } from "astro:db";
+import { Team, File as FileDB } from "@/db/schema";
+import db from "@/lib/db";
 import { unflatten } from "flat";
 import path from "node:path";
 import fsp from "node:fs/promises";

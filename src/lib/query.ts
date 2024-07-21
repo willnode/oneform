@@ -1,4 +1,4 @@
-import { User, UserAuth, Team, Form, Entry } from "@/db/schema";
+import { User, UserAuth, Team, Form, Entry, View } from "@/db/schema";
 import db from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 
@@ -48,6 +48,11 @@ const query = {
       .select()
       .from(Form)
       .where(and(eq(Form.teamId, teamId)));
+  },
+  async getViewListByTeamId(teamId: string) {
+    return await db
+      .select()
+      .from(View);
   },
   async getEntryById(entryId: string) {
     let qa = await db

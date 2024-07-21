@@ -1,7 +1,9 @@
 import { Hono } from "hono";
 import { rError, rOK } from "./helper";
 import { unflatten } from "flat";
-import { db, Entry, eq, Form } from "astro:db";
+import { Entry, Form } from "@/db/schema";
+import db from "@/lib/db";
+import { eq } from "drizzle-orm";
 import { validator } from "hono/validator";
 import { ulid } from "ulid";
 import query from "../lib/query";
@@ -22,7 +24,7 @@ const form = new Hono()
         teamId: team,
         id,
       });
-      if (r.rowsAffected == 0) {
+      if (r[0].affectedRows == 0) {
         return rError(c, "Emm no shit");
       }
       return rOK(c, id);
@@ -42,7 +44,7 @@ const form = new Hono()
           ...values,
         })
         .where(eq(Form.id, id));
-      if (r.rowsAffected == 0) {
+      if (r[0].affectedRows == 0) {
         return rError(c, "Emm no shit");
       }
       return rOK(c);

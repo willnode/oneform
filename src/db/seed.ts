@@ -1,4 +1,4 @@
-import { User, UserAuth, Team, Form, Entry, Format } from "./schema";
+import { User, UserAuth, Team, Form, Entry, View } from "./schema";
 import { ulid } from "ulid";
 import { encryptPW } from "@/api/helper";
 import db from "@/lib/db";
@@ -90,15 +90,12 @@ export default async function seed() {
       authorId: null,
     },
   ]);
-  await db.insert(Format).values([
+  await db.insert(View).values([
     {
       id: aid,
-      formId: fid,
+      route: "/",
       privilenge: "public",
-      schema: {},
-      teamId: tid,
-      title: "New JSON",
-      type: "json",
+      schema: '{}',
     }
   ])
 }
