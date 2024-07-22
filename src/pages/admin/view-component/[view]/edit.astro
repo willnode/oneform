@@ -18,7 +18,7 @@ if (!teamId) {
   return backToLogin();
 }
 
-const view = await query.getViewById(viewId);
+const view = await query.getViewComponentById(viewId);
 if (!view || view.teamId != teamId) {
   return notFound();
 }

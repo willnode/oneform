@@ -4,6 +4,7 @@ import { Form } from "../ui/form.tsx";
 import formSchema from "../editor/form.ts";
 import viewSchema from "../editor/view.ts";
 import { Button } from "../ui/button.tsx";
+import viewComponentSchema from "../editor/viewComponent.ts";
 
 export type FormProps = {
   schema: any;
@@ -18,6 +19,10 @@ export function EditorFormControl(props: Omit<FormProps, "schema">) {
 
 export function EditorViewControl(props: Omit<FormProps, "schema">) {
   return <FormControl {...props} schema={viewSchema} />;
+}
+
+export function EditorViewComponentControl(props: Omit<FormProps, "schema">) {
+  return <FormControl {...props} schema={viewComponentSchema} />;
 }
 
 export function FormControl({ schema, onSubmit, disabled, value }: FormProps) {

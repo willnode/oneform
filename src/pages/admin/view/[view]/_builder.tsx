@@ -20,7 +20,6 @@ const save = (id: string) => {
     } else {
       // setError(rj.message);
     }
-    console.log(data);
   }
 };
 
@@ -28,6 +27,8 @@ const save = (id: string) => {
 export default function Editor({ id, schema }: { id: string, schema: any }) {
   return <div>
     <Puck config={config} data={schema} onPublish={save(id)} />
-    <Toaster />
+    <div style={{ zIndex: 1000, position: 'absolute', top: 0 }}>
+      <Toaster />
+    </div>
   </div>
 }

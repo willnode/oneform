@@ -23,28 +23,20 @@ export default function ListForm({ list }: Props) {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="/form/new"
+              href="/admin/form/new"
               className={buttonVariants({})}
             >
               New
             </NavigationMenuLink>
           </NavigationMenuItem>
-          {/* <NavigationMenuItem>
-            <NavigationMenuLink
-              href="/api/auth/logout"
-              className={navigationMenuTriggerStyle()}
-            >
-              Logout
-            </NavigationMenuLink>
-          </NavigationMenuItem> */}
         </NavigationMenuList>
       </NavigationMenu>
 
       <h1 className="text-2xl mb-5">Form List</h1>
 
       <div className="list-group grid xl:grid-cols-3 md:grid-cols-2 my-3 gap-3">
-        {list?.map((form) => (
-          <Button variant="outline" asChild>
+        {list?.map((form, i) => (
+          <Button key={i} variant="outline" asChild>
             <a href={`/form/${form.id}/edit`}>{form.title}</a>
           </Button>
         ))}

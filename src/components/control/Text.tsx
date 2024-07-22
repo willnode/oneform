@@ -35,6 +35,7 @@ export default function Text({ parentID, form, schema }: ControlProps) {
               maxLength={schema.maxlength}
               required={!!schema.required}
               defaultValue={field.value}
+              onChange={field.onChange}
             />
           ) : (
             <Input

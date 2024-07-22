@@ -4,7 +4,6 @@ import BuilderView from "./_builder";
 import { notFound } from "@/components/helper";
 import { getTeam } from "@/lib/auth";
 import query from "@/lib/query";
-import Admin from "@/layouts/Admin.astro";
 const { view: id } = Astro.params;
 
 if (!id) {
@@ -16,19 +15,14 @@ if (!teamId) {
   return backToLogin();
 }
 
-const view = await query.getViewById(id);
+const view = await query.getViewComponentById(id);
 if (!view || view.teamId != teamId) {
   return notFound();
 }
 
-
-let schema =
-    typeof view.schema === "string" ? JSON.parse(view.schema) : view.schema;
-
 ---
 
 <Layout title="New View">
-    <BuilderView id={id} schema={schema} client:only="react" />
+    <BuilderView id={id} schema={view.schema} config={view.config} client:only="react" />
 </Layout>
-
 

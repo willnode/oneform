@@ -1,0 +1,10 @@
+---
+import Admin from "@/layouts/Admin.astro";
+import NewView from "./_new";
+---
+
+<Admin title="New View">
+    <div class="p-5">
+        <NewView client:only="react" />
+    </div>
+</Admin>

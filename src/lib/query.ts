@@ -1,4 +1,4 @@
-import { User, UserAuth, Team, Form, Entry, View } from "@/db/schema";
+import { User, UserAuth, Team, Form, Entry, View, ViewComponent } from "@/db/schema";
 import db from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 
@@ -52,13 +52,31 @@ const query = {
   async getViewListByTeamId(teamId: string) {
     return await db
       .select()
-      .from(View);
+      .from(View)
+      .where(and(eq(View.teamId, teamId)));
+  },
+  async getViewComponentListByTeamId(teamId: string) {
+    return await db
+      .select()
+      .from(ViewComponent)
+      .where(and(eq(ViewComponent.teamId, teamId)));
   },
   async getViewById(viewId: string) {
     let qa = await db
       .select()
       .from(View)
       .where(and(eq(View.id, viewId)))
+      .limit(1);
+    if (qa.length > 0) {
+      return qa[0];
+    }
+    return null;
+  },
+  async getViewComponentById(viewComponentId: string) {
+    let qa = await db
+      .select()
+      .from(ViewComponent)
+      .where(and(eq(ViewComponent.id, viewComponentId)))
       .limit(1);
     if (qa.length > 0) {
       return qa[0];
@@ -83,7 +101,6 @@ const query = {
       .where(eq(View.route, route))
       .limit(1);
 
-    console.log(qa);
     if (qa.length > 0) {
       return qa[0];
     }

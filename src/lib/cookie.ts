@@ -24,7 +24,6 @@ const CookieStorage = (
         setItem: async (name: string, value: string): Promise<void> => {
             // set a cookie with options
             let v = JSON.parse(value);
-            console.log(name);
             Cookies.set(name, v.state[key], options);
         },
         removeItem: async (name: string): Promise<void> => {

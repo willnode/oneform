@@ -11,6 +11,7 @@ export const User = mysqlTable("user", {
     mode: 'string'
   }).defaultNow(),
 });
+
 export const UserAuth = mysqlTable("user_auth", {
   id: varchar("id", { length: 26 }).primaryKey(),
   userId: varchar("user_id", { length: 26 }).references(() => User.id).notNull(),
@@ -48,12 +49,24 @@ export const View = mysqlTable("view", {
   id: varchar("id", { length: 26 }).primaryKey(),
   teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
   route: varchar("route", { length: 1024 }).notNull().unique(),
+  title: text("title").notNull(),
   schema: json("schema"),
+  config: json("config"),
   privilenge: text("privilenge").notNull(),
   created: timestamp("created").defaultNow(),
   modified: timestamp("modified").defaultNow(),
 });
 
+export const ViewComponent = mysqlTable("view_component", {
+  id: varchar("id", { length: 26 }).primaryKey(),
+  teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
+  identifier: varchar("identifier", { length: 1024 }).notNull().unique(),
+  title: text("title").notNull(),
+  schema: text("schema"),
+  config: text("config"),
+  created: timestamp("created").defaultNow(),
+  modified: timestamp("modified").defaultNow(),
+});
 
 export const File = mysqlTable("file", {
   id: varchar("id", { length: 26 }).primaryKey(),

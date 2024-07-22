@@ -19,7 +19,6 @@ export const useSidebarToggle = create(
   persist<useSidebarToggleStore>(
     function (set, get) {
       function applyEffect(isOpen: boolean) {
-        // console.log(isOpen)
         // let main = document.getElementById('main');
         // if (!main) return;
         // if (isOpen) {
@@ -54,7 +53,6 @@ export const useTheme = create(
   persist<useThemeStore>(
     function (set, get) {
       function applyEffect(theme: string) {
-        // console.log(isOpen)
         let main = document.documentElement;
         if (!main) return;
         if (theme == 'light') {
@@ -64,7 +62,6 @@ export const useTheme = create(
           main.classList.remove('light');
           main.classList.add('dark');
         }
-        console.log(main.classList);
       }
       return ({
         theme: 'light',

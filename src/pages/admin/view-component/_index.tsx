@@ -11,7 +11,7 @@ import {
 import {
   buttonVariants,
 } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
   list: any[];
@@ -23,7 +23,7 @@ export default function ListForm({ list }: Props) {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink
-              href="/admin/view/new/"
+              href="/admin/view-component/new/"
               className={buttonVariants({})}
             >
               New
@@ -40,26 +40,24 @@ export default function ListForm({ list }: Props) {
         </NavigationMenuList>
       </NavigationMenu>
 
-      <h1 className="text-2xl mb-5">View List</h1>
+      <h1 className="text-2xl mb-5">View Component List</h1>
 
       <div className="list-group grid xl:grid-cols-3 md:grid-cols-2 my-3 gap-3">
         {list?.map((view, i) => (
           <Card key={i}>
             <CardHeader>
-              <CardTitle>{view.route}</CardTitle>
+              <CardTitle>{view.title}</CardTitle>
+              <CardDescription>{view.identifier}</CardDescription>
             </CardHeader>
             <CardContent>
 
             </CardContent>
             <CardFooter>
               <Button variant="outline" asChild>
-                <a href={`/admin/view/${view.id}/edit`}>Edit</a>
+                <a href={`/admin/view-component/${view.id}/edit`}>Edit</a>
               </Button>
               <Button variant="outline" asChild>
-                <a href={`${view.route}`} target="_blank">Preview</a>
-              </Button>
-              <Button variant="outline" asChild>
-                <a href={`/admin/view/${view.id}/builder`}>Builder</a>
+                <a href={`/admin/view-component/${view.id}/builder`}>Builder</a>
               </Button>
             </CardFooter>
           </Card>

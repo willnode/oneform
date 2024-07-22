@@ -8,19 +8,101 @@ let path = Astro.url.pathname;
 
 let route = await query.getViewByRoute(path);
 if (!route) {
-    if (path === "/") {
-        return backToLogin();
-    }
-    return notFound();
+  if (path === "/") {
+    return backToLogin();
+  }
+  return notFound();
 }
 if (!route.schema) {
-    return new Response("empty page here");
+  return new Response("empty page here");
 }
 
 let schema =
-    typeof route.schema === "string" ? JSON.parse(route.schema) : route.schema;
+  typeof route.schema === "string" ? JSON.parse(route.schema) : route.schema;
 ---
 
-<Layout title="A">
-    <Render schema={schema} />
+<Layout title={route.title}>
+  <Render schema={schema} />
+
+  <script is:inline>
+    class ComponentPreviewElement extends HTMLElement {
+      static observedAttributes = ["schema"];
+      #shadowRoot;
+      #cachedSrc;
+      #observer;
+      #dataset;
+
+      constructor() {
+        super();
+
+        this.#shadowRoot = this.attachShadow({ mode: "closed" });
+        this.#cachedSrc = {};
+        this.#dataset = {};
+        // @ts-ignore
+        this.#shadowRoot.dataset = this.#dataset;
+        this.#observer = new MutationObserver((mutationRecords) => {
+          let dataChanged = false;
+          mutationRecords.forEach((record) => {
+            let attr = record.attributeName;
+            if (attr && attr.startsWith("data-")) {
+              this.#dataset[attr.substring(5)] = this.getAttribute(attr);
+              dataChanged = true;
+            }
+          });
+          if (dataChanged) {
+            console.log(this.#dataset);
+            requestAnimationFrame(() => this.#processScripts());
+          }
+        });
+      }
+
+      connectedCallback() {
+        this.#observer.observe(this, { attributes: true });
+      }
+
+      disconnectedCallback() {
+        this.#observer.disconnect();
+      }
+
+      adoptedCallback() {
+        console.log("Custom element moved to new page.");
+      }
+
+      get #scripts() {
+        return this.#shadowRoot.querySelectorAll("script");
+      }
+
+      #scopedEval = (script) => Function(script).bind(this.#shadowRoot)();
+
+      async #processScripts() {
+        let scripts = this.#scripts;
+        console.log(scripts);
+        for (const s of scripts) {
+          if (s.src) {
+            if (!this.#cachedSrc[s.src]) {
+              try {
+                let a = await fetch(s.src);
+                let b = await a.text();
+                this.#scopedEval(b);
+                this.#cachedSrc[s.src] = b;
+              } catch (error) {
+                console.error(error);
+              }
+            }
+          } else {
+            this.#scopedEval(s.innerHTML);
+          }
+        }
+      }
+
+      attributeChangedCallback(name, oldValue, newValue) {
+        if (name == "schema") {
+          this.#shadowRoot.innerHTML = newValue;
+          requestAnimationFrame(() => this.#processScripts());
+        }
+      }
+    }
+    // @ts-ignore
+    customElements.define("preview-component", ComponentPreviewElement);
+  </script>
 </Layout>

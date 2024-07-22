@@ -9,6 +9,9 @@ import { parse } from 'yaml';
 import React, { createContext, useContext, useMemo } from "react";
 import jexl from "jexl";
 import { Liquid } from "liquidjs";
+import { client } from "@/api/client";
+import { X } from "lucide-react";
+import { ComponentRender } from "./component";
 
 function opt(arr: string[]) {
   return arr.map(x => ({ label: _.startCase(x), value: x }));
@@ -43,7 +46,10 @@ const useStyle = (classes: string, style?: string) => {
 const config: Config = {
   categories: {
     layout: {
-      components: ['Box', 'Text']
+      components: ['Box', 'Data', 'Component']
+    },
+    visual: {
+      components: ['Text', 'Button', 'Card']
     }
   },
   components: {
@@ -202,6 +208,45 @@ const config: Config = {
           case 'text':
           default:
             return <div style={css} >{text}</div>;
+        }
+      }
+    },
+    Component: {
+      fields: {
+        component: {
+          type: "external",
+          fetchList: async () => {
+            // ... fetch data from a third party API, or other async source
+            let r = await client.api["view-component"].get.$get();
+            let rw = await r.json();
+            if (rw.status == 'error') return [];
+            return rw.data.map(x => ({ identifier: x.identifier, title: x.title, id: x.id, schema: x.schema, }));
+          },
+          mapRow: (item) => ({ identifier: item.identifier, title: item.title }),
+          getItemSummary: (x) => x.identifier,
+        },
+        data: {
+          type: "array",
+          arrayFields: {
+            key: {
+              type: "text",
+            },
+            value: {
+              type: "text",
+            }
+          }
+        }
+      },
+      render({ component, data }) {
+        let ctx = useContext(dropZoneContext);
+        data = data.map((x: any) => {
+          x.value = useTempl(x.value);
+          return x;
+        });
+        if (ctx?.mode == "edit") {
+          return <div>Custom component {`<${component.identifier} />`} will render here</div>;
+        } else {
+          return <ComponentRender component={component} data={data} />;
         }
       }
     }
