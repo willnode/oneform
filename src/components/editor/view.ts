@@ -24,7 +24,12 @@ const viewSchema = {
         required: true,
       },
     ]
-  }],
+  }, {
+    label: 'Title',
+    id: 'title',
+    type: 'text',
+    required: true,
+  },],
 }
 
 export default viewSchema;

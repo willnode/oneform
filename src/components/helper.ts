@@ -52,7 +52,12 @@ export function extractFormData(data: FormData) {
 
 export function twToStyle(str: string) {
   if (typeof str !== 'string') return {};
-  return twj(str);
+  try {
+    return twj(str);
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 }
 export function cssToStyle(str: string | undefined) {
   if (typeof str !== 'string') return {};

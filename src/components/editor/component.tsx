@@ -6,39 +6,29 @@ const HTMLElementShim: any = typeof HTMLElement === 'undefined' ? Object : HTMLE
 const CustomElementsShim: any = typeof CustomElementRegistry === 'undefined' ? null : customElements;
 
 export class ComponentPreviewElement extends HTMLElementShim {
-    static observedAttributes = ["schema"];
     #shadowRoot: ShadowRoot;
     #cachedSrc: Record<string, string>;
     #observer: MutationObserver;
-    #dataset: Record<string, string | null>;
 
     constructor() {
         super();
 
         this.#shadowRoot = this.attachShadow({ mode: 'closed' });
         this.#cachedSrc = {};
-        this.#dataset = {};
         // @ts-ignore
-        this.#shadowRoot.dataset = this.#dataset;
-        this.#observer = new MutationObserver((mutationRecords) => {
-            let dataChanged = false;
-            mutationRecords.forEach(record => {
-                let attr = record.attributeName;
-                if (attr && attr.startsWith('data-')) {
-                    this.#dataset[attr.substring(5)] = this.getAttribute(attr);
-                    dataChanged = true;
-                }
-            });
-            if (dataChanged) {
-                console.log(this.#dataset);
-                requestAnimationFrame(() => this.#processScripts());
-            }
+        this.#shadowRoot.dataset = this.dataset;
+        this.#observer = new MutationObserver(() => {
+            this.#shadowRoot.innerHTML = this.getAttribute('schema') || '';
+            requestAnimationFrame(() => this.#processScripts());
         });
 
     }
 
     connectedCallback() {
+        // @ts-ignore
         this.#observer.observe(this, { attributes: true });
+        this.#shadowRoot.innerHTML = this.getAttribute('schema') || '';
+        requestAnimationFrame(() => this.#processScripts());
     }
 
     disconnectedCallback() {
@@ -58,29 +48,22 @@ export class ComponentPreviewElement extends HTMLElementShim {
 
     async #processScripts() {
         let scripts = this.#scripts;
-        console.log(scripts);
         for (const s of scripts) {
-            if (s.src) {
-                if (!this.#cachedSrc[s.src]) {
-                    try {
-                        let a = await fetch(s.src);
-                        let b = await a.text();
-                        this.#scopedEval(b);
-                        this.#cachedSrc[s.src] = b;
-                    } catch (error) {
-                        console.error(error);
-                    }
-                }
-            } else {
+            if (!s.src) {
                 this.#scopedEval(s.innerHTML);
+                continue;
             }
-        }
-    }
-
-    attributeChangedCallback(name: any, oldValue: any, newValue: any) {
-        if (name == 'schema') {
-            this.#shadowRoot.innerHTML = newValue;
-            requestAnimationFrame(() => this.#processScripts());
+            if (this.#cachedSrc[s.src]) {
+                continue;
+            }
+            try {
+                let a = await fetch(s.src);
+                let b = await a.text();
+                this.#scopedEval(b);
+                this.#cachedSrc[s.src] = b;
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 }

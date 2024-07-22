@@ -1,17 +1,16 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { DropZone, dropZoneContext, Puck, type Config, type Data } from "@measured/puck";
+import { DropZone, dropZoneContext, type Config } from "@measured/puck";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { cssToStyle, twToStyle } from "../helper";
-import { Button, buttonVariants } from "../ui/button";
-import _, { forEach } from "lodash-es";
+import { buttonVariants } from "../ui/button";
+import _ from "lodash-es";
 import RM from "react-markdown";
 import { parse } from 'yaml';
 import React, { createContext, useContext, useMemo } from "react";
-import jexl from "jexl";
 import { Liquid } from "liquidjs";
 import { client } from "@/api/client";
-import { X } from "lucide-react";
 import { ComponentRender } from "./component";
+import * as Fa from "react-icons/fa6";
+import type { IconType } from "react-icons";
 
 function opt(arr: string[]) {
   return arr.map(x => ({ label: _.startCase(x), value: x }));
@@ -34,6 +33,23 @@ function useTempl(str: string) {
       return 'error evaluating syntax: ' + error?.message;
     }
   }, [data, str])
+}
+
+function useTemplArray(arr: { key: string, value: string }[]) {
+  let data = useContext(DataContext);
+  return useMemo(() => {
+    return arr.map(({ key, value }) => {
+      if (!value) {
+        return { key, value: '' };
+      }
+      try {
+        return { key, value: liquid.parseAndRenderSync(value, data) };
+      } catch (error: any) {
+        console.error(error);
+        return { key, value: 'error evaluating syntax: ' + error?.message };
+      }
+    });
+  }, [data, arr.map(x => x?.value).join()])
 }
 
 const DataContext = createContext<any>({});
@@ -85,16 +101,22 @@ const config: Config = {
         link: {
           type: "text",
         },
+        icon: {
+          type: "select",
+          options: opt(Object.keys(Fa))
+        },
         variant: {
           type: "select",
           options: opt(["link", "default", "destructive", "outline", "secondary", "ghost"]),
         },
       },
-      render: ({ text, link, variant }) => {
+      render: ({ icon, text, link, variant }) => {
         link = useTempl(link);
+        // @ts-ignore
+        let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
         return <a href={link} className={buttonVariants({
           variant,
-        })}>{text}</a>
+        })}>{Icon && <Icon className="me-2" />}{text}</a>
       },
     },
     Card: {
@@ -108,6 +130,9 @@ const config: Config = {
         description: {
           type: "text",
         },
+        classes: {
+          type: "text",
+        },
         hasFooter: {
           type: "radio",
           options: [{
@@ -119,10 +144,11 @@ const config: Config = {
           }]
         }
       },
-      render({ title, description, hasFooter }) {
+      render({ title, description, classes, hasFooter }) {
         title = useTempl(title);
         description = useTempl(description);
-        return <Card>
+        classes = useStyle(classes);
+        return <Card style={classes}>
           {title && <CardHeader>
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
@@ -158,26 +184,26 @@ const config: Config = {
         },
       },
       render({ mock, classes }) {
-        let renderData: React.ReactNode[] = [];
         let css = useStyle(classes);
 
-        mock.forEach((el: any, i: number) => {
-          let data = useMemo(() => {
+        let dataMock = useMemo(() => {
+          return mock.map((m: any) => {
             try {
-              return parse(el.data);
+              return parse(m.data);
             } catch (error) {
               console.error(error);
-              return <div>YAML mock data error</div>
+              return 'YAML mock data error';
             }
-          }, [el.data])
-          renderData.push(<React.Fragment key={i}>
+          })
+        }, [mock]);
+
+        return <div style={css}>{dataMock.map((data: any, i: number) => {
+          return <React.Fragment key={i}>
             <DataContext.Provider value={data}>
               <DropZone zone="children" />
             </DataContext.Provider>
-          </React.Fragment>)
-        });
-
-        return <div style={css}>{renderData}</div>;
+          </React.Fragment>
+        })}</div>;
       }
     },
     Text: {
@@ -239,10 +265,7 @@ const config: Config = {
       },
       render({ component, data }) {
         let ctx = useContext(dropZoneContext);
-        data = data.map((x: any) => {
-          x.value = useTempl(x.value);
-          return x;
-        });
+        data = useTemplArray(data);
         if (ctx?.mode == "edit") {
           return <div>Custom component {`<${component.identifier} />`} will render here</div>;
         } else {
