@@ -52,7 +52,7 @@ function useTemplArray(arr: { key: string, value: string }[]) {
   }, [data, arr.map(x => x?.value).join()])
 }
 
-const DataContext = createContext<any>({});
+export const DataContext = createContext<any>({});
 
 const useStyle = (classes: string, style?: string) => {
   return useMemo(() => ({ ...twToStyle(classes), ...cssToStyle(style) }), [classes, style])
@@ -185,6 +185,7 @@ const config: Config = {
       },
       render({ mock, classes }) {
         let css = useStyle(classes);
+        let oldData = useContext(DataContext);
 
         let dataMock = useMemo(() => {
           return mock.map((m: any) => {
@@ -199,7 +200,7 @@ const config: Config = {
 
         return <div style={css}>{dataMock.map((data: any, i: number) => {
           return <React.Fragment key={i}>
-            <DataContext.Provider value={data}>
+            <DataContext.Provider value={{...oldData, ...data}}>
               <DropZone zone="children" />
             </DataContext.Provider>
           </React.Fragment>

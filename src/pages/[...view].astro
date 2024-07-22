@@ -5,13 +5,19 @@ import Render from "./_view";
 import Layout from "@/layouts/Layout.astro";
 
 let path = Astro.url.pathname;
+let subpath = "";
+
+if (!path.endsWith("/")) {
+  subpath = path.substring(path.lastIndexOf("/") + 1);
+  path = path.substring(0, path.lastIndexOf("/") + 1);
+}
 
 let route = await query.getViewByRoute(path);
 if (!route) {
   if (path === "/") {
     return backToLogin();
   }
-  return notFound();
+  return new Response(path);
 }
 if (!route.schema) {
   return new Response("empty page here");
@@ -22,7 +28,7 @@ let schema =
 ---
 
 <Layout title={route.title}>
-  <Render schema={schema} />
+  <Render schema={schema} data={{ path, subpath }} />
 
-  <script type="module" src='/component-client.js'></script>
+  <script type="module" src="/component-client.js"></script>
 </Layout>
