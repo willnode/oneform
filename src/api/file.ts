@@ -18,7 +18,7 @@ const form = new Hono()
       if (!team) {
         return rError(c, "Unauthenticated");
       }
-      const r = await query.getViewComponentListByTeamId(team);
+      const r = await query.getFileListByTeamId(team);
       return rOK(c, r);
     },
   )

@@ -1,4 +1,4 @@
-import { DropZone, dropZoneContext, type Config } from "@measured/puck";
+import { AutoField, DropZone, dropZoneContext, FieldLabel, Puck, type Config, type CustomField } from "@measured/puck";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { cssToStyle, twToStyle } from "../helper";
 import { buttonVariants } from "../ui/button";
@@ -11,13 +11,17 @@ import { client } from "@/api/client";
 import { ComponentRender } from "./component";
 import * as Fa from "react-icons/fa6";
 import type { IconType } from "react-icons";
+import { Badge } from "../ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 function opt(arr: string[]) {
-  return arr.map(x => ({ label: _.startCase(x), value: x }));
+  return arr.map(x => ({ label: _.startCase(x || '[Empty]'), value: x }));
 }
 function bool() {
-  return [{ label: 'Yes', value: 'y' }, { label: 'No', value: '' }]
+  return [{ label: 'Yes', value: 'y' }, { label: 'No', value: undefined }]
 }
+const variants = ["default", "secondary", "destructive", "warning", "success", "info", "outline"];
+const icons = ["", ...Object.keys(Fa)];
 const liquid = new Liquid();
 
 function useTempl(str: string) {
@@ -58,14 +62,46 @@ const useStyle = (classes: string, style?: string) => {
   return useMemo(() => ({ ...twToStyle(classes), ...cssToStyle(style) }), [classes, style])
 }
 
+const fileSelectionRender = ({ field, onChange, value }: {
+  field: CustomField<any>;
+  name: string;
+  id: string;
+  value: any;
+  onChange: (value: any) => void;
+  readOnly?: boolean;
+}) => {
+  return <FieldLabel label={field.label || 'Thumbnail'}>
+    <AutoField
+      field={{ type: "text" }}
+      onChange={(value) => onChange(value)}
+      value={value}
+    />
+    <AutoField
+      field={{
+        type: "external", fetchList: async () => {
+          // ... fetch data from a third party API, or other async source
+          let r = await client.api.file.get.$get();
+          let rw = await r.json();
+          if (rw.status == 'error') return [];
+          return rw.data.map(x => ({ id: x.id, type: x.type, name: x.name }));
+        },
+      }}
+      onChange={(value) => onChange(value ? `/upload/file/${value.id}/${value.name}` : '')}
+      value={value}
+    />
+  </FieldLabel >
+}
 
 const config: Config = {
   categories: {
     layout: {
       components: ['Box', 'Data', 'Component']
     },
+    content: {
+      components: ['Text', 'Image', 'Button']
+    },
     visual: {
-      components: ['Text', 'Button', 'Card']
+      components: ['Card', 'Alert', 'Badge']
     }
   },
   root: {
@@ -77,8 +113,8 @@ const config: Config = {
         type: "textarea",
       },
       thumbnail: {
-        type: "external",
-        
+        type: "custom",
+        render: fileSelectionRender,
       },
       css: {
         type: "textarea",
@@ -120,20 +156,77 @@ const config: Config = {
         },
         icon: {
           type: "select",
-          options: opt(Object.keys(Fa))
+          options: opt(icons)
         },
         variant: {
           type: "select",
-          options: opt(["link", "default", "destructive", "outline", "secondary", "ghost"]),
+          options: opt([...variants, "ghost", "link"]),
         },
       },
       render: ({ icon, text, link, variant }) => {
         link = useTempl(link);
+        text = useTempl(text);
         // @ts-ignore
         let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
         return <a href={link} className={buttonVariants({
           variant,
         })}>{Icon && <Icon className="me-2" />}{text}</a>
+      },
+    },
+    Badge: {
+      defaultProps: {
+        text: "Badge",
+      },
+      fields: {
+        text: {
+          type: "text",
+        },
+        icon: {
+          type: "select",
+          options: opt(icons)
+        },
+        variant: {
+          type: "select",
+          options: opt([...variants]),
+        },
+      },
+      render: ({ icon, text, link, variant }) => {
+        text = useTempl(text);
+        // @ts-ignore
+        let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
+        return <Badge variant={variant}>{Icon && <Icon className="me-2" />}{text}</Badge>
+      },
+    },
+    Alert: {
+      defaultProps: {
+        title: "Alert Title",
+        description: "Alert Description",
+      },
+      fields: {
+        title: {
+          type: "text",
+        },
+        description: {
+          type: "textarea",
+        },
+        icon: {
+          type: "select",
+          options: opt(icons)
+        },
+        variant: {
+          type: "select",
+          options: opt([...variants]),
+        },
+      },
+      render: ({ icon, title, description, variant }) => {
+        title = useTempl(title);
+        description = useTempl(description);
+        // @ts-ignore
+        let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
+        return <Alert variant={variant}>{Icon && <Icon className="me-2" />}
+          {title && <AlertTitle>{title}</AlertTitle>}
+          {description && <AlertDescription>{description}</AlertDescription>}
+        </Alert>
       },
     },
     Card: {
@@ -150,26 +243,28 @@ const config: Config = {
         classes: {
           type: "text",
         },
+        hasHeader: {
+          type: "radio",
+          options: bool(),
+        },
         hasFooter: {
           type: "radio",
-          options: [{
-            "label": "Yes",
-            value: "y",
-          }, {
-            label: "No",
-            value: ""
-          }]
+          options: bool(),
         }
       },
-      render({ title, description, classes, hasFooter }) {
+      render({ title, description, classes, hasHeader, hasFooter }) {
         title = useTempl(title);
         description = useTempl(description);
         classes = useStyle(classes);
         return <Card style={classes}>
-          {title && <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </CardHeader>}
+          <div className={hasHeader ? "flex items-center" : ""}>
+            {(title || description) && <CardHeader className={hasHeader ? "flex-grow" : ""}>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
+            </CardHeader>}
+            {hasHeader && <div className={(title || description) ? "flex-shrink p-6": "flex-grow p-6"}> <DropZone zone="header" /> </div>}
+          </div>
+
           <CardContent>
             <DropZone zone="children" />
           </CardContent>
@@ -253,6 +348,29 @@ const config: Config = {
           default:
             return <div style={css} >{text}</div>;
         }
+      }
+    },
+    Image: {
+      defaultProps: {
+        src: "https://picsum.photos/400/300"
+      },
+      fields: {
+        src: {
+          type: "custom",
+          render: fileSelectionRender,
+        },
+        classes: {
+          type: "text",
+        },
+        alt: {
+          type: "text",
+        },
+      },
+      render({ src, alt, classes }) {
+        src = useTempl(src);
+        alt = useTempl(alt);
+        let css = useStyle(classes);
+        return <img src={src} style={css} alt={alt} />;
       }
     },
     Component: {
