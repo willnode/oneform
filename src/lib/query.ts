@@ -110,6 +110,12 @@ const query = {
     }
     return null;
   },
+  async getEntryListByFormId(formId: string) {
+    return await db
+      .select()
+      .from(Entry)
+      .where(eq(Entry.formId, formId));
+  },
   async getViewByRoute(route: string) {
     let qa = await db
       .select()

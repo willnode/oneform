@@ -1,34 +1,25 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-
 const { entry: entryID } = Astro.params;
 
-import { Form, Entry, db, eq } from "astro:db";
-import { Format } from "astro:db";
 import ViewEntry from "./_view";
+import query from "@/lib/query";
+import Admin from "@/layouts/Admin.astro";
 
 if (!entryID) {
   return notFound();
 }
 
-const entryList = await db.select().from(Entry).where(eq(Entry.id, entryID));
-if (entryList.length === 0) {
-  return notFound();
-}
-const entry = entryList[0];
-
-const formList = await db.select().from(Form).where(eq(Form.id, entry.formId));
-if (formList.length === 0) {
+const entry = await query.getEntryById(entryID);
+if (!entry) {
   return notFound();
 }
 
-const form = formList[0];
-const formatList = await db
-  .select()
-  .from(Format)
-  .where(eq(Format.formId, form.id));
+const form = await query.getFormById(entry.formId);
+if (!form) {
+  return notFound();
+}
 ---
 
-<Layout title="View Form">
-  <ViewEntry entry={entry} form={form} formats={formatList} />
-</Layout>
+<Admin title="View Form">
+  <ViewEntry entry={entry} form={form} />
+</Admin>

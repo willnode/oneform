@@ -17,7 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 function opt(arr: string[]) {
   return arr.map(x => ({ label: _.startCase(x || '[Empty]'), value: x }));
 }
-function bool() {
+function bool(): any[] {
   return [{ label: 'Yes', value: 'y' }, { label: 'No', value: undefined }]
 }
 const variants = ["default", "secondary", "destructive", "warning", "success", "info", "outline"];

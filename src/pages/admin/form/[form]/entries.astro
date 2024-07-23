@@ -1,5 +1,4 @@
 ---
-import { Form, Entry, db, eq, and, Hook } from "astro:db";
 import Layout from "@/layouts/Layout.astro";
 import { backToLogin, notFound } from "@/components/helper";
 import FormNavbar from "@/components/editor/FormNavbar.tsx";
@@ -28,12 +27,7 @@ if (!form || form.teamId != teamId) {
   return notFound();
 }
 
-if (Astro.request.method === "DELETE") {
-  await db.delete(Entry).where(eq(Entry.formId, formId));
-  return "";
-}
-
-const entryList = await db.select().from(Entry).where(eq(Entry.formId, formId));
+const entryList = await query.getEntryListByFormId(formId);
 ---
 
 <Layout title="Entries.">
