@@ -1,20 +1,20 @@
 ---
 import { notFound } from "@/components/helper";
-import { File, db, eq } from "astro:db";
 import fs from "node:fs/promises";
 import { backTo } from "@/components/helper";
+import query from "@/lib/query";
 
 const { slug } = Astro.params;
 const parts = (slug + "").split("/");
+
 if (Astro.request.method !== "GET" || parts.length < 2 || parts[0] != "file") {
   return notFound();
 }
 
-const fileList = await db.select().from(File).where(eq(File.id, parts[1]));
-if (fileList.length === 0) {
+const file = await query.getFileById(parts[1]);
+if (!file) {
   return notFound();
 }
-const file = fileList[0];
 
 if (parts.length === 2) {
   return backTo(`/upload/file/${parts[1]}/${file.name}`);

@@ -62,6 +62,7 @@ export default function File({ parentID, form, schema }: ControlProps) {
             placeholder={schema.placeholder}
             multiple={schema.multiple}
             name={name}
+            id={name}
             required={!!schema.required}
           />
         </FormItem>

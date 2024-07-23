@@ -1,0 +1,19 @@
+---
+import { backToLogin } from "@/components/helper";
+import FormList from "./_index";
+import { getTeam } from "@/lib/auth";
+import query from "@/lib/query";
+import Admin from "@/layouts/Admin.astro";
+const team = await getTeam(Astro.request);
+if (!team) {
+  return backToLogin();
+}
+const formList = await query.getFormListByTeamId(team);
+---
+
+<Admin title="List of Forms">
+  <div class="p-5">
+    <FormList list={formList} client:load />
+    {formList.length == 0 && <div class="italic opacity-50">This list is empty</div>}
+  </div>
+</Admin>

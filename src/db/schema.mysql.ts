@@ -70,13 +70,13 @@ export const ViewComponent = mysqlTable("view_component", {
 
 export const File = mysqlTable("file", {
   id: varchar("id", { length: 26 }).primaryKey(),
-  formId: varchar("form_id", { length: 26 }).references(() => Form.id).notNull(),
-  authorId: varchar("author_id", { length: 26 }).references(() => User.id).notNull(),
+  formId: varchar("form_id", { length: 26 }).references(() => Form.id),
+  authorId: varchar("author_id", { length: 26 }).references(() => User.id),
   teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
-  size: int("size"),
-  type: text("type"),
-  name: text("name"),
-  path: text("path"),
+  size: int("size").notNull(),
+  type: text("type").notNull(),
+  name: text("name").notNull(),
+  path: text("path").notNull(),
   created: timestamp("created").defaultNow(),
   modified: timestamp("modified").defaultNow(),
 });

@@ -1,0 +1,19 @@
+---
+import { backToLogin } from "@/components/helper";
+import FileList from "./_index";
+import { getTeam } from "@/lib/auth";
+import query from "@/lib/query";
+import Admin from "@/layouts/Admin.astro";
+const team = await getTeam(Astro.request);
+if (!team) {
+  return backToLogin();
+}
+const viewList = await query.getFileListByTeamId(team);
+---
+
+<Admin title="List of Views">
+  <div class="p-5">
+    <FileList list={viewList} client:load />
+    {viewList.length == 0 && <div class="italic opacity-50">This list is empty</div>}
+  </div>
+</Admin>

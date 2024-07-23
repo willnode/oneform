@@ -8,7 +8,7 @@ import * as cookie from "hono/cookie";
 import { ulid } from "ulid";
 import bcrypt from "bcryptjs";
 
-const authSecret: string = process.env.AUTH_SECRET || "secret";
+const authSecret: string = import.meta.env.AUTH_SECRET || "secret";
 
 const loginSchema = z.object({
   email: z.string().email(),

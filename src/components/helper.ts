@@ -67,3 +67,17 @@ export function cssToStyle(str: string | undefined) {
     return obj;
   }, {})
 }
+
+export function formatBytes(bytes: number, precision = 1) {
+  var units = ['B', 'KiB', 'MiB', 'GiB', 'TiB'];
+
+  bytes = Math.max(bytes, 0);
+  var pow = Math.floor((bytes ? Math.log(bytes) : 0) / Math.log(1024));
+  pow = Math.min(pow, units.length - 1);
+
+  // Uncomment one of the following alternatives
+  bytes /= Math.pow(1024, pow);
+  // bytes /= (1 << (10 * pow));
+
+  return bytes.toFixed(precision) + ' ' + units[pow];
+}

@@ -6,7 +6,8 @@ import {
   SquarePen,
   LayoutGrid,
   LayoutList,
-  type LucideIcon
+  type LucideIcon,
+  Image
 } from "lucide-react";
 
 type Submenu = {
@@ -31,18 +32,18 @@ type Group = {
 export function getMenuList(pathname: string): Group[] {
   return [
     {
-      groupLabel: "",
+      groupLabel: "Admin",
       menus: [
         {
           href: "/admin/form/",
-          label: "Form",
+          label: "Forms",
           active: pathname.startsWith("/admin/form/"),
           icon: LayoutGrid,
           submenus: []
         },
         {
           href: "/admin/view/",
-          label: "View",
+          label: "Views",
           active: pathname.startsWith("/admin/view/"),
           icon: LayoutList,
           submenus: []
@@ -51,7 +52,7 @@ export function getMenuList(pathname: string): Group[] {
           href: "/admin/view-component/",
           label: "View Components",
           active: pathname.startsWith("/admin/view-component/"),
-          icon: LayoutList,
+          icon: Bookmark,
           submenus: []
         }
       ]
@@ -60,35 +61,17 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Contents",
       menus: [
         {
-          href: "",
-          label: "Posts",
-          active: pathname.includes("/posts"),
+          href: "/admin/entry/",
+          label: "Entries",
+          active: pathname.includes("/admin/entry/"),
           icon: SquarePen,
-          submenus: [
-            {
-              href: "/posts",
-              label: "All Posts",
-              active: pathname === "/posts"
-            },
-            {
-              href: "/posts/new",
-              label: "New Post",
-              active: pathname === "/posts/new"
-            }
-          ]
-        },
-        {
-          href: "/categories",
-          label: "Categories",
-          active: pathname.includes("/categories"),
-          icon: Bookmark,
           submenus: []
         },
         {
-          href: "/tags",
-          label: "Tags",
-          active: pathname.includes("/tags"),
-          icon: Tag,
+          href: "/admin/file/",
+          label: "File",
+          active: pathname.includes("/admin/file/"),
+          icon: Image,
           submenus: []
         }
       ]
@@ -97,16 +80,16 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Settings",
       menus: [
         {
-          href: "/users",
+          href: "/admin/user/",
           label: "Users",
-          active: pathname.includes("/users"),
+          active: pathname.includes("/admin/user/"),
           icon: Users,
           submenus: []
         },
         {
-          href: "/account",
+          href: "/admin/account/",
           label: "Account",
-          active: pathname.includes("/account"),
+          active: pathname.includes("/admin/account/"),
           icon: Settings,
           submenus: []
         }

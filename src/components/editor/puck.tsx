@@ -68,6 +68,23 @@ const config: Config = {
       components: ['Text', 'Button', 'Card']
     }
   },
+  root: {
+    fields: {
+      title: {
+        type: "text",
+      },
+      description: {
+        type: "textarea",
+      },
+      thumbnail: {
+        type: "external",
+        
+      },
+      css: {
+        type: "textarea",
+      },
+    }
+  },
   components: {
     Box: {
       fields: {
@@ -200,7 +217,7 @@ const config: Config = {
 
         return <div style={css}>{dataMock.map((data: any, i: number) => {
           return <React.Fragment key={i}>
-            <DataContext.Provider value={{...oldData, ...data}}>
+            <DataContext.Provider value={{ ...oldData, ...data }}>
               <DropZone zone="children" />
             </DataContext.Provider>
           </React.Fragment>

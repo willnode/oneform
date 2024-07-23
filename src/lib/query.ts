@@ -1,4 +1,4 @@
-import { User, UserAuth, Team, Form, Entry, View, ViewComponent } from "@/db/schema";
+import { User, UserAuth, Team, Form, Entry, View, ViewComponent, File } from "@/db/schema";
 import db from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 
@@ -60,6 +60,22 @@ const query = {
       .select()
       .from(ViewComponent)
       .where(and(eq(ViewComponent.teamId, teamId)));
+  },
+  async getFileListByTeamId(teamId: string) {
+    return await db
+      .select()
+      .from(File)
+      .where(and(eq(File.teamId, teamId)));
+  },
+  async getFileById(id: string) {
+    let qa = await db
+      .select()
+      .from(File)
+      .where(and(eq(File.id, id)));
+    if (qa.length > 0) {
+      return qa[0];
+    }
+    return null;
   },
   async getViewById(viewId: string) {
     let qa = await db

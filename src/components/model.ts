@@ -1,4 +1,4 @@
-import { Team, File as FileDB } from "@/db/schema";
+import { File as FileDB } from "@/db/schema";
 import db from "@/lib/db";
 import { unflatten } from "flat";
 import path from "node:path";
@@ -6,13 +6,16 @@ import fsp from "node:fs/promises";
 import fs from "node:fs";
 import { ulid } from "ulid";
 import { extractFormData } from "../components/helper";
+import { getApiSession, getSession } from "@/lib/auth";
+import type { Context } from "hono";
 
 export async function handleFormUpload(
-  data: FormData,
-  formId: string,
+  c: Context,
+  formId: string | null,
   teamId: string,
 ) {
-  const entries = extractFormData(data);
+  const entries = extractFormData(await c.req.formData());
+  const authorId = await getApiSession(c)
   for (const entry of Object.keys(entries)) {
     let v = entries[entry];
     if (v instanceof File) {
@@ -31,6 +34,7 @@ export async function handleFormUpload(
 
       await db.insert(FileDB).values({
         formId,
+        authorId,
         path: p,
         size: v.size,
         teamId,

@@ -2,7 +2,7 @@ import type { Context } from "hono";
 import * as cookie from "hono/cookie";
 import query from "./query";
 
-const authSecret: string = process.env.AUTH_SECRET || "secret";
+const authSecret: string = import.meta.env.AUTH_SECRET || "secret";
 const authCookieName: string = "uid";
 
 // get session under SSR
@@ -16,18 +16,18 @@ export async function getApiSession(c: Context): Promise<string | null> {
 }
 
 export async function getTeam(req: Request) {
-    try {
-      const session = await getSession(req);
-      if (!session) {
-        return null;
-      }
-      let q = await query.getTeamByUser(session);
-      return q?.id || null;
-    } catch (error) {
-      console.error(error);
+  try {
+    const session = await getSession(req);
+    if (!session) {
       return null;
     }
+    let q = await query.getTeamByUser(session);
+    return q?.id || null;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
+}
 
 export async function setSession(c: Context, id: string) {
   await cookie.setSignedCookie(c, authCookieName, id, authSecret, {

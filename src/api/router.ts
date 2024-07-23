@@ -5,6 +5,7 @@ import { ZodError } from "zod";
 import { rError, rOK } from "./helper";
 import form from "./form";
 import view from "./view";
+import file from "./file";
 import viewComponent from "./view-component";
 
 const app = new Hono()
@@ -12,6 +13,7 @@ const app = new Hono()
   .route("/api/auth", auth)
   .route("/api/form", form)
   .route("/api/view", view)
+  .route("/api/file", file)
   .route("/api/view-component", viewComponent)
   .get("/api/health", async (c) => {
     return rOK(c);

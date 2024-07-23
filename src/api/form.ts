@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { validator } from "hono/validator";
 import { ulid } from "ulid";
 import query from "../lib/query";
-import { getTeam } from "@/lib/auth";
+import { getSession, getTeam } from "@/lib/auth";
 import { handleFormUpload } from "@/components/model";
 
 const form = new Hono()
@@ -61,7 +61,7 @@ const form = new Hono()
         return rError(c, "not found");
       }
 
-      const data: any = await handleFormUpload(await c.req.formData(), formId, form.teamId);
+      const data: any = await handleFormUpload(c, formId, form.teamId);
       const id = ulid();
       await db.insert(Entry).values({
         formId,

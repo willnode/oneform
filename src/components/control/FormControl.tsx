@@ -5,6 +5,7 @@ import formSchema from "../editor/form.ts";
 import viewSchema from "../editor/view.ts";
 import { Button } from "../ui/button.tsx";
 import viewComponentSchema from "../editor/viewComponent.ts";
+import fileSchema from "../editor/file.ts";
 
 export type FormProps = {
   schema: any;
@@ -19,6 +20,10 @@ export function EditorFormControl(props: Omit<FormProps, "schema">) {
 
 export function EditorViewControl(props: Omit<FormProps, "schema">) {
   return <FormControl {...props} schema={viewSchema} />;
+}
+
+export function EditorFileControl(props: Omit<FormProps, "schema">) {
+  return <FormControl {...props} schema={fileSchema} />;
 }
 
 export function EditorViewComponentControl(props: Omit<FormProps, "schema">) {
@@ -37,7 +42,7 @@ export function FormControl({ schema, onSubmit, disabled, value }: FormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <fieldset disabled={disabled}>
           <Control form={form} parentID="" schema={rSchema} />
-          <Button className="my-3">Save</Button>
+          <Button name="formSubmitBtn" className="my-3">Save</Button>
         </fieldset>
       </form>
     </Form>

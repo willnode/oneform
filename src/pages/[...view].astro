@@ -1,5 +1,4 @@
 ---
-import { backToLogin, notFound } from "@/components/helper";
 import query from "@/lib/query";
 import Render from "./_view";
 import Layout from "@/layouts/Layout.astro";
@@ -15,7 +14,7 @@ if (!path.endsWith("/")) {
 let route = await query.getViewByRoute(path);
 if (!route) {
   if (path === "/") {
-    return backToLogin();
+    return Astro.redirect('/admin/');
   }
   return new Response(path);
 }
