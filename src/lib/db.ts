@@ -5,7 +5,7 @@ import * as schema from '@/db/schema';
 import mysql from 'mysql2/promise';
 const mySqlConfig = {
   host: import.meta.env.DB_HOST || 'localhost',
-  user: import.meta.env.DB_USER || 'root',
+  user: import.meta.env.DB_USERNAME || 'root',
   password: import.meta.env.DB_PASSWORD || '',
   database: import.meta.env.DB_NAME || 'oneform_db',
   port: parseInt(import.meta.env.DB_PORT || '3306'),
