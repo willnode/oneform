@@ -1,5 +1,4 @@
 import {
-  Tag,
   Users,
   Settings,
   Bookmark,

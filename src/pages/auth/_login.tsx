@@ -16,7 +16,7 @@ export default function LoginForm() {
     let r = await client.api.auth.login.$post({ json });
     let rj = await r.json();
     if (rj.status == "ok") {
-      window.location.assign("/");
+      window.location.assign("/admin/");
     } else {
       setError(rj.message);
     }

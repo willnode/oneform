@@ -1,4 +1,4 @@
-import { AutoField, DropZone, dropZoneContext, FieldLabel, Puck, type Config, type CustomField } from "@measured/puck";
+import { AutoField, DropZone, dropZoneContext, FieldLabel, type Config, type CustomField } from "@measured/puck";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { cssToStyle, twToStyle } from "../helper";
 import { buttonVariants } from "../ui/button";
@@ -162,15 +162,19 @@ const config: Config = {
           type: "select",
           options: opt([...variants, "ghost", "link"]),
         },
+        classes: {
+          type: "text",
+        },
       },
-      render: ({ icon, text, link, variant }) => {
+      render: ({ icon, text, link, classes, variant }) => {
         link = useTempl(link);
         text = useTempl(text);
+        let style = useStyle(classes);
         // @ts-ignore
         let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
         return <a href={link} className={buttonVariants({
           variant,
-        })}>{Icon && <Icon className="me-2" />}{text}</a>
+        })} style={style}>{Icon && <Icon className={text && "me-2"} />}{text}</a>
       },
     },
     Badge: {
@@ -189,12 +193,16 @@ const config: Config = {
           type: "select",
           options: opt([...variants]),
         },
+        classes: {
+          type: "text",
+        },
       },
-      render: ({ icon, text, link, variant }) => {
+      render: ({ icon, text, classes, variant }) => {
         text = useTempl(text);
+        let style = useStyle(classes);
         // @ts-ignore
         let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
-        return <Badge variant={variant}>{Icon && <Icon className="me-2" />}{text}</Badge>
+        return <Badge variant={variant} style={style}>{Icon && <Icon className={text && "me-2"} />}{text}</Badge>
       },
     },
     Alert: {
@@ -217,13 +225,17 @@ const config: Config = {
           type: "select",
           options: opt([...variants]),
         },
+        classes: {
+          type: "text",
+        },
       },
-      render: ({ icon, title, description, variant }) => {
+      render: ({ icon, title, description, variant, classes }) => {
         title = useTempl(title);
         description = useTempl(description);
+        let style = useStyle(classes);
         // @ts-ignore
         let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
-        return <Alert variant={variant}>{Icon && <Icon className="me-2" />}
+        return <Alert variant={variant} style={style}>{Icon && <Icon className="me-2" />}
           {title && <AlertTitle>{title}</AlertTitle>}
           {description && <AlertDescription>{description}</AlertDescription>}
         </Alert>
@@ -262,7 +274,7 @@ const config: Config = {
               <CardTitle>{title}</CardTitle>
               <CardDescription>{description}</CardDescription>
             </CardHeader>}
-            {hasHeader && <div className={(title || description) ? "flex-shrink p-6": "flex-grow p-6"}> <DropZone zone="header" /> </div>}
+            {hasHeader && <div className={(title || description) ? "flex-shrink min-w-24 p-6" : "flex-grow p-6"}> <DropZone zone="header" /> </div>}
           </div>
 
           <CardContent>

@@ -1,5 +1,3 @@
-"use client";
-
 import { Ellipsis, LogOut } from "lucide-react";
 
 import { cn } from "@/lib/utils";
