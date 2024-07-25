@@ -33,66 +33,89 @@ type Props = {
   config: string | null,
 }
 
-const indent = 2;
+const editorIndentSpaces = 2;
+const indent = " ".repeat(editorIndentSpaces);
+const unIndentPattern = new RegExp(`^ {${editorIndentSpaces}}`);
 
-// https://stackoverflow.com/a/46063843/3908409
-const keyDownModifier: React.KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-  const c = e.currentTarget;
-  if (e.which == 13) // ASCII newline
-  {
-    requestAnimationFrame(function () {
-      var start = c.selectionStart;
-      var v = c.value;
-      var thisLine = "";
-      var indentation = 0;
-      for (var i = start - 2; i >= 0 && v[i] != "\n"; i--) {
-        thisLine = v[i] + thisLine;
-      }
-      for (var i = 0; i < thisLine.length && thisLine[i] == " "; i++) {
+// https://stackoverflow.com/a/76821523/3908409
+const keyDownModifier: React.KeyboardEventHandler<HTMLTextAreaElement> = (ev) => {
+  const textarea = ev.currentTarget;
+  const v = textarea.value;
+  const startPos = textarea.selectionStart;
+  const endPos = textarea.selectionEnd;
+  if (ev.key === "Tab") {
+    ev.preventDefault(); //stop the focus from changing
+    const isUnIndenting = ev.shiftKey;
 
-        indentation++;
+    if (startPos === endPos) {
+      //nothing selected, just indent/unindent where the cursor is
+      let newCursorPos;
+      const lineStartPos = v.slice(0, startPos).lastIndexOf("\n") + 1;
+      const lineEndPos = v.slice(lineStartPos, v.length).indexOf("/n");
+      if (isUnIndenting) {
+        const newLineContent = v
+          .slice(lineStartPos, lineEndPos)
+          .replace(unIndentPattern, "");
+        textarea.value =
+          v.slice(0, lineStartPos) + newLineContent + v.slice(lineEndPos);
+        newCursorPos = Math.max(startPos - editorIndentSpaces, lineStartPos);
+      } else {
+        textarea.value =
+          v.slice(0, lineStartPos) + indent + v.slice(lineStartPos);
+        newCursorPos = startPos + editorIndentSpaces;
       }
-      c.value = v.slice(0, start) + " ".repeat(indentation) + v.slice(start);
-      c.selectionStart = start + indentation;
-      c.selectionEnd = start + indentation;
-    });
-  }
-  if (e.which == 9) //ASCII tab
-  {
-    e.preventDefault();
-    var start = c.selectionStart;
-    var end = c.selectionEnd;
-    var v = c.value;
-    if (start == end) {
-      c.value = v.slice(0, start) + " ".repeat(indent) + v.slice(start);
-      c.selectionStart = start + indent;
-      c.selectionEnd = start + indent;
-      return;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    } else {
+      //Indent/unindent the selected text
+      const lineStartPos = v.slice(0, startPos).lastIndexOf("\n") + 1;
+      const selection = v.substring(lineStartPos, endPos);
+      let result = "";
+      const lines = selection.split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        if (isUnIndenting) {
+          //unindent selected lines
+          result += lines[i].replace(unIndentPattern, "");
+        } else {
+          //Indent selected lines
+          result += indent + lines[i];
+        }
+
+        if (i < lines.length - 1) {
+          //add line breaks after all but the last line
+          result += "\n";
+        }
+      }
+
+      textarea.value = v.split(selection).join(result);
+      if (isUnIndenting) {
+        textarea.setSelectionRange(
+          Math.max(startPos - editorIndentSpaces, lineStartPos),
+          lineStartPos + result.length
+        );
+      } else {
+        textarea.setSelectionRange(
+          startPos + editorIndentSpaces,
+          lineStartPos + result.length
+        );
+      }
     }
+  } else if (ev.key === "Enter") {
+    //When enter is pressed, maintain the current indentation level
 
-    var selectedLines = [];
-    var inSelection = false;
-    var lineNumber = 0;
-    for (var i = 0; i < v.length; i++) {
-      if (i == start) {
-        inSelection = true;
-        selectedLines.push(lineNumber);
-      }
-      if (i >= end)
-        inSelection = false;
+    //We will place the newline character manually, this stops it from being typed
+    ev.preventDefault();
 
-      if (v[i] == "\n") {
-        lineNumber++;
-        if (inSelection)
-          selectedLines.push(lineNumber);
-      }
-    }
-    var lines = v.split("\n");
-    for (var i = 0; i < selectedLines.length; i++) {
-      lines[selectedLines[i]] = " ".repeat(indent) + lines[selectedLines[i]];
-    }
+    //Get the current indentation level and prefix the new line with the same
+    const prevLinePos = v.slice(0, startPos).lastIndexOf("\n") + 1;
+    const prevLine = v.slice(prevLinePos, endPos);
+    const levels = (prevLine.match(/^ */)?.[0].length || 0) / editorIndentSpaces;
+    const indentation = indent.repeat(levels);
+    textarea.value =
+      v.slice(0, endPos) + "\n" + indentation + v.slice(endPos);
 
-    c.value = lines.join("\n");
+    //Set the cursor position
+    const newCursorPos = endPos + 1 + indentation.length;
+    textarea.setSelectionRange(newCursorPos, newCursorPos);
   }
 
 }
