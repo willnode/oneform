@@ -1,6 +1,7 @@
 class ComponentPreviewElement extends HTMLElement {
   #shadowRoot;
   #cachedSrc;
+  #observer;
 
   constructor() {
     super();
@@ -9,15 +10,20 @@ class ComponentPreviewElement extends HTMLElement {
     this.#cachedSrc = {};
     // @ts-ignore
     this.#shadowRoot.dataset = this.dataset;
+    this.#observer = new MutationObserver(() => {
+      this.#shadowRoot.innerHTML = this.getAttribute('schema') || '';
+      requestAnimationFrame(() => this.#processScripts());
+  });
   }
 
   connectedCallback() {
     this.#shadowRoot.innerHTML = this.getAttribute('schema') || '';
     requestAnimationFrame(() => this.#processScripts());
+    this.#observer.observe(this, { attributes: true });
   }
 
   disconnectedCallback() {
-    //
+    this.#observer.disconnect();
   }
 
   adoptedCallback() {

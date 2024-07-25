@@ -29,8 +29,8 @@ const save = (id: string): SubmitHandler<any> => {
 
 type Props = {
   id: string,
-  schema: string,
-  config: string,
+  schema: string | null,
+  config: string | null,
 }
 
 // Render Puck editor
@@ -56,7 +56,7 @@ export default function Editor({ id, schema, config }: Props) {
             <FormItem className="grow">
               <Textarea
                 className="form-control"
-                defaultValue={field.value}
+                defaultValue={field.value || ''}
                 name="config"
                 onChange={field.onChange}
                 placeholder={"# Config\nmock:\n  title: My Component!"}
@@ -71,7 +71,7 @@ export default function Editor({ id, schema, config }: Props) {
             <FormItem className="grow">
               <Textarea
                 className="form-control"
-                defaultValue={field.value}
+                defaultValue={field.value || ''}
                 name="schema"
                 onChange={field.onChange}
                 placeholder={"<!-- HTML body\n(style: use @import instead of href)\n(scripts: use this instead of document) -->\n<div id='tag'></div>\n<script src='https://unpkg.com/jquery/dist/jquery.min.js'>\n<script>$('#tag').text(this.dataset.title)</script>"}
