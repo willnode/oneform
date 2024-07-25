@@ -53,7 +53,7 @@ function useTemplArray(arr: { key: string, value: string }[]) {
         return { key, value: 'error evaluating syntax: ' + error?.message };
       }
     });
-  }, [data, arr.map(x => x?.value).join()])
+  }, [data, (arr?.map(x => x?.value).join() || '')])
 }
 
 export const DataContext = createContext<any>({});
@@ -386,6 +386,9 @@ const config: Config = {
       }
     },
     Component: {
+      defaultProps: {
+        data: [],
+      },
       fields: {
         component: {
           type: "external",
