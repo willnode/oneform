@@ -418,7 +418,7 @@ const config: Config = {
         let ctx = useContext(dropZoneContext);
         data = useTemplArray(data);
         if (ctx?.mode == "edit") {
-          return <div>Custom component {`<${component.identifier} />`} will render here</div>;
+          return <div>Custom component {`<${component?.identifier || '??'} />`} will render here</div>;
         } else {
           return <ComponentRender component={component} data={data} />;
         }
