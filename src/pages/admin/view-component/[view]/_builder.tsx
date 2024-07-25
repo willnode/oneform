@@ -29,6 +29,7 @@ const save = (id: string): SubmitHandler<any> => {
 
 type Props = {
   id: string,
+  title: string,
   schema: string | null,
   config: string | null,
 }
@@ -121,7 +122,7 @@ const keyDownModifier: React.KeyboardEventHandler<HTMLTextAreaElement> = (ev) =>
 }
 
 // Render Puck editor
-export default function Editor({ id, schema, config }: Props) {
+export default function Editor({ id, schema, config, title }: Props) {
   const form = useForm({
     defaultValues: {
       schema,
@@ -135,7 +136,10 @@ export default function Editor({ id, schema, config }: Props) {
   return <div className="grid grid-cols-2 gap-2">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(save(id))}>
+        <div className="flex items-center gap-3">
         <Button>Save</Button>
+        <h2>{title}</h2>
+        </div>
         <FormField
           control={form.control}
           name="config"

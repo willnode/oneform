@@ -23,7 +23,7 @@ if (!view || view.teamId != teamId) {
 ---
 
 <Layout title="New View">
-    <BuilderView id={id} schema={view.schema} config={view.config} client:only="react" />
+    <BuilderView id={id} schema={view.schema} title={view.title} config={view.config} client:only="react" />
     <script type="module" src="/component-client.js"></script>
 </Layout>
 

@@ -57,7 +57,7 @@ export default function ListForm({ list }: Props) {
                 <a href={`/admin/view-component/${view.id}/edit`}>Edit</a>
               </Button>
               <Button variant="outline" asChild>
-                <a href={`/admin/view-component/${view.id}/builder`}>Builder</a>
+                <a href={`/admin/view-component/${view.id}/builder`} target="_blank">Builder</a>
               </Button>
             </CardFooter>
           </Card>
