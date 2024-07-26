@@ -10,10 +10,22 @@ class ComponentPreviewElement extends HTMLElement {
     this.#cachedSrc = {};
     // @ts-ignore
     this.#shadowRoot.dataset = this.dataset;
-    this.#observer = new MutationObserver(() => {
-      this.#shadowRoot.innerHTML = this.getAttribute('schema') || '';
-      requestAnimationFrame(() => this.#processScripts());
-  });
+    this.#observer = new MutationObserver((c) => {
+      let changed = false;
+      for (const cc of c) {
+        let name = cc.attributeName;
+        if (!name) continue;
+        if (name == "schema" || name.startsWith('data-')) {
+          changed = true;
+          break;
+        }
+      }
+
+      if (changed) {
+        this.#shadowRoot.innerHTML = this.getAttribute('schema') || '';
+        requestAnimationFrame(() => this.#processScripts());
+      }
+    });
   }
 
   connectedCallback() {
