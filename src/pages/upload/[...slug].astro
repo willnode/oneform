@@ -22,13 +22,25 @@ if (parts.length === 2) {
 
 Astro.response.headers.append("Content-Type", file.type);
 Astro.response.headers.append("Content-Length", file.size + "");
+Astro.response.headers.append("Etag", file.etag);
+
+let responseOptions = {
+  headers: {
+    "Cache-Control": 'max-age=3600',
+    "Content-Type": file.type,
+    "Content-Length": file.size + "",
+    "Etag":  `W/"${file.etag}"`,
+  },
+};
+let userEtag = Astro.request.headers.get("If-None-Match");
+if (userEtag && userEtag === `W/"${file.etag}"`) {
+  return new Response(null, {
+    status: 304,
+    ...responseOptions,
+  });
+}
 
 let fileb = await fs.readFile(file.path);
 
-return new Response(fileb, {
-  headers: {
-    "Content-Type": file.type,
-    "Content-Length": file.size + "",
-  },
-});
+return new Response(fileb, responseOptions);
 ---

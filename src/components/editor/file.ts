@@ -7,6 +7,7 @@ const fileSchema = {
     id: 'file',
     type: 'file',
     required: true,
+    multiple: true,
   },],
 }
 

@@ -1,13 +1,11 @@
 import { Hono } from "hono";
 import { rError, rOK } from "./helper";
-import { unflatten } from "flat";
-import { Entry, File, Form } from "@/db/schema";
+import { File } from "@/db/schema";
 import db from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { validator } from "hono/validator";
-import { ulid } from "ulid";
 import query from "../lib/query";
-import { getSession, getTeam } from "@/lib/auth";
+import { getTeam } from "@/lib/auth";
 import { handleFormUpload } from "@/components/model";
 
 const form = new Hono()
@@ -33,10 +31,10 @@ const form = new Hono()
       }
       const values = await handleFormUpload(c, null, team) as any;
       let id = values.file;
-      if (typeof id !== 'string') {
-        return rError(c, "Emm no shit");
+      if (Array.isArray(id) || typeof id === 'string') {
+        return rOK(c, id);
       }
-      return rOK(c, id);
+      return rError(c, "Emm no shit");
     },
   )
   .post(

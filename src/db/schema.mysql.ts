@@ -73,6 +73,7 @@ export const File = mysqlTable("file", {
   formId: varchar("form_id", { length: 26 }).references(() => Form.id),
   authorId: varchar("author_id", { length: 26 }).references(() => User.id),
   teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),
+  etag: varchar("etag", { length: 27 }).notNull(),
   size: int("size").notNull(),
   type: text("type").notNull(),
   name: text("name").notNull(),
