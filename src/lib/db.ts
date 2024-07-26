@@ -7,7 +7,7 @@ import mysql from 'mysql2/promise';
 // import.meta.env saves envar at build time
 const mySqlConfig = {
   host: import.meta.env.DB_HOST || '127.0.0.1',
-  user: import.meta.env.DB_USER || 'root',
+  user: import.meta.env.DB_USERNAME || 'root',
   password: import.meta.env.DB_PASSWORD || '',
   database: import.meta.env.DB_NAME || 'oneform_db',
   port: parseInt(import.meta.env.DB_PORT || '3306'),
