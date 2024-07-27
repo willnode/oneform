@@ -412,15 +412,19 @@ const config: Config = {
               type: "text",
             }
           }
-        }
+        },
+        classes: {
+          type: "text",
+        },
       },
-      render({ component, data }) {
+      render({ component, data, classes }) {
         let ctx = useContext(dropZoneContext);
         data = useTemplArray(data);
+        let style = useStyle(classes);
         if (ctx?.mode == "edit") {
-          return <div>Custom component {`<${component?.identifier || '??'} />`} will render here</div>;
+          return <div style={style}>Custom component {`<${component?.identifier || '??'} />`} will render here</div>;
         } else {
-          return <ComponentRender component={component} data={data} />;
+          return <ComponentRender style={style} component={component} data={data} />;
         }
       }
     }
