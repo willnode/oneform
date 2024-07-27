@@ -418,13 +418,12 @@ const config: Config = {
         },
       },
       render({ component, data, classes }) {
-        let ctx = useContext(dropZoneContext);
         data = useTemplArray(data);
         let style = useStyle(classes);
-        if (ctx?.mode == "edit") {
-          return <div style={style}>Custom component {`<${component?.identifier || '??'} />`} will render here</div>;
-        } else {
+        if (component) {
           return <ComponentRender style={style} component={component} data={data} />;
+        } else {
+          return <div style={style}>Choose a component</div>;
         }
       }
     }
