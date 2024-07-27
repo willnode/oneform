@@ -5,6 +5,7 @@ import { notFound } from "@/components/helper";
 import { getTeam } from "@/lib/auth";
 import query from "@/lib/query";
 const { view: id } = Astro.params;
+import { cacheBuster } from "@/components/helper";
 
 if (!id) {
     return notFound();
@@ -24,6 +25,6 @@ if (!view || view.teamId != teamId) {
 
 <Layout title="New View">
     <BuilderView id={id} schema={view.schema} title={view.title} config={view.config} client:only="react" />
-    <script type="module" src="/component-client.js"></script>
+    <script type="module" src={`/component-client.js?v=` + cacheBuster}></script>
 </Layout>
 

@@ -1,5 +1,6 @@
 import _ from "lodash-es";
 import { twj } from "tw-to-css";
+import { ulid } from "ulid";
 
 export function backTo(location: string) {
   return new Response(null, {
@@ -81,3 +82,5 @@ export function formatBytes(bytes: number, precision = 1) {
 
   return bytes.toFixed(precision) + ' ' + units[pow];
 }
+
+export const cacheBuster = ulid().substring(0, 8);

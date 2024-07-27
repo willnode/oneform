@@ -1,6 +1,6 @@
 import { AutoField, DropZone, dropZoneContext, FieldLabel, type Config, type CustomField } from "@measured/puck";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { cssToStyle, twToStyle } from "../helper";
+import { cacheBuster, cssToStyle, twToStyle } from "../helper";
 import { buttonVariants } from "../ui/button";
 import _ from "lodash-es";
 import RM from "react-markdown";
@@ -126,7 +126,7 @@ const config: Config = {
       useEffect(() => {
         const script = document.createElement('script');
 
-        script.src = "/component-client.js";
+        script.src = "/component-client.js?v=" + cacheBuster;
         script.type = 'module';
         body.current?.ownerDocument.head.appendChild(script);
 
@@ -407,6 +407,7 @@ const config: Config = {
     Component: {
       defaultProps: {
         data: [],
+        classes: "block w-full h-48"
       },
       fields: {
         component: {
@@ -430,6 +431,9 @@ const config: Config = {
             value: {
               type: "text",
             }
+          },
+          getItemSummary(item, index) {
+            return item?.key || "Item #" + (index + 1);
           }
         },
         classes: {

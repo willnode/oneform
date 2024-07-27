@@ -2,7 +2,7 @@
 import query from "@/lib/query";
 import Render from "./_view";
 import Layout from "@/layouts/Layout.astro";
-
+import { cacheBuster } from "@/components/helper";
 let path = Astro.url.pathname;
 let subpath = "";
 
@@ -29,5 +29,5 @@ let schema =
 <Layout title={route.title}>
   <Render schema={schema} data={{ path, subpath }} />
 
-  <script type="module" src="/component-client.js"></script>
+  <script type="module" src={`/component-client.js?v=` + cacheBuster}></script>
 </Layout>
