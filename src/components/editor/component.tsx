@@ -18,8 +18,6 @@ export function ComponentPreview({ schema, config }: any) {
     }, [config])
 
     let ElemName = 'preview-component';
-    useEffect(() => {
-      }, [ElemName])
 
     // @ts-ignore
     return <ElemName schema={schema} {...dataConf}></ElemName>

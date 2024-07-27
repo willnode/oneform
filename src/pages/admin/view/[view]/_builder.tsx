@@ -27,7 +27,7 @@ const save = (id: string) => {
 // Render Puck editor
 export default function Editor({ id, schema }: { id: string, schema: any }) {
   return <div>
-    <Puck config={config} data={schema || {}} onPublish={save(id)} />
+    <Puck config={config} iframe={{enabled: false}} data={schema || {}} onPublish={save(id)} />
     <div style={{ zIndex: 1000, position: 'absolute', top: 0 }}>
       <Toaster />
     </div>
