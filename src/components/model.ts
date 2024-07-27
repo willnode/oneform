@@ -79,12 +79,13 @@ export async function handleFormUpload(
   return unflatten(entries);
 }
 
-export async function insertViewCache(content: string, viewId: string, route: string) {
+export async function insertViewCache(content: string, viewId: string, title: string, route: string) {
   const etag = await computeEtag(new TextEncoder().encode(content));
 
   return await db.insert(ViewCache).values({
     id: ulid(),
     content,
+    title,
     route,
     viewId,
     etag

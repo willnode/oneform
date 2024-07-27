@@ -5,10 +5,12 @@ import Layout from "@/layouts/Layout.astro";
 import { cacheBuster } from "@/components/helper";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
-import {insertViewCache} from "@/components/model"
+import { insertViewCache } from "@/components/model";
 let path = Astro.url.pathname;
 let subpath = "";
 let viewpath = path;
+let content = "";
+let title = "Website";
 
 if (!path.endsWith("/")) {
   subpath = path.substring(path.lastIndexOf("/") + 1);
@@ -21,33 +23,37 @@ if (cache) {
   let userEtag = Astro.request.headers.get("If-None-Match");
   if (userEtag && userEtag === `W/"${cache.etag}"`) {
     Astro.response.status = 304;
-    return Astro.response;
+    return new Response(null, Astro.response);
   }
-}
-
-let route = await query.getViewByRoute(path);
-if (!route) {
-  if (path === "/") {
-    return Astro.redirect("/admin/");
+  title = cache.title;
+} else {
+  let route = await query.getViewByRoute(viewpath);
+  if (!route) {
+    if (viewpath === "/") {
+      return Astro.redirect("/admin/");
+    }
+    Astro.response.status = 404;
+    return new Response(path, Astro.response);
   }
-  return new Response(path);
+  if (!route.schema) {
+    return new Response("empty page here");
+  }
+
+  let schema =
+    typeof route.schema === "string" ? JSON.parse(route.schema) : route.schema;
+
+  content = ReactDOMServer.renderToString(
+    React.createElement(Render, { schema, data: { path: viewpath, subpath } })
+  );
+
+  title = route.title;
+
+  await insertViewCache(content, route.id, title, path);
 }
-if (!route.schema) {
-  return new Response("empty page here");
-}
-
-let schema =
-  typeof route.schema === "string" ? JSON.parse(route.schema) : route.schema;
-
-let content = ReactDOMServer.renderToString(
-  React.createElement(Render, { schema, data: { path, subpath } })
-);
-
-await insertViewCache(content, route.id, path);
 ---
 
-<Layout title={route.title}>
+<Layout title={title}>
   <div set:html={content} />
 
-  <script type="module" src={`/component-client.js?v=` + cacheBuster}></script>
+  <script is:inline type="module" src={`/component-client.js?v=` + cacheBuster}></script>
 </Layout>

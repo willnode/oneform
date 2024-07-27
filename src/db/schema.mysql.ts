@@ -60,6 +60,7 @@ export const View = mysqlTable("view", {
 export const ViewCache = mysqlTable("view_cache", {
   id: varchar("id", { length: 26 }).primaryKey(),
   viewId: varchar("view_id", { length: 26 }).references(() => View.id).notNull(),
+  title: text("title").notNull(),
   route: varchar("route", { length: 256 }).notNull().unique(),
   content: text("content").notNull(),
   etag: varchar("etag", { length: 27 }).notNull(),
