@@ -17,10 +17,8 @@ export function ComponentPreview({ schema, config }: any) {
         }
     }, [config])
 
-    let ElemName = 'preview-component';
-
     // @ts-ignore
-    return <ElemName schema={schema} {...dataConf}></ElemName>
+    return <preview-component schema={schema} {...dataConf}></preview-component>
 }
 
 export function ComponentRender({ component, data, style }: any) {
@@ -39,7 +37,6 @@ export function ComponentRender({ component, data, style }: any) {
         }
     }, [data])
 
-    let ElemName = 'preview-component';
     // @ts-ignore
-    return <ElemName schema={component.schema} style={style} {...dataConf}></ElemName>
+    return <preview-component schema={component.schema} style={style} {...dataConf}></preview-component>
 }

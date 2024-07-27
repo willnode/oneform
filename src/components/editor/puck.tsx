@@ -5,7 +5,7 @@ import { buttonVariants } from "../ui/button";
 import _ from "lodash-es";
 import RM from "react-markdown";
 import { parse } from 'yaml';
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useRef } from "react";
 import { Liquid } from "liquidjs";
 import { client } from "@/api/client";
 import { ComponentRender } from "./component";
@@ -119,6 +119,25 @@ const config: Config = {
       css: {
         type: "textarea",
       },
+    },
+    render({ children }) {
+      let body = useRef<HTMLDivElement>(null);
+
+      useEffect(() => {
+        const script = document.createElement('script');
+
+        script.src = "/component-client.js";
+        script.type = 'module';
+        body.current?.ownerDocument.head.appendChild(script);
+
+        return () => {
+          body.current?.ownerDocument.head.removeChild(script);
+        }
+      }, []);
+
+      return <div ref={body}>
+        {children}
+      </div>
     }
   },
   components: {
