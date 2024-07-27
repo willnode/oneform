@@ -26,6 +26,7 @@ if (cache) {
     return new Response(null, Astro.response);
   }
   title = cache.title;
+  content = cache.content;
 } else {
   let route = await query.getViewByRoute(viewpath);
   if (!route) {
