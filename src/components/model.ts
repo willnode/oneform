@@ -1,42 +1,14 @@
-import { File as FileDB } from "@/db/schema";
+import { File as FileDB, View, ViewCache } from "@/db/schema";
 import db from "@/lib/db";
 import { unflatten } from "flat";
 import path from "node:path";
 import fsp from "node:fs/promises";
 import fs from "node:fs";
 import { ulid } from "ulid";
-import { extractFormData } from "../components/helper";
-import { getApiSession, getSession } from "@/lib/auth";
+import { computeEtag, extractFormData } from "../components/helper";
+import { getApiSession } from "@/lib/auth";
 import type { Context } from "hono";
 
-
-const ENCODING = "0123456789ABCDEFGHJKMNPQRSTVWXYZ" // Crockford's Base32
-
-function hashEtag(input: Uint8Array) {
-  let alphabet = ENCODING;
-
-  const length = input.byteLength;
-
-  let bits = 0;
-  let value = 0;
-  let output = '';
-
-  for (let i = 0; i < length; i++) {
-    value = (value << 8) | input[i]!;
-    bits += 8;
-
-    while (bits >= 5) {
-      output += alphabet[(value >>> (bits - 5)) & 31];
-      bits -= 5;
-    }
-  }
-
-  if (bits > 0) {
-    output += alphabet[(value << (5 - bits)) & 31];
-  }
-
-  return output;
-}
 
 
 async function uploadFile(file: File, formId: string | null, teamId: string, authorId: string | null): Promise<string | null> {
@@ -53,10 +25,8 @@ async function uploadFile(file: File, formId: string | null, teamId: string, aut
   if (!r.value) {
     return null;
   }
-  const buf = Buffer.from(r.value);
-  await fsp.writeFile(p, buf);
-  var hash = await crypto.subtle.digest("SHA-1", buf);
-  var etag = hashEtag(new Uint8Array(hash)).substring(0, 27);
+  await fsp.writeFile(p, r.value);
+  const etag = await computeEtag(r.value);
 
   await db.insert(FileDB).values({
     formId,
@@ -107,4 +77,17 @@ export async function handleFormUpload(
     }
   }
   return unflatten(entries);
+}
+
+export async function insertViewCache(content: string, viewId: string, route: string) {
+  const etag = await computeEtag(new TextEncoder().encode(content));
+
+  return await db.insert(ViewCache).values({
+    id: ulid(),
+    content,
+    route,
+    viewId,
+    etag
+  });
+
 }

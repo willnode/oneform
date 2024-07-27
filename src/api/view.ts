@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { rError, rOK } from "./helper";
 import { unflatten } from "flat";
-import { Entry, View } from "@/db/schema";
+import { Entry, View, ViewCache } from "@/db/schema";
 import db from "@/lib/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { validator } from "hono/validator";
 import { ulid } from "ulid";
 import { getTeam } from "@/lib/auth";
@@ -61,6 +61,9 @@ const view = new Hono()
       if (r[0].affectedRows == 0) {
         return rError(c, "Emm no shit");
       }
+      await db
+        .delete(ViewCache)
+        .where(eq(ViewCache.viewId, id));
       return rOK(c);
     },
   )

@@ -3,18 +3,32 @@ import query from "@/lib/query";
 import Render from "./_view";
 import Layout from "@/layouts/Layout.astro";
 import { cacheBuster } from "@/components/helper";
+import React from "react";
+import ReactDOMServer from "react-dom/server";
+import {insertViewCache} from "@/components/model"
 let path = Astro.url.pathname;
 let subpath = "";
+let viewpath = path;
 
 if (!path.endsWith("/")) {
   subpath = path.substring(path.lastIndexOf("/") + 1);
-  path = path.substring(0, path.lastIndexOf("/") + 1);
+  viewpath = path.substring(0, path.lastIndexOf("/") + 1);
+}
+
+let cache = await query.getViewCacheByRoute(path);
+if (cache) {
+  Astro.response.headers.set("Etag", `W/"${cache.etag}"`);
+  let userEtag = Astro.request.headers.get("If-None-Match");
+  if (userEtag && userEtag === `W/"${cache.etag}"`) {
+    Astro.response.status = 304;
+    return Astro.response;
+  }
 }
 
 let route = await query.getViewByRoute(path);
 if (!route) {
   if (path === "/") {
-    return Astro.redirect('/admin/');
+    return Astro.redirect("/admin/");
   }
   return new Response(path);
 }
@@ -24,10 +38,16 @@ if (!route.schema) {
 
 let schema =
   typeof route.schema === "string" ? JSON.parse(route.schema) : route.schema;
+
+let content = ReactDOMServer.renderToString(
+  React.createElement(Render, { schema, data: { path, subpath } })
+);
+
+await insertViewCache(content, route.id, path);
 ---
 
 <Layout title={route.title}>
-  <Render schema={schema} data={{ path, subpath }} />
+  <div set:html={content} />
 
   <script type="module" src={`/component-client.js?v=` + cacheBuster}></script>
 </Layout>

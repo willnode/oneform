@@ -57,6 +57,16 @@ export const View = mysqlTable("view", {
   modified: timestamp("modified").defaultNow(),
 });
 
+export const ViewCache = mysqlTable("view", {
+  id: varchar("id", { length: 26 }).primaryKey(),
+  viewId: varchar("view_id", { length: 26 }).references(() => View.id).notNull(),
+  route: varchar("route", { length: 256 }).notNull().unique(),
+  content: text("content").notNull(),
+  etag: varchar("etag", { length: 27 }).notNull(),
+  created: timestamp("created").defaultNow(),
+  modified: timestamp("modified").defaultNow(),
+});
+
 export const ViewComponent = mysqlTable("view_component", {
   id: varchar("id", { length: 26 }).primaryKey(),
   teamId: varchar("team_id", { length: 26 }).references(() => Team.id).notNull(),

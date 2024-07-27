@@ -87,4 +87,39 @@ export function formatBytes(bytes: number, precision = 1) {
   return bytes.toFixed(precision) + ' ' + units[pow];
 }
 
+
+
+const ENCODING = "0123456789ABCDEFGHJKMNPQRSTVWXYZ" // Crockford's Base32
+
+function hashEtag(input: Uint8Array) {
+  let alphabet = ENCODING;
+
+  const length = input.byteLength;
+
+  let bits = 0;
+  let value = 0;
+  let output = '';
+
+  for (let i = 0; i < length; i++) {
+    value = (value << 8) | input[i]!;
+    bits += 8;
+
+    while (bits >= 5) {
+      output += alphabet[(value >>> (bits - 5)) & 31];
+      bits -= 5;
+    }
+  }
+
+  if (bits > 0) {
+    output += alphabet[(value << (5 - bits)) & 31];
+  }
+
+  return output;
+}
+
+export async function computeEtag(content: Uint8Array) {
+  var hash = await crypto.subtle.digest("SHA-1", content);
+  return hashEtag(new Uint8Array(hash)).substring(0, 27);
+}
+
 export const cacheBuster = ulid().substring(0, 8);

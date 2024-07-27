@@ -1,4 +1,4 @@
-import { User, UserAuth, Team, Form, Entry, View, ViewComponent, File } from "@/db/schema";
+import { User, UserAuth, Team, Form, Entry, View, ViewComponent, File, ViewCache } from "@/db/schema";
 import db from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 
@@ -121,6 +121,18 @@ const query = {
       .select()
       .from(View)
       .where(eq(View.route, route))
+      .limit(1);
+
+    if (qa.length > 0) {
+      return qa[0];
+    }
+    return null;
+  },
+  async getViewCacheByRoute(route: string) {
+    let qa = await db
+      .select()
+      .from(ViewCache)
+      .where(eq(ViewCache.route, route))
       .limit(1);
 
     if (qa.length > 0) {
