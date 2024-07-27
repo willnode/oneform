@@ -1,5 +1,5 @@
 import _ from "lodash-es";
-import { twj } from "tw-to-css";
+import { twi, twj } from "tw-to-css";
 import { ulid } from "ulid";
 
 export function backTo(location: string) {
@@ -52,12 +52,16 @@ export function extractFormData(data: FormData) {
 }
 
 export function twToStyle(str: string) {
-  if (typeof str !== 'string') return {};
+  if (typeof str !== 'string') return "";
   try {
-    return twj(str);
+    return twi(str, {
+      ignoreMediaQueries: false,
+      merge: false,
+      minify: false,
+    });
   } catch (error) {
     console.error(error);
-    return {};
+    return "";
   }
 }
 export function cssToStyle(str: string | undefined) {

@@ -13,6 +13,7 @@ import * as Fa from "react-icons/fa6";
 import type { IconType } from "react-icons";
 import { Badge } from "../ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { cn } from "@/lib/utils";
 
 function opt(arr: string[]) {
   return arr.map(x => ({ label: _.startCase(x || '[Empty]'), value: x }));
@@ -58,8 +59,12 @@ function useTemplArray(arr: { key: string, value: string }[]) {
 
 export const DataContext = createContext<any>({});
 
-const useStyle = (classes: string, style?: string) => {
-  return useMemo(() => ({ ...twToStyle(classes), ...cssToStyle(style) }), [classes, style])
+const useStyle = (style: string) => {
+  return useMemo(() => (cssToStyle(style)), [style])
+}
+
+const useClasses = (classes: string) => {
+  return useMemo(() => (twToStyle(classes)), [classes])
 }
 
 const fileSelectionRender = ({ field, onChange, value }: {
@@ -152,14 +157,35 @@ const config: Config = {
       },
       render: ({ classes, style }) => {
         let ctx = useContext(dropZoneContext);
-        let css = useStyle(classes, style);
-        if (ctx && ctx.mode == "edit") {
-          return <DropZone style={css} zone="children" />
-        } else {
-          return <div style={css}>
-            <DropZone zone="children" />
-          </div>
-        }
+        let ref = useRef<HTMLDivElement>(null);
+        let refOldClasses = useRef<string>("");
+
+        let styling = useStyle(style);
+        let css = useClasses(classes);
+        let edit = ctx && ctx.mode == "edit";
+
+        useEffect(() => {
+          if (!edit || !ref.current) return;
+          let target = ref.current.querySelector<HTMLDivElement>(`div[class^='_DropZone-content']`);
+          if (!target) return;
+          if (classes != refOldClasses.current) {
+            let oldList = refOldClasses.current.split(' ').filter(x => x);
+            let newList = classes.split(' ').filter((x: string) => x);
+            if (oldList.length > 0) {
+              target.classList.remove(...oldList);
+            }
+            if (newList.length > 0) {
+              target.classList.add(...newList);
+            }
+            refOldClasses.current = classes;
+          }
+          target.style.cssText = style;
+        }, [classes, style, edit])
+
+        return <div ref={ref} className={edit ? undefined : classes} style={edit ? undefined : styling}>
+          {css && <style >{css}</style>}
+          <DropZone zone="children" />
+        </div>
       },
     },
     Button: {
@@ -188,12 +214,14 @@ const config: Config = {
       render: ({ icon, text, link, classes, variant }) => {
         link = useTempl(link);
         text = useTempl(text);
-        let style = useStyle(classes);
+        let css = useClasses(classes);
         // @ts-ignore
         let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
-        return <a href={link} className={buttonVariants({
+        return <a href={link} className={cn(buttonVariants({
           variant,
-        })} style={style}>{Icon && <Icon className={text && "me-2"} />}{text}</a>
+        }), classes)}>{Icon && <Icon className={text && "me-2"} />}{text}
+          {css && <style >{css}</style>}
+        </a>
       },
     },
     Badge: {
@@ -218,10 +246,12 @@ const config: Config = {
       },
       render: ({ icon, text, classes, variant }) => {
         text = useTempl(text);
-        let style = useStyle(classes);
+        let css = useClasses(classes);
         // @ts-ignore
         let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
-        return <Badge variant={variant} style={style}>{Icon && <Icon className={text && "me-2"} />}{text}</Badge>
+        return <Badge variant={variant} className={classes}>{Icon && <Icon className={text && "me-2"} />}{text}
+          {css && <style >{css}</style>}
+        </Badge>
       },
     },
     Alert: {
@@ -251,12 +281,13 @@ const config: Config = {
       render: ({ icon, title, description, variant, classes }) => {
         title = useTempl(title);
         description = useTempl(description);
-        let style = useStyle(classes);
+        let css = useClasses(classes);
         // @ts-ignore
         let Icon: IconType = useMemo(() => Fa[icon] || null, [Fa, icon]);
-        return <Alert variant={variant} style={style}>{Icon && <Icon className="me-2" />}
+        return <Alert className={classes} variant={variant}>{Icon && <Icon className="me-2" />}
           {title && <AlertTitle>{title}</AlertTitle>}
           {description && <AlertDescription>{description}</AlertDescription>}
+          {css && <style >{css}</style>}
         </Alert>
       },
     },
@@ -286,22 +317,22 @@ const config: Config = {
       render({ title, description, classes, hasHeader, hasFooter }) {
         title = useTempl(title);
         description = useTempl(description);
-        classes = useStyle(classes);
+        let css = useClasses(classes);
         return <Card style={classes}>
-          <div className={hasHeader ? "flex items-center" : ""}>
+          <div className={cn(hasHeader && "flex items-center", classes)}>
             {(title || description) && <CardHeader className={hasHeader ? "flex-grow" : ""}>
               <CardTitle>{title}</CardTitle>
               <CardDescription>{description}</CardDescription>
             </CardHeader>}
             {hasHeader && <div className={(title || description) ? "flex-shrink min-w-24 p-6" : "flex-grow p-6"}> <DropZone zone="header" /> </div>}
           </div>
-
           <CardContent>
             <DropZone zone="children" />
           </CardContent>
           {hasFooter && <CardFooter className="flex justify-between">
             <DropZone zone="footer" />
           </CardFooter>}
+          {css && <style >{css}</style>}
         </Card>
       }
     },
@@ -327,9 +358,8 @@ const config: Config = {
         },
       },
       render({ mock, classes }) {
-        let css = useStyle(classes);
         let oldData = useContext(DataContext);
-
+        let css = useClasses(classes);
         let dataMock = useMemo(() => {
           return mock.map((m: any) => {
             try {
@@ -341,13 +371,15 @@ const config: Config = {
           })
         }, [mock]);
 
-        return <div style={css}>{dataMock.map((data: any, i: number) => {
+        return <div className={classes}>{dataMock.map((data: any, i: number) => {
           return <React.Fragment key={i}>
             <DataContext.Provider value={{ ...oldData, ...data }}>
               <DropZone zone="children" />
             </DataContext.Provider>
           </React.Fragment>
-        })}</div>;
+        })}
+          {css && <style>{css}</style>}
+        </div>;
       }
     },
     Text: {
@@ -369,16 +401,12 @@ const config: Config = {
       },
       render({ text, classes, mode }) {
         text = useTempl(text);
-        let css = useStyle(classes);
-        switch (mode) {
-          case 'prose':
-            return <div className="prose dark:prose-invert" style={css} >
-              <RM>{text}</RM>
-            </div>
-          case 'text':
-          default:
-            return <div style={css} >{text}</div>;
-        }
+        let css = useClasses(classes);
+        let prose = mode == "prose";
+        return <div className={cn(prose && "prose dark:prose-invert", classes)} >
+          {prose ? <RM>{text}</RM> : text}
+          {css && <style>{css}</style>}
+        </div>
       }
     },
     Image: {
@@ -400,8 +428,11 @@ const config: Config = {
       render({ src, alt, classes }) {
         src = useTempl(src);
         alt = useTempl(alt);
-        let css = useStyle(classes);
-        return <img src={src} style={css} alt={alt} />;
+        let css = useClasses(classes);
+        return <>
+          <img src={src} className={classes} alt={alt} />
+          {css && <style>{css}</style>}
+        </>
       }
     },
     Component: {
@@ -433,7 +464,7 @@ const config: Config = {
             }
           },
           getItemSummary(item, index) {
-            return item?.key || "Item #" + (index + 1);
+            return item?.key || "Item #" + (index || 0);
           }
         },
         classes: {
@@ -442,11 +473,17 @@ const config: Config = {
       },
       render({ component, data, classes }) {
         data = useTemplArray(data);
-        let style = useStyle(classes);
+        let css = useClasses(classes);
         if (component) {
-          return <ComponentRender style={style} component={component} data={data} />;
+          return <>
+            <ComponentRender className={classes} component={component} data={data} />
+            {css && <style>{css}</style>}
+          </>;
         } else {
-          return <div style={style}>Choose a component</div>;
+          return <>
+            <div className={classes}>Choose a component</div>
+            css && <style>{css}</style>
+          </>;
         }
       }
     }

@@ -21,7 +21,7 @@ export function ComponentPreview({ schema, config }: any) {
     return <preview-component schema={schema} {...dataConf}></preview-component>
 }
 
-export function ComponentRender({ component, data, style }: any) {
+export function ComponentRender({ component, data, className }: any) {
     if (!component || !component.identifier) return <div></div>
 
     let dataConf = useMemo(() => {
@@ -38,5 +38,5 @@ export function ComponentRender({ component, data, style }: any) {
     }, [data])
 
     // @ts-ignore
-    return <preview-component schema={component.schema} style={style} {...dataConf}></preview-component>
+    return <preview-component schema={component.schema} class={className} {...dataConf}></preview-component>
 }
