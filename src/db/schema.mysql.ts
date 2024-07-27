@@ -57,7 +57,7 @@ export const View = mysqlTable("view", {
   modified: timestamp("modified").defaultNow(),
 });
 
-export const ViewCache = mysqlTable("view", {
+export const ViewCache = mysqlTable("view_cache", {
   id: varchar("id", { length: 26 }).primaryKey(),
   viewId: varchar("view_id", { length: 26 }).references(() => View.id).notNull(),
   route: varchar("route", { length: 256 }).notNull().unique(),
