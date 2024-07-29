@@ -163,6 +163,7 @@ const config: Config = {
         let styling = useStyle(style);
         let css = useClasses(classes);
         let edit = ctx && ctx.mode == "edit";
+        classes = classes || '';
 
         useEffect(() => {
           if (!edit || !ref.current) return;
